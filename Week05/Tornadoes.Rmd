@@ -1,0 +1,243 @@
+---
+title: "P1 - An Analysis on the Effects of Tornadoes in 2022"
+author: "Arun Mahadevan Sathia Narayanan | as235872 | arunmsnarayanan@utexas.edu"
+date: 'Date Published: `r Sys.Date()`'
+output:
+  html_document:
+    theme: journal
+    toc: true
+    toc_float:
+      collapsed: true
+---
+<font style="color:black;">
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+tornadoes_project1 = read.csv("Project1_Tornados.csv")
+library(ggplot2)
+```
+
+![Figure I.1: A tornado caused by a supercell. Source: (https://www.vercounty.org/news-item/tornado-watches-vs-warnings/)](https://www.vercounty.org/wp-content/uploads/2020/09/tornado-banner.jpg)  
+
+<br>  
+
+Welcome! Hold onto your hat — this session might just sweep you off your feet, but don’t worry, I’ll keep it all under control... mostly!  
+
+As the title states, the data set being analyzed in this report is the tornadoes of 2022. More specifically, we look at the magnitude of the tornadoes, if there were fatalities/injuries, the estimated property loss (in US dollars), and the size.  
+
+The data was retrieved from the NOAA (https://www.spc.noaa.gov/wcm/#data).  
+
+The variable of interest (dependent variable) that I will be exploring in this report is the [**estimated property loss**]{.underline}, with the predictor variables (independent variables) being the <span style="color:red;">**state**</span> the tornado was in, the <span style="color:blue;">**magnitude**</span> of the tornado, and the <span style="color:lightgreen;">**distance**</span> the tornado traveled. We will be analyzing these for the 591 tornadoes the data was collected for.   
+
+And yes, you have to grit your teeth and push your way through the ridiculous puns.
+
+# OUTCOME VARIABLE 
+Now that we have addressed what exactly to look at, let's visualize the dataset we have to analyze:  
+
+```{r echo = FALSE}
+prop_loss_no_na <- tornadoes_project1[!is.na(tornadoes_project1$property_loss),]
+prop_loss <- ggplot(prop_loss_no_na)
+prop_loss + geom_boxplot(aes(x = property_loss)) + labs(title = "Estimated Property Loss by Tornadoes (2022)", x = "Property Loss (US $)") + theme(axis.text.y = element_blank(), axis.ticks.y = element_blank())
+```
+  
+##### Figure O.1: A boxplot visualization of the spread of property loss data.  
+
+Looking at this boxplot, we can see that many of the tornadoes have done property damage in the lower half of the data. To better analyze this, let's see the actual numbers.  
+`r summary(prop_loss_no_na$property_loss)`
+```{r echo = FALSE}
+summary(prop_loss_no_na$property_loss)
+```
+  
+##### Figure O.2: The number-view of the spread of the property loss data.  
+From these numbers we can see the hard data:  
+The values all the way up until the 3rd Quartile (meaning 75% of the total data) go only until \$347,500. The average property loss caused by these 591 tornadoes is \$2,099,165 (and of course, this is mainly due to the mean being high affected by the outliers in the data). The maximum damage caused by any tornado in the United States in 2022 was \$220,000,000.  
+
+-  
+Why did the tornado say to the data scientist?  
+"Hold on tight, I’m about to cause a $category \space shift$ in your results!"  
+
+# BIVARIATE ANALYSES  
+Now, we get to the good stuff.  
+
+Since we got an understanding of what exactly we're looking at here, let's see how exactly property loss is related to the states, the magnitudes, and the distances traveled.  
+
+### State vs. Property Loss
+```{r echo = FALSE}
+prop_loss_state <- ggplot(prop_loss_no_na)
+prop_loss_state + geom_boxplot(aes(x = state, y = property_loss), color = 'red') + 
+  labs(title = "State vs. Property Loss due to Tornadoes in 2022", x = "State", y = "Property Loss (US $)")
+```
+  
+##### Figure B.1: The relationship between the state and the property loss.  
+Here, we have a boxplot made for the property loss per state. From the visualization, we can see that a large cluster of the data for each state is in the lower range of the data. The largest property loss, as observed from the boxplot distributions, was in Iowa (IA). If you want to know more about this tornado, you can go here: (https://en.wikipedia.org/wiki/Tornado_outbreak_of_March_5–7,_2022). To take a closer look at the data for the lower ranges, let's set a bound on the property loss value to \$53,000,000.  
+
+```{r echo = FALSE}
+prop_loss_state_limit <- prop_loss_no_na[prop_loss_no_na$property_loss <= 5.3e+07,]
+prop_loss_state_limit_plot <- ggplot(prop_loss_state_limit)
+prop_loss_state_limit_plot + geom_boxplot(aes(x = state, y = property_loss), color = 'red') + 
+  labs(title = "State vs. Property Loss due to Tornadoes in 2022 (Lower Region)", x = "State", y = "Property Loss (US $)")
+```
+  
+From this graph, we can see the distribution of the data a little better. Here, we can see that Kansas (KS) had the largest spread (though Michigan (MI) had the largest property loss, it is the only data point, and thus has no spread), with a minimum of around \$10,000,000 and a maximum of around \$42,000,000.  
+
+The main reason for performing this state comparison is to analyze whether or not the Tornado Alley is just a myth or not. The Tornado Alley consists of <span style="color:red;">Texas (TX), Oklahoma (OK), Kansas (KS), Nebraska (NE), and South Dakota (SD)</span> [the South Dakota was all N/A and was thus excluded from the boxplot distributions]. When we look at these states specifically (again, excluding SD) we see that from the lower portions Texas is larger than the other data points, Oklahoma not so much, Nebraska has a distribution a bit higher than the other states, and Kansas, as we previously discussed, has the largest data spread. When comparing these states to the others, the Tornado Alley seems to be a realistic area for a larger number of tornadoes. If you want to learn more about the Tornado Alley, go here: (https://en.wikipedia.org/wiki/Tornado_Alley).  
+
+### Magnitude vs. Property Loss  
+The next bivariate distribution to analyze the relationship between the magnitude of the tornado and the property loss incurred.  
+
+```{r echo = FALSE}
+prop_loss_magnitude <- ggplot(prop_loss_no_na)
+prop_loss_magnitude + geom_boxplot(aes(y = property_loss), color = 'blue') + theme(axis.text.x = element_blank(), axis.ticks.x = element_blank()) + labs(title = "Magnitude vs. Property Loss due to Tornadoes in 2022", x = "Magnitude (EF Scale)", y = "Property Loss (US $)") + facet_wrap(~magnitude, nrow = 1) 
+```
+  
+##### Figure B.2: The relationship between the magnitude and the property loss.  
+We can also make this a boxplot, and from the data, we can analyze that the magnitude which cased the largest property loss was indeed a magnitude 4 tornado. But we can visualize that the property loss done by the magnitude 3's are less than the property loss done by the magnitude 2's. To learn more about the scale with which tornadoes are measured, head over to (https://www.weather.gov/oun/efscale#).  
+
+To properly analyze the relationship, let's find the correlation:  
+```{r echo = FALSE}
+cor(prop_loss_no_na$magnitude, prop_loss_no_na$property_loss)
+```
+  
+#### <span style="color:blue;">About Correlation</span>  
+How correlation works is that the decimal value has to be between -1 and 1, with -1 being a perfectly negative correlation and 1 being a perfectly positive correlation. Correlation is defined as "the extent to which to variables are linearly related". Note that correlation does not imply causation. Just because two variables are related to each other does not mean one caused the other. For example, if a study showed that Ice Cream Sales and Drowning Deaths have a strong positive correlation, it does not mean that simply because of more ice cream being sold, more people drowned (that makes no sense!). Instead, there would be a third variable, known as a confounding variable, which influences both the dependent and independent variables. In this case, the confounding variable would be summer heat; with more heat, more ice cream will be sold and more people will go swimming. Thus, just because more ice cream was sold does not mean more people would die by drowning. Correlation does not imply causation.  
+The distribution of correlation is as follows:
+```{}
+c = -1                  Perfectly Negative
+-1 < c <= -0.7          Strong Negative
+-0.7 < c <= -0.4        Moderate Negative
+-0.4 < c < 0            Weak Negative
+c = 0                   No correlation
+0 < c < 0.4             Weak Positive
+0.4 <= c < 0.7          Moderate Positive
+0.7 <= c < 1            Strong Positive
+c = 1                   Perfectly Positive
+```
+  
+#### <span style="color:blue;">Back to the Analysis</span> 
+Here, the correlation is shown to be a little over 0.37, which is considered a Weak Positive correlation. From this, we can understand that magnitude does affect the property loss, but only to a limited degree.  
+But what if we take them apart individually? What can we see? Well, let's first compare the number summaries of property losses for each magnitude.  
+```{r echo = FALSE}
+result <- data.frame(aggregate(property_loss ~ magnitude, data = prop_loss_no_na, FUN = summary))
+colnames(result)[2] <- ""
+result$magnitude = NULL
+result
+```
+  
+From this table, we can see gradual increase in both the median and mean property loss with an increasing magnitude. So there does seem to be a correlation between an increasing magnitude and increasing property loss. To visualize this, let's put the data into a table:
+```{r echo = FALSE}
+result_med <- data.frame(aggregate(property_loss ~ magnitude, data = prop_loss_no_na, FUN = median))
+colnames(result_med)[2] <- "Median $"
+colnames(result_med)[1] <- "Magnitude"
+result_med
+```
+  
+and get the correlation between the two columns:  
+```{r echo = FALSE}
+cor(result_med[1], result_med[2])
+```
+  
+We can do the same for mean:  
+```{r echo = FALSE}
+result_mean <- data.frame(aggregate(property_loss ~ magnitude, data = prop_loss_no_na, FUN = mean))
+colnames(result_mean)[2] <- "Mean $"
+colnames(result_mean)[1] <- "Magnitude"
+result_mean
+```
+  
+and get their correlation:  
+```{r echo = FALSE}
+cor(result_mean[1], result_mean[2])
+```
+  
+From these, we get vastly different results compared to what we originally got.  
+A 0.79 correlation for the median and 0.84 correlation for the mean both represent a Strong Positive Correlation, meaning there is a huge relationship between the magnitude of the tornado and the damage it has done. The reason for this discrepancy is because of the data set each of the methods is looking at. The first method looks at the entire data set, meaning any lows and highs will cause a lower correlation. However, the second method looks specifically at the median and mean, which both combined do a pretty good job (without a large standard deviation from the mean) at representing the data. Since this method only looks at the representation of the data rather than the data itself, the correlation will be higher (and less affected by any outliers).  
+
+And now, we move on to the final bivariate relationship.  
+
+### Distance Traveled vs. Property Loss  
+How does the distance a tornado traveled relate to the property loss caused by said tornado? Well, there are a lot of factors to take into consideration before answering that question. Where was this happening: the urbanized regions or somewhere in the boonies? How fast was the tornado going [with larger speeds and more distance a ton of damage could be done]? So on and so forth.  
+But we don't have any of that information, just the distance. So let's try to analyze our data with what we've got.  
+
+```{r echo = FALSE}
+prop_loss_magnitude <- ggplot(prop_loss_no_na)
+prop_loss_magnitude + geom_point(aes(x = length_miles, y = property_loss), color = 'green') + labs(title = "Distance Traveled vs. Property Loss due to Tornadoes in 2022", x = "Distance Traveled (miles)", y = "Property Loss (US $)")
+```
+  
+##### Figure B.3: The relationship between the distance traveled and the property loss.  
+
+So what can we see from the scatterplot?  
+Well, visible immediately is the cluster of data points within the <span style="color:lightgreen;">20 mile and \$5.0e+07</span> box. The data points vary in area after this cluster. This points to there being a low correlation between the two variables. Let's do the math, just in case:
+```{r echo = FALSE}
+cor(prop_loss_no_na$length_miles, prop_loss_no_na$property_loss)
+```
+  
+So the data shows a 0.45, which means it is a Moderate Positive Correlation. This shows that, with all points (other than N/A) in consideration, there is somewhat of a relationship between the distance a tornado traveled and the damage done.  
+Just for fun, let's exclude the outliers in the data and focus only on the 20 mile and \$5.0e+07 region:  
+```{r echo = FALSE}
+prop_loss_limit <- prop_loss_no_na[prop_loss_no_na$property_loss <= 5.3e+07,]
+prop_loss_limit <- prop_loss_limit[prop_loss_limit$length_miles <= 20,]
+prop_loss_limit_plot <- ggplot(prop_loss_limit)
+prop_loss_limit_plot + geom_point(aes(x = length_miles, y = property_loss), color = 'green') + labs(title = "Distance Traveled vs. Property Loss due to Tornadoes in 2022 (Lower Region)", x = "Distance Traveled (miles)", y = "Property Loss (US $)")
+```
+  
+Now that we have the graph for the region, let's find the correlation for it:
+```{r echo = FALSE}
+cor(prop_loss_limit$length_miles, prop_loss_limit$property_loss)
+```
+  
+Wait, what? Why is the correlation lower? Not what you expected, right?  
+Well, the correlation, .21, is lower, because most of the data is distributed horizontally, which is linear, but with a very minimal growth. This shows that their relationship is not actually that strong, meaning for this range, the distance a tornado traveled does not have a good relation to the damage it caused.  
+
+### <span style="color:blue;">Multivariate</span> <span style="color:lightgreen;">Analysis</span>  
+As a bonus, let's analyze how several of these variables compare to my output variable:  
+```{r echo = FALSE}
+tor_multi <- ggplot(prop_loss_no_na)
+tor_multi + geom_point(aes(x = length_miles, y = property_loss, color = magnitude)) + labs(title = "Property Loss vs Distance Traveled and Magnitude", x = "Distance Traveled", y = "Property Loss", color = "Magnitude")
+```
+  
+We can see that the graph is shaped exactly how the Distance vs. Property Loss was shaped, with the added benefit of viewing how the Magnitude varied for each distance and property loss. The cluster remains at the bottom corner, but with a majority of the colors being darker (meaning most of the data in the bottom corner has a lower magnitude). When observing more closely, using the following:  
+```{r echo = FALSE}
+tor_multi_limit <- prop_loss_no_na[prop_loss_no_na$property_loss <= 5.3e+07,]
+tor_multi_limit <- prop_loss_limit[prop_loss_limit$length_miles <= 20,]
+tor_multi_limit_plot <- ggplot(prop_loss_limit)
+tor_multi_limit_plot + geom_point(aes(x = length_miles, y = property_loss, color = magnitude)) + labs(title = "Property Loss vs Distance Traveled and Magnitude (Lower Region)", x = "Distance Traveled", y = "Property Loss", color = "Magnitude")
+```
+  
+we can see that the maximum magnitude observed from these data points is 3, and indeed, there is a cluster of dark points (lower magnitude) near the lower property loss values and a more dispersed amount of lighter points (higher magnitude) with higher property loss values. 
+
+-
+Why did the data join the tornado's team?  
+Because it wanted to be part of a real $twist$ in the analysis!  
+
+# CHOICE ELEMENTS  
+The five of the choice elements I chose were (B), (C), (D), (F), and (G).  
+B.2. Hyperlink 1 is at the bottom of the BIVARIATE ANALYSES: State vs. Property Loss -- a link giving further details about the Tornado Alley in the US.  
+B.2. Hyperlink 2 is underneath BIVARIATE ANALYSES: Magnitude vs. Property Loss: Figure B.2 -- a link that can help readers understand more about the EF scale.  
+C.1. The font style was changed in the INTRODUCTION paragraph, for the variable of interest -- "estimated property loss".  
+C.2. The color of the font was changed in the INTRODUCTION paragraph, for the predictor variables -- "state", "magnitude", "distance".  
+C.3. The color of the font was changed in the BIVARIATE ANALYSES: State vs. Property Loss for the states of the Tornado Alley.  
+C.4. The color of the font was changed in the BIVARIATE ANALYSES: Magnitude vs. Property Loss for the subsections -- "About Correlation", "Back to the Analysis".  
+C.5. The color of the font was changed in the BIVARIATE ANALYSES: Distance Traveled vs. Property Loss for the smaller region -- "20 mile and $5.0e+07".  
+D.1. The floating table of contents was included to the left of the page.  
+F.1. Subset 1 was created to analyze the lower region of the boxplot distributions for BIVARIATE ANALYSES: State vs. Property Loss (second graph).  
+F.2. Subset 2 was created to analyze the region of clustered data points of the scatterplot for BIVARIATE ANALYSES: Distance Traveled vs. Property Loss (second graph).  
+F.3. Subset 3 was created to analyze the region of clustered data points of the scatterplot for BIVARIATE ANALYSIS: Property Loss vs. Distance and Magnitude (second graph).  
+G.1. The multivariate plot is in the BIVARIATE ANALYSES: Multivariate Analysis section. 
+
+# CONCLUSION  
+And that's all!  
+We are done with the analysis on Tornadoes that happened during 2022. Glad you stuck through the whirlwind of data thrown at your face.  
+We looked at the effect the state, the magnitude, and the distance traveled had on the property loss (in US$) per tornado. With data analytics, we proved the existence of the Tornado Alley, individually analyzed the data for each magnitude and saw that there was indeed an increase in property loss with an increasing magnitude, and understood that, for the most part, that with more distance covered there is more property loss.  
+But it was easy to tell that the analysis between distance and property loss couldn't be done properly - we didn't have enough data to know if the correlation between the two variables could have been higher or worse.  
+Future research for this project could include the speed of the tornado, the specific location (city, for example), the actual count of injuries and fatalities (not just a boolean yes or no value), and such.
+
+### References  
+https://www.vercounty.org/news-item/tornado-watches-vs-warnings/  
+This is where I got the image from for the introduction.  
+https://www.spc.noaa.gov/wcm/#data  
+This is the NOAA Storm Prediction Center's website, and where the data was acquired from.  
+https://en.wikipedia.org/wiki/Tornado_outbreak_of_March_5–7,_2022  
+This is the Wikipedia article that dives deeper into the most damaging tornado of 2022 (out of these 591 tornadoes).  
+https://en.wikipedia.org/wiki/Tornado_Alley  
+This is more about the Tornado Alley, which I analyzed in the State vs. Property Loss section.  
+https://www.weather.gov/oun/efscale#  
+This is an article from the National Weather Service, which explains more about the Enhanced Fujita (EF) scale which tornadoes are measured with.

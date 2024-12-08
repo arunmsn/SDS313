@@ -1,0 +1,184 @@
+---
+title: "More Data Wrangling"
+output: 
+  html_document:
+    toc: true
+    toc_float: true
+    toc_depth: 3
+---
+
+In this worksheet, we will:
+
+-   Recode some variables for easier visualizations
+-   Discuss how to handle missing values
+
+## 0. Dataset and Library
+
+We will again consider the built-in dataset `txhousing`, available in the `tidyverse` package:
+
+```{r}
+# Upload the package
+library(tidyverse)
+
+# Take a look at the first few rows of the dataset
+head(txhousing) 
+```
+
+Let's further manipulate this dataset and create visualizations.
+
+## 1. Recoding variables
+
+There are many reasons why we may want to recode some variables. This list is not exhaustive!
+
+### a. Log-transformation
+
+When a variable is highly skewed, it might be difficult to "see" the variation:
+
+```{r}
+# Check this boxplot
+txhousing |>
+  ggplot() +
+  geom_boxplot(aes(x = sales))
+```
+
+For distributions of numeric variables that are heavily right-skewed like this one we can apply a log-transformation:
+
+```{r}
+txhousing |>
+  # Transform the sales variable
+  mutate(log_sales = log(sales)) |>
+  # Use this new variable in a ggplot
+  ggplot() +
+  geom_boxplot(aes(x = log_sales))
+```
+
+What is the unit of this new variable?
+
+**Write sentences here.**
+
+Note that this log-transformation only works for right-skewed data and can only be applied to values greater than 0.
+
+### b. Numeric variable considered as a categorical variable
+
+Some variables are coded numerically but would be better to represent as a category:
+
+```{r}
+# Check this plot
+txhousing |>
+  ggplot(aes(x = year, y = sales)) +
+  geom_smooth(se = FALSE)
+
+txhousing |>
+  # Color by year as a numeric variable
+  ggplot(aes(x = year, y = sales, color = month)) +
+  geom_smooth(se = FALSE)
+
+txhousing |>
+  # Consider year as a factor (a type of categorical variable)
+  mutate(month_fct = as.factor(month)) |>
+  # Color by year as a categorical variable
+  ggplot(aes(x = year, y = sales, color = month_fct)) +
+  geom_smooth(se = FALSE)
+```
+
+The `as.numeric()` would do the opposite: make a variable numeric.
+
+### c. Recoding values based on conditions
+
+We can recode some values based on conditions with `case_when()`:
+
+```{r}
+txhousing |>
+  # Recode months into 4 quarters
+  mutate(month_cat = case_when(
+    month <= 3 ~ "1st quarter",
+    4 <= month & month <= 6 ~ "2nd quarter",
+    7 <= month & month <= 9 ~ "3rd quarter",
+    10 <= month & month <= 12 ~ "4th quarter")) |>
+  # Use this new variable in a ggplot
+  ggplot(aes(x = year, y = sales, color = month_cat)) +
+  geom_smooth(se = FALSE)
+```
+
+Or we can recode each value with `recode()`:
+
+```{r}
+txhousing |>
+  # Recode months with Spanish names
+  mutate(month_es = recode(month,
+                           `1` = "enero", `2` = "febrero", `3` = "marzo",
+                           `4` = "abril", `5` = "mayo", `6` = "junio",
+                           `7` = "julio", `8` = "agosto", `9` = "septiembre",
+                           `10` = "octubre", `11` = "noviembre", `12` = "diciembre")) |>
+  # You can control in which order the levels of a factor variable would appear
+  mutate(month_es = factor(month_es, 
+                           levels = c("enero", "febrero", "marzo", 
+                                      "abril", "mayo", "junio",
+                                      "julio", "agosto", "septiembre", 
+                                      "octubre", "noviembre", "diciembre"))) |>
+  # Use this new variable in a ggplot
+  ggplot(aes(x = month_es, y = sales)) +
+  geom_bar(stat = "summary", fun = sum)
+```
+
+## 2. Handling missing values
+
+We talked about removing missing values in calculations with `na.rm = TRUE` for example. But simply ignoring missing data without trying to understand why the data might be missing could introduce some bias in our visualizations and statistics.
+
+### a. Missing values never go unnoticed
+
+When calculating statistics:
+
+```{r}
+txhousing |>
+  # Find mean and correlation
+  summarize(mean_sales = mean(sales),
+            correlation = cor(sales,listings))
+```
+
+When making visualizations:
+
+```{r}
+# Check the Warning message
+txhousing |>
+  ggplot() +
+  geom_boxplot(aes(x = sales))
+```
+
+Before omitting the missing values, we should check how many values are missing and if there is any pattern in the missing data:
+
+```{r}
+txhousing |> 
+  # Count missing values for each variable
+  summarize_all(~ sum(is.na(.)))
+```
+
+```{r}
+txhousing |>
+  # Split by year/month
+  group_by(year,month) |>
+  # Count missing values for each variable
+  summarize_all(~ sum(is.na(.)))
+```
+
+Note that it looks like more recent data is not missing as much as older data.
+
+```{r}
+txhousing |>
+  # Split by city
+  group_by(city) |>
+  # Count missing values for each variable
+  summarize_all(~ sum(is.na(.)))
+```
+
+Some cities don't have any data missing, others have only a few, and others have a lot!
+
+### b. Values that were omitted
+
+If we have monthly data in `txhousing` for 46 cities, from 2000 to 2015, how many rows should we expect?
+
+```{r}
+
+```
+
+The missing rows are due to the data only being reported until July of 2015. It would not make sense to compare yearly data in 2015 to other years.

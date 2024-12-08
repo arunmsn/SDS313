@@ -1,0 +1,380 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[
+]{article}
+\usepackage{amsmath,amssymb}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\usepackage[margin=1in]{geometry}
+\usepackage{graphicx}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+% Set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\ifLuaTeX
+  \usepackage{selnolig}  % disable illegal ligatures
+\fi
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  pdftitle={P1 - An Analysis on the Effects of Tornadoes in 2022},
+  pdfauthor={Arun Mahadevan Sathia Narayanan \textbar{} as235872 \textbar{} arunmsnarayanan@utexas.edu},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\title{P1 - An Analysis on the Effects of Tornadoes in 2022}
+\author{Arun Mahadevan Sathia Narayanan \textbar{} as235872 \textbar{}
+\href{mailto:arunmsnarayanan@utexas.edu}{\nolinkurl{arunmsnarayanan@utexas.edu}}}
+\date{Date Published: 2024-09-24}
+
+\begin{document}
+\maketitle
+
+{
+\setcounter{tocdepth}{2}
+\tableofcontents
+}
+\begin{figure}
+\centering
+\includegraphics{https://www.vercounty.org/wp-content/uploads/2020/09/tornado-banner.jpg}
+\caption{Figure I.1: A tornado caused by a supercell. Source:
+(\url{https://www.vercounty.org/news-item/tornado-watches-vs-warnings/})}
+\end{figure}
+
+\section{INTRODUCTION}\label{introduction}
+
+Welcome! Hold onto your hat --- this session might just sweep you off
+your feet, but don't worry, I'll keep it all under control\ldots{}
+mostly!
+
+As the title states, the data set being analyzed in this report is the
+tornadoes of 2022. More specifically, we look at the magnitude of the
+tornadoes, if there were fatalities/injuries, the estimated property
+loss (in US dollars), and the size.
+
+The data was retrieved from the NOAA
+(\url{https://www.spc.noaa.gov/wcm/\#data}).\\
+The variable of interest (dependent variable) that I will be exploring
+in this report is the estimated property loss, with the predictor
+variables (independent variables) being the state the tornado was in,
+the magnitude of the tornado, and the distance the tornado traveled. We
+will be analyzing these for the 591 tornadoes the data was collected
+for.
+
+And yes, you have to grit your teeth and push your way through the
+ridiculous puns.
+
+\section{OUTCOME VARIABLE}\label{outcome-variable}
+
+Now that we have addressed what exactly to look at, let's visualize the
+dataset we have to analyze:
+
+\includegraphics{Tornadoes_files/figure-latex/unnamed-chunk-1-1.pdf}
+
+\subparagraph{Figure O.1: A boxplot visualization of the spread of
+property loss
+data.}\label{figure-o.1-a-boxplot-visualization-of-the-spread-of-property-loss-data.}
+
+Looking at this boxplot, we can see that many of the tornadoes have done
+property damage in the lower half of the data. To better analyze this,
+let's see the actual numbers.
+
+\begin{verbatim}
+##      Min.   1st Qu.    Median      Mean   3rd Qu.      Max. 
+##      1000     37500    100000   2099165    347500 220000000
+\end{verbatim}
+
+\subparagraph{Figure O.2: The number-view of the spread of the property
+loss
+data.}\label{figure-o.2-the-number-view-of-the-spread-of-the-property-loss-data.}
+
+From these numbers we can see the hard data:\\
+The values all the way up until the 3rd Quartile (meaning 75\% of the
+total data) go only until \$347,500. The average property loss caused by
+these 591 tornadoes is \$2,099,165 (and of course, this is mainly due to
+the mean being high affected by the outliers in the data). The maximum
+damage caused by any tornado in the United States in 2022 was
+\$220,000,000.
+
+\begin{itemize}
+\tightlist
+\item
+  Why did the tornado say to the data scientist?\\
+  ``Hold on tight, I'm about to cause a \(category \space shift\) in
+  your results!''
+\end{itemize}
+
+\section{BIVARIATE ANALYSES}\label{bivariate-analyses}
+
+Now, we get to the good stuff.
+
+Since we got an understanding of what exactly we're looking at here,
+let's see how exactly property loss is related to the states, the
+magnitudes, and the distances traveled.
+
+\subsubsection{State vs.~Property Loss}\label{state-vs.-property-loss}
+
+\includegraphics{Tornadoes_files/figure-latex/unnamed-chunk-3-1.pdf}
+
+\subparagraph{Figure B.1: The relationship between the state and the
+property
+loss.}\label{figure-b.1-the-relationship-between-the-state-and-the-property-loss.}
+
+Here, we have a boxplot made for the property loss per state. From the
+visualization, we can see that a large cluster of the data for each
+state is in the lower range of the data. The largest property loss, as
+observed from the boxplot distributions, was in Iowa (IA). If you want
+to know more about this tornado, you can go here:
+(\url{https://en.wikipedia.org/wiki/Tornado_outbreak_of_March_5–7,_2022}).
+To take a closer look at the data for the lower ranges, let's set a
+bound on the property loss value to \$53,000,000.
+
+\includegraphics{Tornadoes_files/figure-latex/unnamed-chunk-4-1.pdf}
+
+From this graph, we can see the distribution of the data a little
+better. Here, we can see that Kansas (KS) had the largest spread (though
+Michigan (MI) had the largest property loss, it is the only data point,
+and thus has no spread), with a minimum of around \$10,000,000 and a
+maximum of around \$42,000,000.
+
+The main reason for performing this state comparison is to analyze
+whether or not the Tornado Alley is just a myth or not. The Tornado
+Alley consists of Texas (TX), Oklahoma (OK), Kansas (KS), Nebraska (NE),
+and South Dakota (SD) {[}the South Dakota was all N/A and was thus
+excluded from the boxplot distributions{]}. When we look at these states
+specifically (again, excluding SD) we see that from the lower portions
+Texas is larger than the other data points, Oklahoma not so much,
+Nebraska has a distribution a bit higher than the other states, and
+Kansas, as we previously discussed, has the largest data spread. When
+comparing these states to the others, the Tornado Alley seems to be a
+realistic area for a larger number of tornadoes. If you want to learn
+more about the Tornado Alley, go here:
+(\url{https://en.wikipedia.org/wiki/Tornado_Alley}).
+
+\subsubsection{Magnitude vs.~Property
+Loss}\label{magnitude-vs.-property-loss}
+
+The next bivariate distribution to analyze the relationship between the
+magnitude of the tornado and the property loss incurred.
+
+\includegraphics{Tornadoes_files/figure-latex/unnamed-chunk-5-1.pdf}
+
+\subparagraph{Figure B.2: The relationship between the magnitude and the
+property
+loss.}\label{figure-b.2-the-relationship-between-the-magnitude-and-the-property-loss.}
+
+We can also make this a boxplot, and from the data, we can analyze that
+the magnitude which cased the largest property loss was indeed a
+magnitude 4 tornado. But we can visualize that the property loss done by
+the magnitude 3's are less than the property loss done by the magnitude
+2's. To properly analyze the relationship, let's find the correlation:
+
+\begin{verbatim}
+## [1] 0.3716175
+\end{verbatim}
+
+\paragraph{About Correlation}\label{about-correlation}
+
+How correlation works is that the decimal value has to be between -1 and
+1, with -1 being a perfectly negative correlation and 1 being a
+perfectly positive correlation. Correlation is defined as ``the extent
+to which to variables are linearly related''. Note that correlation does
+not imply causation. Just because two variables are related to each
+other does not mean one caused the other. For example, if a study showed
+that Ice Cream Sales and Drowning Deaths have a strong positive
+correlation, it does not mean that simply because of more ice cream
+being sold, more people drowned (that makes no sense!). Instead, there
+would be a third variable, known as a confounding variable, which
+influences both the dependent and independent variables. In this case,
+the confounding variable would be summer heat; with more heat, more ice
+cream will be sold and more people will go swimming. Thus, just because
+more ice cream was sold does not mean more people would die by drowning.
+Correlation does not imply causation.\\
+The distribution of correlation is as follows:
+
+\begin{verbatim}
+c = -1                  Perfectly Negative
+-1 < c <= -0.7          Strong Negative
+-0.7 < c <= -0.4        Moderate Negative
+-0.4 < c < 0            Weak Negative
+c = 0                   No correlation
+0 < c < 0.4             Weak Positive
+0.4 <= c < 0.7          Moderate Positive
+0.7 <= c < 1            Strong Positive
+c = 1                   Perfectly Positive
+\end{verbatim}
+
+\paragraph{Back to the analysis}\label{back-to-the-analysis}
+
+Here, the correlation is shown to be a little over 0.37, which is
+considered a Weak Positive correlation. From this, we can understand
+that magnitude does affect the property loss, but only to a limited
+degree.\\
+But what if we take them apart individually? What can we see? Well,
+let's first compare the number summaries of property losses for each
+magnitude.
+
+\begin{verbatim}
+##          Min.     1st Qu.      Median        Mean     3rd Qu.        Max.
+## 1      1000.0     25000.0     60000.0    157519.2    150000.0   5000000.0
+## 2      2000.0    218750.0    500000.0   3129930.6   1000000.0 150000000.0
+## 3    100000.0    450000.0   1500000.0  12348076.9  20000000.0  50175000.0
+## 4   5900000.0  21450000.0  37000000.0  87633333.3 128500000.0 220000000.0
+\end{verbatim}
+
+From this table, we can see gradual increase in both the median and mean
+property loss with an increasing magnitude. So there does seem to be a
+correlation between an increasing magnitude and increasing property
+loss. To visualize this, let's put the data into a table:
+
+\begin{verbatim}
+##   Magnitude Median $
+## 1         1  6.0e+04
+## 2         2  5.0e+05
+## 3         3  1.5e+06
+## 4         4  3.7e+07
+\end{verbatim}
+
+and get the correlation between the two columns:
+
+\begin{verbatim}
+##            Median $
+## Magnitude 0.7946369
+\end{verbatim}
+
+We can do the same for mean:
+
+\begin{verbatim}
+##   Magnitude     Mean $
+## 1         1   157519.2
+## 2         2  3129930.6
+## 3         3 12348076.9
+## 4         4 87633333.3
+\end{verbatim}
+
+and get their correlation:
+
+\begin{verbatim}
+##              Mean $
+## Magnitude 0.8443055
+\end{verbatim}
+
+From these, we get vastly different results compared to what we
+originally got.\\
+A 0.79 correlation for the median and 0.84 correlation for the mean both
+represent a Strong Positive Correlation, meaning there is a huge
+relationship between the magnitude of the tornado and the damage it has
+done. The reason for this discrepancy is because of the data set each of
+the methods is looking at. The first method looks at the entire data
+set, meaning any lows and highs will cause a lower correlation. However,
+the second method looks specifically at the median and mean, which both
+combined do a pretty good job (without a large standard deviation from
+the mean) at representing the data. Since this method only looks at the
+representation of the data rather than the data itself, the correlation
+will be higher (and less affected by any outliers).
+
+And now, we move on to the final bivariate relationship.
+
+\subsubsection{Distance Traveled vs.~Property
+Loss}\label{distance-traveled-vs.-property-loss}
+
+How does the distance a tornado traveled relate to the property loss
+caused by said tornado? Well, there are a lot of factors to take into
+consideration before answering that question. Where was this happening:
+the urbanized regions or somewhere in the boonies? How fast was the
+tornado going {[}with larger speeds and more distance a ton of damage
+could be done{]}? So on and so forth.\\
+But we don't have any of that information, just the distance. So let's
+try to analyze our data with what we've got.
+
+\includegraphics{Tornadoes_files/figure-latex/unnamed-chunk-12-1.pdf}
+
+\subparagraph{Figure B.3: The relationship between the distance traveled
+and the property
+loss.}\label{figure-b.3-the-relationship-between-the-distance-traveled-and-the-property-loss.}
+
+So what can we see from the scatterplot?\\
+Well, visible immediately is the cluster of data points within the 20
+mile and \$5.0e+07 box. The data points vary in area after this cluster.
+This points to there being a low correlation between the two variables.
+Let's do the math, just in case:
+
+\begin{verbatim}
+## [1] 0.4469718
+\end{verbatim}
+
+So the data shows a 0.45, which means it is a Moderate Positive
+Correlation. This shows that, with all points (other than N/A) in
+consideration, there is somewhat of a relationship between the distance
+a tornado traveled and the damage done.\\
+Just for fun, let's exclude the outliers in the data and focus only on
+the 20 mile and \$5.0e+07 region:\\
+\includegraphics{Tornadoes_files/figure-latex/unnamed-chunk-14-1.pdf}
+
+Now that we have the graph for the region, let's find the correlation
+for it:
+
+\begin{verbatim}
+## [1] 0.2077407
+\end{verbatim}
+
+Wait, what? Why is the correlation lower? Not what you expected,
+right?\\
+Well, the correlation, .21, is lower, because most of the data is
+distributed horizontally, which is linear, but with a very minimal
+growth. This shows that their relationship is not actually that strong,
+meaning for this range, the distance a tornado traveled does not have a
+good relation to the damage it caused.
+
+\begin{itemize}
+\tightlist
+\item
+  Why did the data join the tornado's team?\\
+  Because it wanted to be part of a real \(twist\) in the analysis!
+\end{itemize}
+
+\end{document}
