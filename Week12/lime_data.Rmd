@@ -1,0 +1,112 @@
+---
+title: "Lime Scooter Data"
+author: "Arun Mahadevan Sathia Narayanan | Eshaan Singh | Prady Kandi"
+date: 'Date Published: `r Sys.Date()`'
+output:
+  html_document:
+    theme: darkly
+    toc: true
+    toc_float:
+      collapsed: true
+---
+
+```{r echo = FALSE}
+library(tidyverse)
+library(ggplot2)
+library(stringr)
+library(knitr)
+library(lubridate)
+
+lime_data <- read.csv("lime_data.csv")
+
+lime_data$Date <- mdy(lime_data$Date)
+
+# First Graph: Lime Data by Date with Curve Fitting
+ggplot(lime_data) +
+  geom_point(aes(x = Date, y = Count, color = Count), show.legend = FALSE) +
+  geom_smooth(aes(x = Date, y = Count), method = "loess", color = "green", se = FALSE) + # Added curve fitting
+  scale_x_date(date_breaks = "1 day", date_labels = "%Y-%m-%d") +
+  labs(title = "Lime Data by Date", x = "Date", y = "Count") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  scale_color_gradient(low = "black", high = "green")
+
+lime_data <- lime_data |>
+  mutate(Weekday = wday(Date, label = TRUE)) |>
+  mutate(YearWeek = week(Date)) |>
+  mutate(Earnings = 0.235 * 10 * Count)
+
+# Second Graph: Lime Data by Weekday
+ggplot(lime_data) +
+  geom_col(aes(x = Weekday, y = Count, fill = Weekday), show.legend = FALSE) +
+  labs(title = "Lime Data by Weekday", x = "Weekday", y = "Count") + 
+  scale_fill_brewer(palette = "YlGn")
+
+# Third Graph: Lime Date - Earnings by Day with Curve Fitting
+ggplot(lime_data) +
+  geom_point(aes(x = Date, y = Earnings, color = Earnings), show.legend = FALSE) + 
+  geom_smooth(aes(x = Date, y = Earnings), method = "loess", color = "green", se = FALSE) + # Added curve fitting
+  scale_x_date(date_breaks = "1 day", date_labels = "%Y-%m-%d") +
+  labs(title = "Lime Date - Earnings by Day", x = "Date", y = "Earnings ($)") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  scale_color_gradient(low = "black", high = "green")
+```
+
+```{r echo = FALSE}
+library(tidyverse)
+library(ggplot2)
+library(stringr)
+library(knitr)
+library(lubridate)
+
+# Load the data
+lime_data <- read.csv("lime_data.csv")
+lime_data$Date <- mdy(lime_data$Date)
+
+# Fit a linear model for Count
+count_model <- lm(Count ~ Date, data = lime_data)
+
+# Create a new data frame for future dates
+future_dates <- data.frame(Date = seq(max(lime_data$Date) + 1, by = "day", length.out = 30))
+
+# Predict future Counts
+future_counts <- predict(count_model, newdata = future_dates)
+future_dates$Count <- future_counts
+
+# Combine with original data for plotting
+predicted_data <- bind_rows(lime_data, future_dates)
+
+# Plot original and predicted Count
+ggplot(predicted_data) +
+  geom_point(aes(x = Date, y = Count, color = Count), show.legend = FALSE) +
+  geom_smooth(aes(x = Date, y = Count), method = "loess", color = "green", se = FALSE) +
+  geom_line(data = future_dates, aes(x = Date, y = Count), color = "red", linetype = "dashed") + # Future predictions
+  scale_x_date(date_breaks = "2 days", date_labels = "%Y-%m-%d") +
+  labs(title = "Predicted Lime Data Count", x = "Date", y = "Count") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  scale_color_gradient(low = "black", high = "green")
+
+# Fit a linear model for Earnings
+lime_data <- lime_data |>
+  mutate(Earnings = 0.235 * 10 * Count)
+
+earnings_model <- lm(Earnings ~ Date, data = lime_data)
+
+# Predict future Earnings
+future_earnings <- predict(earnings_model, newdata = future_dates)
+future_dates$Earnings <- future_earnings
+
+# Combine with original data for plotting
+predicted_earnings_data <- bind_rows(lime_data, future_dates)
+
+# Plot original and predicted Earnings
+ggplot(predicted_earnings_data) +
+  geom_point(aes(x = Date, y = Earnings, color = Earnings), show.legend = FALSE) +
+  geom_smooth(aes(x = Date, y = Earnings), method = "loess", color = "green", se = FALSE) +
+  geom_line(data = future_dates, aes(x = Date, y = Earnings), color = "red", linetype = "dashed") + # Future predictions
+  scale_x_date(date_breaks = "2 days", date_labels = "%Y-%m-%d") +
+  labs(title = "Predicted Lime Earnings", x = "Date", y = "Earnings ($)") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  scale_color_gradient(low = "black", high = "green")
+
+(median(lime_data$Earnings)*5*7*52*50)-(20*250*365)
+```

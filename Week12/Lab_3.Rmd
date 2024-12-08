@@ -1,0 +1,72 @@
+---
+title: "Lab 3"
+author: "Arun Mahadevan Sathia Narayanan | Eshaan Singh | Prady Kandi"
+date: 'Date Published: `r Sys.Date()`'
+output:
+  html_document:
+    theme: journal
+    toc: true
+    toc_float:
+      collapsed: true
+---
+
+```{r}
+library(ggplot2)
+library(stringr)
+library(RColorBrewer)
+library(knitr)
+library(tidyverse)
+data <- read.csv("job_postings.csv")
+data <- data |>
+  select(-job_link)
+```
+# Analysis 1
+```{r}
+onsite <- data |>
+  filter(job_type == "Onsite")
+
+onsite_US <- onsite |> 
+  filter(search_country == "United States") |>
+  mutate(state = str_sub(job_location, start = nchar(job_location) - 2, end = nchar(job_location))) |>
+  filter(str_detect(state, pattern = "[A-Z]"))
+ggplot(onsite_US) + geom_bar(aes(y = state, fill = job_level)) + labs(title = "Job Level by US State", y = "State", x = "Count")
+```
+  
+For the first graph, we filtered based on many different categories like the job level which was mid senior, job type which was onsite and the job country which was united states. From there we used the job location and used regex and substring to filter out the state like TX or CA and we filter out the number of jobs per state and used that to sort top states.  
+
+On my end, I was able to fill each bar with the job level to show how many associates positions were open and how many mid-senior positions were open.  
+
+In this bar plot, we sorted the amount of job offers in the US by state. As expected, the states that had the biggest amount of job offers were the largest states by population, with California having the largest amount of job offers at around 1000. Texas and Virginia had the second and third most job offers, and states like Alaska, Wyoming, and West Virginia had the least offers. It was intriguing how Virginia had the third most offers, while only ranking 12th in population.
+
+Top 10 States Hiring: 
+```{r}
+kable(onsite_US |> 
+  group_by(state) |> 
+  summarise(count = n()) |> 
+  arrange(desc(count)) |>
+  head(10))
+```
+# Analysis 2
+```{r}
+data |>
+  count(company) |>
+  arrange(desc(n)) |>
+  mutate(company = factor(company, levels = company)) |>
+  head(10) |>
+  ggplot() + 
+    geom_col(aes(y = company, x = n, fill = company), show.legend = FALSE) + 
+    labs(title = "Top 10 Most Hiring Companies", y = "Company", x = "Count") + 
+    scale_fill_brewer(palette = "Spectral")
+```
+  
+This bar plot contains the 10 companies that are offering the most jobs across the US, Canada, and other countries. Jobs for Humanity has by far the largest amount of jobs offered at around 700, while Recruiting from Scratch is second at nearly 400 jobs. The bar plot helps us show how extremes at the upper end can skew the mean amount of jobs offered per company, as several big corporations offer a majority of the available jobs.  
+
+```{r}
+data |> 
+  count(company) |> 
+  arrange(desc(n)) |> 
+  head(10) |> 
+  table()
+```
+
+When making the table for the above data, we filtered the data based on the most frequently recruiting and sorted it by the top 10. From that, we used the company and mapped it out using a table. 
