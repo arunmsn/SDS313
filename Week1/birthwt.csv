@@ -1,0 +1,190 @@
+low,age,lwt,race,smoke,ptl,ht,ui,ftv,bwt
+no,19,182,black,no,no,no,yes,none,2523
+no,33,155,other,no,no,no,no,two or more,2551
+no,20,105,white,yes,no,no,no,one,2557
+no,21,108,white,yes,no,no,yes,two or more,2594
+no,18,107,white,yes,no,no,yes,none,2600
+no,21,124,other,no,no,no,no,none,2622
+no,22,118,white,no,no,no,no,one,2637
+no,17,103,other,no,no,no,no,one,2637
+no,29,123,white,yes,no,no,no,one,2663
+no,26,113,white,yes,no,no,no,none,2665
+no,19,95,other,no,no,no,no,none,2722
+no,19,150,other,no,no,no,no,one,2733
+no,22,95,other,no,no,yes,no,none,2751
+no,30,107,other,no,yes,no,yes,two or more,2750
+no,18,100,white,yes,no,no,no,none,2769
+no,18,100,white,yes,no,no,no,none,2769
+no,15,98,black,no,no,no,no,none,2778
+no,25,118,white,yes,no,no,no,two or more,2782
+no,20,120,other,no,no,no,yes,none,2807
+no,28,120,white,yes,no,no,no,one,2821
+no,32,121,other,no,no,no,no,two or more,2835
+no,31,100,white,no,no,no,yes,two or more,2835
+no,36,202,white,no,no,no,no,one,2836
+no,28,120,other,no,no,no,no,none,2863
+no,25,120,other,no,no,no,yes,two or more,2877
+no,28,167,white,no,no,no,no,none,2877
+no,17,122,white,yes,no,no,no,none,2906
+no,29,150,white,no,no,no,no,two or more,2920
+no,26,168,black,yes,no,no,no,none,2920
+no,17,113,black,no,no,no,no,one,2920
+no,17,113,black,no,no,no,no,one,2920
+no,24,90,white,yes,yes,no,no,one,2948
+no,35,121,black,yes,yes,no,no,one,2948
+no,25,155,white,no,no,no,no,one,2977
+no,25,125,black,no,no,no,no,none,2977
+no,29,140,white,yes,no,no,no,two or more,2977
+no,19,138,white,yes,no,no,no,two or more,2977
+no,27,124,white,yes,no,no,no,none,2922
+no,31,215,white,yes,no,no,no,two or more,3005
+no,33,109,white,yes,no,no,no,one,3033
+no,21,185,black,yes,no,no,no,two or more,3042
+no,19,189,white,no,no,no,no,two or more,3062
+no,23,130,black,no,no,no,no,one,3062
+no,21,160,white,no,no,no,no,none,3062
+no,18,90,white,yes,no,no,yes,none,3062
+no,18,90,white,yes,no,no,yes,none,3062
+no,32,132,white,no,no,no,no,two or more,3080
+no,19,132,other,no,no,no,no,none,3090
+no,24,115,white,no,no,no,no,two or more,3090
+no,22,85,other,yes,no,no,no,none,3090
+no,22,120,white,no,no,yes,no,one,3100
+no,23,128,other,no,no,no,no,none,3104
+no,22,130,white,yes,no,no,no,none,3132
+no,30,95,white,yes,no,no,no,two or more,3147
+no,19,115,other,no,no,no,no,none,3175
+no,16,110,other,no,no,no,no,none,3175
+no,21,110,other,yes,no,no,yes,none,3203
+no,30,153,other,no,no,no,no,none,3203
+no,20,103,other,no,no,no,no,none,3203
+no,17,119,other,no,no,no,no,none,3225
+no,17,119,other,no,no,no,no,none,3225
+no,23,119,other,no,no,no,no,two or more,3232
+no,24,110,other,no,no,no,no,none,3232
+no,28,140,white,no,no,no,no,none,3234
+no,26,133,other,yes,yes,no,no,none,3260
+no,20,169,other,no,yes,no,yes,one,3274
+no,24,115,other,no,no,no,no,two or more,3274
+no,28,250,other,yes,no,no,no,two or more,3303
+no,20,141,white,no,yes,no,yes,one,3317
+no,22,158,black,no,yes,no,no,two or more,3317
+no,22,112,white,yes,yes,no,no,none,3317
+no,31,150,other,yes,no,no,no,two or more,3321
+no,23,115,other,yes,no,no,no,one,3331
+no,16,112,black,no,no,no,no,none,3374
+no,16,135,white,yes,no,no,no,none,3374
+no,18,229,black,no,no,no,no,none,3402
+no,25,140,white,no,no,no,no,one,3416
+no,32,134,white,yes,yes,no,no,two or more,3430
+no,20,121,black,yes,no,no,no,none,3444
+no,23,190,white,no,no,no,no,none,3459
+no,22,131,white,no,no,no,no,one,3460
+no,32,170,white,no,no,no,no,none,3473
+no,30,110,other,no,no,no,no,none,3544
+no,20,127,other,no,no,no,no,none,3487
+no,23,123,other,no,no,no,no,none,3544
+no,17,120,other,yes,no,no,no,none,3572
+no,19,105,other,no,no,no,no,none,3572
+no,23,130,white,no,no,no,no,none,3586
+no,36,175,white,no,no,no,no,none,3600
+no,22,125,white,no,no,no,no,one,3614
+no,24,133,white,no,no,no,no,none,3614
+no,21,134,other,no,no,no,no,two or more,3629
+no,19,235,white,yes,no,yes,no,none,3629
+no,25,95,white,yes,yes,no,yes,none,3637
+no,16,135,white,yes,no,no,no,none,3643
+no,29,135,white,no,no,no,no,one,3651
+no,29,154,white,no,no,no,no,one,3651
+no,19,147,white,yes,no,no,no,none,3651
+no,19,147,white,yes,no,no,no,none,3651
+no,30,137,white,no,no,no,no,one,3699
+no,24,110,white,no,no,no,no,one,3728
+no,19,184,white,yes,no,yes,no,none,3756
+no,24,110,other,no,yes,no,no,none,3770
+no,23,110,white,no,no,no,no,one,3770
+no,20,120,other,no,no,no,no,none,3770
+no,25,241,black,no,no,yes,no,none,3790
+no,30,112,white,no,no,no,no,one,3799
+no,22,169,white,no,no,no,no,none,3827
+no,18,120,white,yes,no,no,no,two or more,3856
+no,16,170,black,no,no,no,no,two or more,3860
+no,32,186,white,no,no,no,no,two or more,3860
+no,18,120,other,no,no,no,no,one,3884
+no,29,130,white,yes,no,no,no,two or more,3884
+no,33,117,white,no,no,no,yes,one,3912
+no,20,170,white,yes,no,no,no,none,3940
+no,28,134,other,yes,no,no,no,one,3941
+no,14,135,white,no,no,no,no,none,3941
+no,28,130,other,no,no,no,no,none,3969
+no,25,120,white,no,no,no,no,two or more,3983
+no,16,95,other,yes,no,no,no,one,3997
+no,20,158,white,no,no,no,no,one,3997
+no,26,160,other,yes,no,no,no,none,4054
+no,21,115,white,no,no,no,no,one,4054
+no,22,129,white,no,no,no,no,none,4111
+no,25,130,white,no,no,no,no,two or more,4153
+no,31,120,white,no,no,no,no,two or more,4167
+no,35,170,white,no,yes,no,no,one,4174
+no,19,120,white,yes,no,no,no,none,4238
+no,24,116,white,no,no,no,no,one,4593
+no,45,123,white,no,no,no,no,one,4990
+yes,28,120,other,yes,yes,no,yes,none,709
+yes,29,130,white,no,no,no,yes,two or more,1021
+yes,34,187,black,yes,no,yes,no,none,1135
+yes,25,105,other,no,yes,yes,no,none,1330
+yes,25,85,other,no,no,no,yes,none,1474
+yes,27,150,other,no,no,no,no,none,1588
+yes,23,97,other,no,no,no,yes,one,1588
+yes,24,128,black,no,yes,no,no,one,1701
+yes,24,132,other,no,no,yes,no,none,1729
+yes,21,165,white,yes,no,yes,no,one,1790
+yes,32,105,white,yes,no,no,no,none,1818
+yes,19,91,white,yes,yes,no,yes,none,1885
+yes,25,115,other,no,no,no,no,none,1893
+yes,16,130,other,no,no,no,no,one,1899
+yes,25,92,white,yes,no,no,no,none,1928
+yes,20,150,white,yes,no,no,no,two or more,1928
+yes,21,200,black,no,no,no,yes,two or more,1928
+yes,24,155,white,yes,yes,no,no,none,1936
+yes,21,103,other,no,no,no,no,none,1970
+yes,20,125,other,no,no,no,yes,none,2055
+yes,25,89,other,no,yes,no,no,one,2055
+yes,19,102,white,no,no,no,no,two or more,2082
+yes,19,112,white,yes,no,no,yes,none,2084
+yes,26,117,white,yes,yes,no,no,none,2084
+yes,24,138,white,no,no,no,no,none,2100
+yes,17,130,other,yes,yes,no,yes,none,2125
+yes,20,120,black,yes,no,no,no,two or more,2126
+yes,22,130,white,yes,yes,no,yes,one,2187
+yes,27,130,black,no,no,no,yes,none,2187
+yes,20,80,other,yes,no,no,yes,none,2211
+yes,17,110,white,yes,no,no,no,none,2225
+yes,25,105,other,no,yes,no,no,one,2240
+yes,20,109,other,no,no,no,no,none,2240
+yes,18,148,other,no,no,no,no,none,2282
+yes,18,110,black,yes,yes,no,no,none,2296
+yes,20,121,white,yes,yes,no,yes,none,2296
+yes,21,100,other,no,yes,no,no,two or more,2301
+yes,26,96,other,no,no,no,no,none,2325
+yes,31,102,white,yes,yes,no,no,one,2353
+yes,15,110,white,no,no,no,no,none,2353
+yes,23,187,black,yes,no,no,no,one,2367
+yes,20,122,black,yes,no,no,no,none,2381
+yes,24,105,black,yes,no,no,no,none,2381
+yes,15,115,other,no,no,no,yes,none,2381
+yes,23,120,other,no,no,no,no,none,2410
+yes,30,142,white,yes,yes,no,no,none,2410
+yes,22,130,white,yes,no,no,no,one,2410
+yes,17,120,white,yes,no,no,no,two or more,2414
+yes,23,110,white,yes,yes,no,no,none,2424
+yes,17,120,black,no,no,no,no,two or more,2438
+yes,26,154,other,no,yes,yes,no,one,2442
+yes,20,105,other,no,no,no,no,two or more,2450
+yes,26,190,white,yes,no,no,no,none,2466
+yes,14,101,other,yes,yes,no,no,none,2466
+yes,28,95,white,yes,no,no,no,two or more,2466
+yes,14,100,other,no,no,no,no,two or more,2495
+yes,23,94,other,yes,no,no,no,none,2495
+yes,17,142,black,no,no,yes,no,none,2495
+yes,21,130,white,yes,no,yes,no,two or more,2495
