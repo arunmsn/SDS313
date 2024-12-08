@@ -1,0 +1,239 @@
+campus_name,campus_location,students,community_type,campus_type,research,community,liberal_arts,religious,rating
+"University of Maryland, College Park","College Park, MD",37952,large urban city,public,yes,no,no,no,5
+University of Michigan-Dearborn,"Dearborn, MI",9000,medium city,public,yes,no,no,no,3
+SUNY Westchester Community College,"Valhalla, NY",13000,very small town,public,no,yes,no,no,4
+University at Buffalo,"Buffalo, NY",29850,medium city,public,yes,no,no,no,3.5
+Slippery Rock University,"Slippery Rock, PA",8500,rural community,public,yes,no,yes,no,4
+Emory University,"Atlanta, GA",14769,large urban city,private,yes,no,yes,yes,4.5
+Washington State University,"Pullman, WA",19446,small town,public,yes,no,no,no,5
+Davidson College,"Davidson, NC",1850,small town,private,no,no,yes,no,4
+Virginia Commonwealth University,"Richmond, VA",31500,medium city,public,yes,no,no,no,4.5
+Northern Arizona University,"Flagstaff, AZ",29000,small city,public,yes,no,no,no,4.5
+"California State University, Long Beach or Long Beach State","Long Beach, CA",36846,medium city,public,yes,no,no,no,4.5
+University of La Verne,"La Verne, CA",8600,small city,private,yes,no,no,no,2.5
+"Rutgers, The State University of New Jersey-New Brunswick","New Brunswick, NJ",48000,large urban city,public,yes,no,no,no,5
+Gettysburg College,"Gettysburg, PA",2400,very small town,private,no,no,yes,no,4.5
+Northern Illinois University,"DeKalb, IL",16234,small city,public,yes,no,no,no,5
+Trinity College,"Hartford, CT",2159,medium city,private,no,no,yes,no,5
+Augsburg University,"Minneapolis, MN",3537,large urban city,private,yes,no,yes,yes,5
+Ithaca College,"Ithaca, NY",6000,small city,private,no,no,yes,no,5
+Portland State University,"Portland, OR",25000,large urban city,public,yes,no,no,no,5
+Northwestern University,"Evanston, IL",21215,small city,private,yes,no,no,no,4
+University of Colorado at Boulder,"Boulder, CO",30000,small city,public,yes,no,no,no,5
+Northeastern Illinois University,"Chicago, IL",10275,large urban city,public,no,no,no,no,2.5
+Elon University,"Elon, NC",6500,small town,private,no,no,yes,no,5
+Bridgewater State University,"Bridgewater, MA",10000,small city,public,no,no,yes,no,4.5
+New Mexico State University,"Las Cruces, NM",16765,medium city,public,yes,no,no,no,4.5
+University of Richmond,"Richmond, VA",3890,medium city,private,no,no,yes,no,4.5
+Tufts University,"Medford, MA",11926,small city,private,yes,no,no,no,5
+University of Nebraska at Omaha,"Omaha, NE",15500,large urban city,public,yes,no,no,no,4.5
+Youngstown State University,"youngstown, OH",11171,medium city,public,no,no,no,no,3
+"University of Massachusetts, Amherst","Amherst, MA",28500,small town,NA,yes,no,no,no,5
+West Virginia University,"Morgantown, WV",34000,small city,public,yes,no,no,no,4.5
+Virginia State University,"Virginia State University, VA",3400,small town,public,yes,no,no,no,4
+Kansas State University,"Manhattan, KS",20000,small city,public,yes,no,no,no,5
+Bentley University,"Waltham, MA",4100,small city,private,yes,no,no,no,4.5
+Knox College,"Galesburg, IL",1300,small city,private,no,no,yes,no,4
+Oakland University,"Rochester, MI",17170,small city,public,yes,no,no,no,5
+Union College,"Schenectady, NY",2150,small city,private,no,no,yes,no,5
+Montana State University-Bozeman,"Bozeman, MT",16902,small city,public,yes,no,no,no,4
+Syracuse University,"Syracuse, NY",14422,medium city,private,yes,no,no,no,4
+"California State University, Northridge","Northridge, CA",36000,large urban city,public,yes,no,no,no,4.5
+SUNY Oneonta,"Oneonta, NY, NY",5514,small town,public,no,no,no,no,4
+Montclair State University,"Montclair, NJ",21000,small city,public,yes,no,yes,no,5
+University of New Haven,"West Haven, CT",6500,small city,private,no,no,no,no,4
+University of Wisconsin,"Madison, WI",43193,medium city,public,yes,no,no,no,4.5
+Lehigh University,"Bethlehem, PA",6950,small city,private,yes,no,no,no,5
+George Mason University,"Fairfax, VA",39150,small city,public,yes,no,no,no,5
+University of Houston,"Houston, TX",40000,large urban city,public,yes,no,no,no,4.5
+William & Mary,"Williamsburg, VA",8500,small town,public,yes,no,yes,no,4.5
+College of Staten Island/CUNY,"Staten Island, NY",10185,large urban city,public,yes,no,yes,no,3.5
+Virginia Tech,"Blacksburg, VA",31000,small city,public,yes,no,no,no,4
+Washington University in St. Louis,"St. Louis, MO",14000,medium city,private,yes,no,no,no,5
+Eastern Michigan University,"Ypsilanti, MI",10500,small city,public,yes,no,no,no,4.5
+University of Vermont,"Burlington, VT",11000,small city,public,yes,no,no,no,5
+MIT,"Cambridge, MA",11000,medium city,private,yes,no,no,no,4.5
+"University of Minnesota, Morris","Morris, MN",1900,very small town,public,no,no,yes,no,4
+Kalamazoo College,"Kalamazoo, MI",1458,medium city,private,no,no,yes,no,4
+Pace University,"New York, NY",12835,large urban city,private,yes,no,yes,no,5
+"University of Maryland, Baltimore County","Baltimore, MD",14000,large urban city,public,yes,no,yes,no,3
+The University of Alabama,"Tuscaloosa, AL",38000,small city,public,yes,no,no,no,4.5
+Michigan State University,"East Lansing, MI",50000,small city,public,yes,no,no,no,4
+The Evergreen State College,"Olympia, WA",2100,small city,public,no,no,yes,no,3.5
+Napa Valley College,"Napa, CA",5000,small city,NA,no,yes,no,no,4
+University of Tennessee,"KNoxville, TN",26000,medium city,public,yes,no,no,no,4
+University of Missouri-Kansas City,"Kansas City, MO",16375,large urban city,public,yes,no,no,no,4.5
+Clark University,"Worcester, MA",2300,medium city,private,yes,no,yes,no,4.5
+Roger Williams University,"Bristol, RI",4000,small town,private,no,no,yes,no,4
+University of Colorado at Colorado Springs,"Colorado Springs, CO",12017,medium city,public,yes,no,no,no,4.5
+The Pennsylvania State University,"University Park, PA",46184,small town,NA,yes,no,no,no,5
+Emporia State University,"Emporia, KS",6100,small city,public,yes,no,no,no,4
+"Indiana University, Bloomington","Bloomington, IN",49695,small city,public,yes,no,no,no,5
+Lawrence University,"Appleton, WI",1500,small city,private,no,no,yes,no,4
+Macalester College,"Saint Paul, MN",2094,large urban city,private,no,no,yes,no,5
+University of Missouri - St. Louis,"Saint Louis, MO",8381,large urban city,public,yes,no,no,no,4
+San Diego State University,"San Diego, CA",32000,large urban city,public,yes,no,no,no,5
+Appalachian State University,"Boone, NC",20436,small town,public,no,no,no,no,4.5
+University of Wisconsin - Superior,"Superior, WI",2500,small city,public,no,no,no,no,3.5
+Centre College,"Danville, KY",1450,small town,private,no,no,yes,no,3
+University of Wisconsin - Eau Claire,"Eau Claire, WI",11000,small city,public,yes,no,yes,no,5
+Rhodes College,"Memphis, TN",2000,large urban city,private,no,no,yes,yes,4.5
+"California State University, Chico","Chico, CA",16251,medium city,public,no,no,no,no,4
+Hofstra University,"Hempstead, NY",9533,medium city,NA,yes,no,no,no,5
+University of Rochester,"Rochester, NY",10182,medium city,private,yes,no,no,no,5
+"University California, Irvine","Irvine, CA",29000,medium city,NA,yes,no,no,no,3.5
+Washington College,"Chestertown, MD",1420,very small town,NA,no,no,yes,no,3.5
+Illinois State University,"Normal, IL",20000,small city,public,yes,no,no,no,4
+University of Miami,"Coral Gables, FL",16397,large urban city,private,yes,no,no,no,4
+University of Kentucky,"Lexington, KY",30000,medium city,public,yes,no,no,no,5
+University of Wisconsin - Oshkosh,"Oshkosh, WI",14000,small city,public,no,no,no,no,4.5
+Oregon State University,"Corvallis, OR",28000,small city,public,yes,no,no,no,4
+North Dakota State University,"Fargo, ND",14500,medium city,public,yes,no,no,no,3.5
+University at Albany - SUNY,"Albany, NY",18000,medium city,public,yes,no,no,no,5
+Michigan Technological University,"Houghton, MI",7238,rural community,public,yes,no,no,no,3.5
+Colby College,"Waterville, ME",2299,small town,NA,no,no,yes,no,3.5
+Northern Kentucky University,"Highland Heights, KY",16000,medium city,public,no,no,no,no,5
+Eckerd College,"St. Petersburg, FL",1950,medium city,private,no,no,yes,no,3
+Guilford College,"Greensboro, NC",1200,medium city,private,no,no,yes,yes,5
+University of North Dakota,"Grand Forks, ND",14172,small city,public,yes,no,no,no,4
+University of Wisconsin - Green Bay,"Green Bay, WI",9780,medium city,public,yes,no,yes,no,5
+Georgia College & State University,"Milledgeville, GA",6800,small town,public,no,no,yes,no,3
+University of Pittsburgh at Bradford,"Bradford, PA",1500,rural community,NA,no,no,no,no,3.5
+University of Kansas,"Lawrence, KS",28000,small city,public,yes,no,no,no,4.5
+Baldwin Wallace University,"Berea, OH",3500,small town,private,no,no,no,no,4
+Rochester Institute of Technology,"Rochester, NY",18897,medium city,private,yes,no,yes,no,4
+University of Maine at Machias,"Machias, ME",800,rural community,public,no,no,yes,no,4.5
+University of Wisconsin - Whitewater,"Whitewater, WI",12000,small town,public,no,no,no,no,4
+San Francisco State University,"San Francisco, CA",29905,large urban city,public,no,no,no,no,3.5
+Swarthmore College,"Swarrthmore, PA",1699,large urban city,NA,no,no,yes,no,4
+University of Texas at Dallas,"Richardson, TX",27642,medium city,public,yes,no,no,no,5
+Red Rocks Community College,"Lakewood, CO",4297,medium city,NA,no,yes,no,no,3.5
+Colgate University,"Hamilton, NY",3228,rural community,private,no,no,yes,no,4.5
+Bard College at Simon's Rock,"Great Barrington, MA",400,very small town,private,no,no,yes,no,4.5
+Kent State University,"Kent, OH",28000,small city,public,yes,no,no,no,5
+Purdue University,"West Lafayette, IN",49000,small city,public,yes,no,no,no,5
+Kenyon College,"Gambier, OH",1730,rural community,private,no,no,yes,no,4
+Widener University,"Chester, PA",6300,small city,private,yes,no,no,no,4
+College of Wooster,"Wooster, OH",2000,small city,private,no,no,yes,no,4
+University of Wisconsin - Milwaukee,"Milwaukee, WI, WI",23829,large urban city,public,yes,no,no,no,4.5
+University of Maine at Farmington,"Farmington, ME",1800,very small town,public,no,no,yes,no,4.5
+"St. John's College, Annapolis","Annapolis, MD",450,small city,private,no,no,yes,no,3.5
+Drexel University,"Philadelphia, PA",14000,large urban city,private,yes,no,no,no,3.5
+Southern Methodist University,"DALLAS, TX",12373,large urban city,private,yes,no,no,yes,4.5
+Earlham College,"Richmond, IN",1200,small city,private,no,no,yes,yes,4.5
+Southern Illinois University Carbondale,"Carbondale, IL",14000,small city,public,yes,no,no,no,5
+University of Louisville,"Louisville, KY",22000,large urban city,public,yes,no,no,no,5
+Wichita State University,"Wichita, KS",15000,large urban city,public,no,no,no,no,4
+SUNY ROCKLAND COMMUNITY COLLEGE,"SUFFERN, NY",7500,small town,NA,no,yes,no,no,3
+Adelphi University,"Garden City, NY",7859,small town,private,no,no,no,no,5
+Hobart and William Smith Colleges,"Geneva, NY",2396,rural community,private,no,no,yes,no,4.5
+University of Illinois Chicago,"Chicago, IL",30539,large urban city,public,yes,no,no,no,5
+Metropolitan State University of Denver,"Denver, CO",21000,large urban city,public,no,no,no,no,4.5
+Montserrat College of Art,"Beverly, MA",370,small city,private,no,no,yes,no,4
+Harvard College,"Cambridge, MA",6500,medium city,private,no,no,yes,no,4.5
+Cleveland State University,"Cleveland, OH",16000,medium city,public,yes,no,no,no,4
+University of Mount Union,"Alliance, OH",2100,small town,private,no,no,no,yes,3
+University of Virginia,"Charlottesville, VA",22000,small town,public,yes,no,no,no,4.5
+Gonzaga University,"Spokane, WA",7450,medium city,private,no,no,no,yes,4.5
+James Madison University,"Harrisonburg, VA",22000,small city,public,yes,no,no,no,4
+University of the Arts,"Philadelphia, PA",1900,large urban city,private,no,no,no,no,3
+Stevens Institute of Technology,"Hoboken, NJ",6825,small city,private,yes,no,no,no,4
+Towson University,"Towson, MD",16517,large urban city,public,yes,no,no,no,5
+Florida International University,"Miami, FL",34000,large urban city,NA,yes,no,no,no,4.5
+Antioch College,"Yellow Springs, OH",125,rural community,private,no,no,yes,no,4.5
+Millersville University of Pennsylvania,"Millersville, PA",7500,small city,public,no,no,no,no,3.5
+Mars Hill University,"Mars Hill, NC",1000,rural community,private,no,no,yes,yes,3
+Kean University,"Union, NJ",11610,small city,public,yes,no,no,no,3
+The University of Findlay,"Findlay, OH",3500,small city,private,no,no,yes,no,3.5
+Fort Lewis College,"Durango, CO",3443,small town,public,no,no,yes,no,4
+Southwestern University,"Georgetown, TX",1500,small city,private,no,no,yes,yes,3.5
+Lebanon Valley College,"Annville, PA",1651,rural community,private,no,no,yes,yes,4
+University of New Hampshire-Main Campus,"Durham, NH",13000,small town,public,yes,no,no,no,4.5
+Mohawk Valley Community College,"Utica, NY",5000,small city,public,no,yes,no,no,2
+Bryant University,"Smithfield, RI",3287,small town,private,no,no,no,no,2
+Emerson College,"Boston, MA",3783,large urban city,private,no,no,yes,no,4
+Manhattan School of Music,"New York, NY",1035,large urban city,private,no,no,no,no,3
+Eastern Mennonite University,"Harrisonburg, VA",1000,small city,private,no,no,yes,yes,3
+Tidewater Community College,"Norfolk, VA",7028,large urban city,NA,no,yes,no,no,1.5
+Art Academy of Cincinnati,"Cincinnati, OH",260,medium city,private,no,no,no,no,2.5
+Joliet Junior College,"Joliet, IL",10000,small city,NA,no,yes,no,no,2.5
+University of Mary Washington,"Fredericksburg, VA",4000,small city,public,no,no,yes,no,4
+Gwynedd Mercy University,"Gwynedd Valley, PA",1724,small town,private,no,no,no,yes,3
+Colorado College,"Colorado Springs, CO",2300,large urban city,private,no,no,no,no,2.5
+University of Puget Sound,"Tacoma, WA",2200,medium city,private,no,no,yes,no,4
+Virginia Wesleyan University,"Virginia Beach, VA",1750,large urban city,private,no,no,yes,yes,5
+Fitchburg State University,"FITCHBURG, MA",3500,small city,public,no,no,yes,no,4.5
+Juniata College,"Huntingdon, PA",1600,very small town,private,no,no,yes,yes,3
+University of Michigan-Ann Arbor,"Ann Arbor, MI",46000,medium city,public,yes,no,no,no,5
+Worcester State University,"Worcester, MA",4039,medium city,public,no,no,no,no,4.5
+Regis College,"Weston, MA",3014,rural community,private,yes,no,no,yes,3.5
+West Chester University of Pennsylvania,"West Chester, PA",17552,small town,public,yes,no,no,no,4
+William Paterson University of New Jersey,"Wayne, NJ",8000,small city,public,no,no,no,no,4.5
+Gallaudet University,"Washington, DC",1454,large urban city,private,yes,no,yes,no,3.5
+Whitman College,"Walla Walla, WA",1493,small city,private,no,no,yes,no,3
+University of Wisconsin-Stevens Point,"Stevens Point, WI",8900,small city,public,no,no,yes,no,4.5
+Georgia Southern University,"Statesboro, GA",21000,small town,public,yes,no,no,no,3.5
+Susquehanna University,"Selinsgrove, PA",2300,very small town,private,no,no,yes,no,3
+Dominican University of California,"San Rafael, CA",1531,small city,private,no,no,yes,no,3
+Texas State University,"San Marcos, TX",38000,small city,NA,yes,no,no,no,3.5
+Skyline College,"San Bruno, CA",5599,small city,public,no,yes,no,no,3
+Salt Lake Community College,"Salt Lake City, UT",16158,large urban city,NA,no,yes,no,no,4
+Catawba College,"Salisbury, NC",1200,rural community,private,no,no,yes,yes,2
+Nazareth College,"Rochester, NY",3000,small town,private,yes,no,yes,no,4
+Rhode Island College,"Providence, RI",5776,medium city,public,no,no,yes,no,2.5
+Big Sandy Community and Technical College,"Prestonsburg, KY",1193,rural community,NA,no,yes,no,no,2.5
+Dutchess Community College,"Poughkeepsie, NY",6500,medium city,NA,no,yes,no,no,3.5
+California State Polytechnic University-Pomona,"Pomona, CA",23717,medium city,public,no,no,no,no,3.5
+Diablo Valley College,"Pleasant Hill, CA",7854,small city,NA,no,yes,no,no,1.5
+Point Park University,"Pittsburgh, PA",4000,medium city,private,yes,no,yes,no,3
+Bergen Community College,"Paramus, NJ",14585,large urban city,NA,no,yes,no,no,4.5
+Miami University-Oxford,"Oxford, OH",24000,small town,public,yes,no,no,no,4.5
+Butte College,"Oroville, CA",4816,small town,NA,no,yes,no,no,3.5
+Wheaton College,"Norton, MA",1700,small town,private,no,no,yes,no,4.5
+University of Oklahoma-Norman Campus,"Norman, OK",25829,medium city,public,yes,no,yes,no,4
+Norco College,"Norco, CA",10000,small town,NA,no,yes,no,no,3
+Milwaukee Institute of Art & Design,"Milwaukee, WI",900,large urban city,private,no,no,no,no,4
+Allegheny College,"Meadville, PA",1800,small town,private,no,no,yes,no,4.5
+Ramapo College of New Jersey,"Mahwah, NJ",5041,small city,public,no,no,yes,no,4
+Drew University,"Madison, NJ",2100,small town,private,no,no,yes,no,4.5
+Dakota State University,"Madison, SD",3100,very small town,public,yes,no,no,no,2
+Randolph College,"Lynchburg, VA",650,rural community,NA,no,no,yes,no,3
+Otis College of Art and Design,"Los Angeles, CA",1100,large urban city,private,no,no,no,no,4
+Dickinson College,"Carlisle, PA",2400,small town,private,no,no,yes,no,4.5
+University of Northern Colorado,"Greeley, CO",11114,medium city,public,yes,no,no,no,5
+University of North Carolina at Charlotte,"Charlotte, NC",22968,large urban city,public,yes,no,no,no,3.5
+University of Nebraska at Kearney,"Kearney, NE",6232,small city,public,yes,no,no,no,5
+California State University-Bakersfield,"Bakersfield, CA",7000,medium city,public,no,no,no,no,3.5
+Suffolk University,"Boston, MA",7288,large urban city,private,yes,no,no,no,3.5
+Wayne State University,"Detroit, MI",26251,large urban city,public,yes,no,no,no,4.5
+Western Colorado University,"Gunnison, CO",3040,very small town,public,no,no,yes,no,3
+Wentworth Institute of Technology,"Boston, MA",5000,large urban city,private,no,no,no,no,4.5
+Sacred Heart University,"Fairfield, CT",10216,small city,private,yes,no,no,yes,4
+Henry Ford Community College,"Dearborn, MI",13000,small city,NA,no,yes,yes,no,2.5
+Xavier University,"Cincinnati, OH",6738,medium city,private,yes,no,no,yes,3
+Haverford College,"Haverford, PA",1400,small city,private,no,no,yes,no,3
+The College of Idaho,"Caldwell, ID",987,very small town,NA,no,no,yes,no,2.5
+University of Central Arkansas,"Conway, AR",12000,small city,public,yes,no,no,no,2
+Camden County College,"Blackwood, NJ",6425,rural community,NA,no,yes,no,no,2.5
+Western Kentucky University,"Bowling Green, KY",13228,small city,public,yes,no,no,no,4.5
+University of Pittsburgh-Main Campus,"Pittsburgh, PA",25069,medium city,NA,yes,no,no,no,5
+Binghamton University SUNY,"Binghamton, NY",18000,small city,NA,yes,no,no,no,4.5
+Stockton University,"Galloway, NJ",9080,small city,public,yes,no,yes,no,4.5
+Kutztown University,"Kutztown, PA",8000,very small town,public,yes,no,yes,no,4
+East Carolina University,"Greenville, NC",29131,small city,public,yes,no,no,no,4.5
+Southern New Hampshire University,"Manchester, NH",3400,medium city,private,no,no,no,no,3.5
+Cuyahoga Community College Metro Campus,"Cleveland, OH",3094,medium city,NA,no,yes,no,no,3
+Cuyahoga Community College Western Campus,"Parma, OH",7000,small city,NA,no,yes,no,no,3
+Cuyahoga Community College Eastern Campus,"Highland Hills, OH",3394,small town,NA,no,yes,no,no,3
+Cuyahoga Community College Westshore Campus,"Westlake, OH",2183,small city,NA,no,yes,no,no,3
+Ferris State University,"Big Rapids, MI",10222,small town,public,no,no,no,no,3.5
+University of Toledo,"Toledo, OH",23000,medium city,public,yes,no,no,no,4
+Bates College,"Lewiston, ME",1800,small city,NA,no,no,yes,no,3.5
+Missouri Science & Technology,"Rolla, MO",9000,small town,public,yes,no,no,no,3
+Forsyth Technical Community College,"Winston-Salem, NC",2890,medium city,NA,no,yes,no,no,4
+Woodbury University,"Burbank, CA",1132,medium city,private,no,no,yes,no,3
+University of Texas Arlington,"Arlington, TX",47000,medium city,public,yes,no,no,no,5
+University of Arkansas at Little Rock,"Little Rock, AR",6712,medium city,public,yes,no,yes,no,2.5
+Linfield University,"McMinnville, OR",1750,small city,private,no,no,yes,no,3
+Bluegrass Community & Technical College (BCTC),"Lexington, KY",14500,medium city,NA,no,yes,no,no,4
+Hartwick College,"Oneonta, NY",1100,small town,private,no,no,yes,no,3.5

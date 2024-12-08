@@ -1,0 +1,131 @@
+---
+title: "Project 1 (SDS)"
+author: "Seraphym Ignacio"
+date: "2024-09-27"
+output: 
+  html_document:
+    toc: true
+    toc_float: true
+    toc_depth: 5
+    theme: flatly
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE,
+                      fig.align = "center")
+```
+
+```{r echo=FALSE, include=FALSE}
+# setting up
+library(readr)
+library(ggplot2)
+pride <- "Project1_PrideIndex"
+pride <- read_csv("Project1_PrideIndex.csv")
+```
+
+# Project 1 - Campus Pride
+
+\~
+
+## 1 - Introduction
+
+The Campus Pride Index is a tool used by colleges and universities to create more inclusive campus environments. This tool allows students and families to better understand the LGBTQ+ demographic of certain campuses so that they may improve the quality of their daily campus life. The following data comes from the Campus Pride Index and assesses the relationship between campus size, location, and its ratings to show LGBTQ+ friendly campuses.
+
+![Taken from Campus Pride Index](https://live.staticflickr.com/65535/52969921501_e96e71246f_c.jpg){width="295"}
+
+One variable that will be explored within the data will be the number of students. Does the amount of students in a college/university correlate to the size of the LGBTQ+ demographic?
+
+## 2 - Outcome Variable
+
+The bar graph below shows the frequency of LGBTQ+ friendly campuses across community types. With the outcome variable being community type, it is evident that the most common type is *small city*, and the least common type is *very small town*, with the second least common type being a *rural community*. This means that it the most common type of LGBTQ+ friendly campus is one that is located in a *small city*.
+
+```{r echo=FALSE}
+# bargraph of types of communities
+pride.ggplot <- ggplot(pride)
+pride.ggplot + geom_bar(aes(x = community_type, fill = community_type), show.legend = FALSE) +
+  labs(
+    title = "Community Types Across Colleges/Unis According to the Campus Pride Index",
+    caption = "Data Taken from the Campus Pride Index",
+    x = "Community Type", 
+    y = "Frequency", 
+  )
+
+# add color?
+```
+
+## 3 - Bivariate Analyses
+
+The following charts/graphs will describe the relationship between a predictor variable in the dataset and the outcome variable (community type). The purpose of comparing these predictors with the outcome variable is to better understand trends among LGBTQ+ friendly schools.
+
+```{r echo=FALSE}
+# graph of community type and student amount
+pride.ggplot + geom_boxplot(aes(x = community_type, y = students, fill = ), fill = "lightblue", color = "darkgray") + 
+  labs(
+    title = "Community Type vs Student Population Amount",
+    caption = "Data Taken from the Campus Pride Index",
+    x = "Community Type", 
+    y = "Students"
+  )
+```
+
+This boxplot above shows the relationship between the number of students in an LGBTQ+ friendly campus in relation to its community type. The community type with the largest IQR of students is from a *large urban city*, while the types with the smallest IQR are *rural* and *very small towns*. This may indicate that there is a preference for LGBTQ+ students to attend campuses in *larger urban cities* and *medium cities* rather than those located in less populated areas.
+
+```{r echo=FALSE}
+# graph of community type and religion
+ggplot(pride, aes(x = community_type, fill = religious)) +
+  geom_bar(position = "dodge") +
+    labs(
+      title = "Community Type vs Religion",
+      caption = "Data Taken from the Campus Pride Index",
+      x = "Community Type", 
+      y = "Religious?"
+    )
+
+```
+
+This grouped bar graph above shows the relationship between campus community type and whether or not the campus is religious. A very small population of these LGBTQ+ friendly campuses are religious. The community type having the highest proportion of religious campuses is *rural community*. This likely suggests a correlation between the amount of LGBTQ+ friendly schools in a certain community based on whether or not the campus is religious. Campuses in *small cities*, *large urban cities*, and *medium cities* have a smaller percentage of religious campuses, which is likely correlated to why those community types are populated with more LGBTQ+ friendly campuses.
+
+```{r echo=FALSE}
+# graph of community type and campus type
+ggplot(pride, aes(x = community_type, fill = campus_type)) +
+  geom_bar(position = "dodge") +
+    labs(
+      title = "Community Type vs Campus Type",
+      caption = "Data Taken from the Campus Pride Index",
+      x = "Community Type", 
+      y = "Campus Type"
+    )
+```
+
+The grouped bar chart above shows the relationship between community type and campus type. *Small cities* have an overwhelmingly larger amount of *public* LGBTQ+ friendly schools compared to other campus types. Most other community types also have more *public* LGBTQ+ friendly schools, whereas schools in *rural communities* have more *private* LGBTQ+ friendly schools. *Small town* type schools have approximately the same amount of *private* and *public*. Overall, public universities in most community types are more LGBTQ+ friendly.
+
+```{r echo=FALSE}
+# multivariate graph for choice element part G
+ggplot(pride, aes(x = community_type, fill = campus_type)) +
+  geom_bar(position = "dodge") +
+    labs(
+      title = "Community Type vs Campus Type + Religion",
+      caption = "Data Taken from the Campus Pride Index",
+      x = "Community Type", 
+      y = "Frequency"
+    ) +
+  facet_wrap(~religious, ncol = 1)
+```
+
+Shown above is a multivariate grouped bar chart which displays the relationship between community type, campus type, and whether the campus is religious. Most community types have a majority of *public non-religious* schools. Additionally, most community types have *private religious* schools as the least common campus type. The exception would be the *rural community* type, with more *private religious* and *non-religious* schools in comparison to its *public non-religious* campuses. Overall, the graph shows that it is more common among most community types for there to be *public non-religious* campuses that are LGBTQ+ friendly.
+
+## 4 - Choice Elements
+
+The choice elements used in this report include inline codes (A) when describing the distribution of student populations among community types, two hyperlinks (B) for more information about the Campus Pride Index, changing font styles (C) by italicizing key words when describing statistical variables, a floating table of contents (D) for easier navigation throughout the report, and a multivariate graph (G) to elaborate on the distribution of the Campus Pride Index dataset.
+
+## 5 - Conclusion
+
+This report was created to organize and better understand the distribution of LGBTQ+ friendly campuses primarily according to community type. By sorting this data by community type, we can better view preferred spaces for LGBTQ+ students. For example, it is evident that *small cities* tend to have more LGBTQ+ friendly spaces, and that *large urban cities* have, on average, higher student populations at LGBTQ+ campuses. Additionally, among all community types we can see that these LGBTQ+ friendly campuses consist of mostly *public* and *non-religious* schools. The community type with the most differing statistics would be rural communities, where there are more *religious* schools and smaller *student* populations. Conclusively, LGBTQ+ friendly campuses tend to exist in *larger populated* schools in more *urban* or *city* settings, and are mostly *public* and *non-religious*.
+
+For information about unsafe spaces/campuses for the LGBTQ+ demographic, click [here](https://www.campuspride.org/WorstList).
+
+### References
+
+-   The [Campus Pride index](https://www.campusprideindex.org/) was used to access this dataset and create data distributions.
+-   This report uses data from this [table](https://utexas.instructure.com/courses/1399995/assignments/6764338?module_item_id=13906455).
+-   This [site](https://github.com/rfordatascience/tidytuesday/blob/master/data/2024/2024-06-11/readme.md) gives more details about the dataset.
