@@ -1,0 +1,262 @@
+---
+title: "Online Data"
+output: 
+  html_document:
+    toc: true
+    toc_float: true
+    toc_depth: 3
+---
+
+Data we have been analyzing in the class so far has been in a .csv format and mostly ready for analysis. But it won't always be so easy to access...
+
+In this worksheet, we will:
+
+-   Explore different sources to find datasets
+-   Scrape data from the web "manually" and with code
+-   Import datasets with a different format
+-   Export datasets manipulated in R into csv files
+
+## 1. Online data resource
+
+Datasets posted online are sometimes easy to access and download but always look for a **data dictionary** or documentation to help you make sense of the variables.
+
+### a. Data portal
+
+Let's retrieve data from the [City of Austin Open Data Portal](https://data.austintexas.gov/) about the quality of the water in Austin. Search for Data with the keywords *watershed scores*. Then we can import the dataset directly to RStudio with API endpoint:
+
+```{r}
+library(tidyverse)
+water_quality <- read_csv("https://data.austintexas.gov/resource/vk3r-6prc.csv")
+```
+
+------------------------------------------------------------------------
+
+#### **Try it! Represent the distribution of `index_water_quality` and `problem_water_quality` separately. What is the difference between these two variables?**
+
+```{r}
+# Write and submit code here!
+library(ggplot2)
+summary(water_quality$index_water_quality)
+summary(water_quality$problem_water_quality)
+ggplot(water_quality) + geom_boxplot(aes(x = index_water_quality))
+ggplot(water_quality) + geom_boxplot(aes(x = problem_water_quality))
+```
+
+**Write sentences here.**
+
+------------------------------------------------------------------------
+
+Be aware that if you get data directly from the web like that it might:
+
+-   No longer be available at some point.
+-   Be updated.
+
+It might be a better idea to export and save the file locally.
+
+### b. Downloading datasets
+
+Only download files from trusted websites! To assess whether a website can be trusted or not, consider the following factors:
+
+-   Check the source of the website: Websites of universities, government agencies, or well-known platforms (e.g., GitHub, Kaggle, and Data.gov...).
+-   Look for HTTPS and security
+-   Examine the quality of the website: Trustworthy websites often look polished and contain clearly written content, whereas scam sites may look poorly designed or filled with ads.
+
+Also be aware that the dataset you download might not be in a usable format in R! See section 3.
+
+### c. Websites with special permissions
+
+Other times, you'll need approval to access the file, like [here](https://repository.niddk.nih.gov/studies/dpp/).
+
+Depending on the source, before you can get the data you might need to:
+
+-   Explain your purpose for using the data.
+-   Explain what security measures you will follow to protect the data.
+-   Get IRB (Instructional Review Board) approval before collecting data.
+-   Sign a data use agreement.
+-   Pay money.
+
+Refer to the [Data Resources page](https://utexas.instructure.com/courses/1399995/pages/data-resources) for a list of common data resources.
+
+## 2. Web scraping
+
+### a. Manually from the web
+
+If the data you want isn't already compiled in a file, you will need to pull the information yourself. Sometimes, it's as easy as a "manual scrape", and simply copy/paste the values into Excel. This is not always perfect but usually follow these steps:
+
+-   Step 1: Select the data you want with your mouse and copy it.
+
+-   Step 2: Open a blank Excel or Google Sheets file. Paste the selection into your file.
+
+-   Step 3: Go to (Excel) File\>Save As\>Name it and choose the *.csv* format from the dropdown; or (Sheets) Name your file, then go to File\>Download\>csv
+
+------------------------------------------------------------------------
+
+#### **Try it! Manually scrape [the state table describing the legal abortion limits by state](https://en.wikipedia.org/wiki/Abortion_law_in_the_United_States_by_state). Create a .csv file and read it into R. Find in how many states abortion is banned.**
+
+```{r}
+# Write and submit code here!
+abortion_data = read.csv("AbortionData.csv")
+table(abortion_data$Waiting.period)
+```
+
+**Write sentences here.**  
+Some challenges: extra row when copy pasting, variable names contain special characters and are very long, some data came with references/citations, which can ruin the data collection.
+
+------------------------------------------------------------------------
+
+### b. With code
+
+There are many (paid) programs/software out there to scrape data from the web - some legal, some not. We will talk about scraping with code, for free with the *rvest* package. We can:
+
+-   Read HTML source code from a website.
+-   Break it into a nice structure.
+-   Extract the specific elements we want to analyze.
+
+```{r message=FALSE}
+library(rvest)
+```
+
+Let's work with a simple example first, the [countries of the world](https://www.scrapethissite.com/pages/simple/) and read the HTML content of this page in R:
+
+```{r}
+read_html("https://www.scrapethissite.com/pages/simple/")
+```
+
+We can select some elements of this page. Without a deep knowledge of HMTL, we can use a simple tool to differentiate between all the different elements:
+
+1.  Download [Chrome's Selector Gadget extension](https://chrome.google.com/webstore/detail/selectorgadget/mhjhnkcfbdhnjickkkdbjoemdmbfginb), which lets you easily identify the HTML "tag" for a pattern of elements that you want to scrape.
+2.  Open the webpage you want to scrape from and click on the "Developer Tools", the puzzle piece to the right of the address bar.
+3.  Click on an element you want to scrape. If anything is highlighted yellow that you *don't* want, click it to remove it from your selection.
+
+Once you see the **element tag** in the bar at the bottom, we can now scrape those with code:
+
+```{r}
+read_html("https://www.scrapethissite.com/pages/simple/") |>
+  html_elements(".country-name") |>
+  html_text(trim = TRUE)
+```
+
+Similarly, let's scrape the capitals:
+
+```{r}
+read_html("https://www.scrapethissite.com/pages/simple/") |>
+  html_elements(".country-capital") |>
+  html_text(trim = TRUE) # without trim, we would get lots of spaces
+```
+
+Now we can put all the information about the countries and their capitals in the same dataset:
+
+```{r}
+# Put it all in a dataframe
+countries_data <- data.frame(
+  "names" = read_html("https://www.scrapethissite.com/pages/simple/") |>
+  html_elements(".country-name") |>
+  html_text(trim = TRUE), 
+  
+  "capitals" = read_html("https://www.scrapethissite.com/pages/simple/") |>
+  html_elements(".country-capital") |>
+  html_text(trim = TRUE))
+countries_data
+```
+
+------------------------------------------------------------------------
+
+#### **Try it! Scrape the population and area for each country then calculate the population density. Which countries have the highest population density in the world?**
+
+```{r}
+# Write and submit code here!
+url = "https://www.scrapethissite.com/pages/simple/"
+country_pop_density <- data.frame(
+  names = read_html(url) |>
+    html_elements(".country-name") |>
+    html_text(trim = TRUE), 
+  population = read_html(url) |>
+    html_elements(".country-population") |>
+    html_text(trim = TRUE), 
+  area = read_html(url) |>
+    html_elements(".country-area") |>
+    html_text(trim = TRUE)
+) |>
+  mutate(pop_density = round(as.numeric(population)/as.numeric(area))) |>
+  arrange(desc(pop_density)) |>
+  select(names, pop_density)
+country_pop_density
+```
+
+**Write sentences here.**
+
+------------------------------------------------------------------------
+
+### c. More examples of scraping
+
+Try scraping these:
+
+1.  [Austin Date Ideas](https://mycurlyadventures.com/fun-austin-date-night-ideas/)
+2.  [Travel destinations](https://www.forbes.com/sites/laurabegleybloom/2019/09/04/bucket-list-travel-the-top-50-places-in-the-world/?sh=248d064820cf)
+
+```{r}
+# Austin date ideas
+read_html("https://mycurlyadventures.com/fun-austin-date-night-ideas/") |>
+  html_elements(".adhesion_desktop , h3") |> 
+  html_text()
+
+# Travel destinations
+read_html("https://www.forbes.com/sites/laurabegleybloom/2019/09/04/bucket-list-travel-the-top-50-places-in-the-world/?sh=248d064820cf") |>
+  html_elements("strong") |>
+  html_text()
+```
+
+## 3. Datasets formats
+
+Other researchers might use different software with their own file extensions. For common ones, there's likely already a package that can be used to import them into R.
+
+Download the *tamu_scholarships.sas7bdat* file from this [GitHub](https://github.com/snehapnaik/SAS-TAMU-scholarship/blob/main/tamu_scholarships.sas7bdat). This file is from SAS (a popular statistical analysis software) and can be imported easily:
+
+```{r}
+# Submit this code only once:
+#install.packages('sas7bdat')
+
+# Upload library
+library(sas7bdat)
+
+# Import SAS dataset
+tamu <- read.sas7bdat('tamu_scholarships.sas7bdat')
+head(tamu)
+```
+
+------------------------------------------------------------------------
+
+#### **Try it! Find the top 10 majors in terms of the number of students who got a scholarship.**
+
+```{r}
+# Write and submit code here!
+
+```
+
+**Write sentences here.**
+
+------------------------------------------------------------------------
+
+If you encounter a file with a weird extension, look up if there is an existing import function into R. If not, you might need to convert the file using another program before working with it in R.
+
+## 4. Export into csv
+
+Once we manipulate our dataset in R, we might be interested in exporting it into a `csv` file:
+
+```{r}
+# Write and submit code here!
+write_csv(tamu, "tamu.csv")
+```
+
+------------------------------------------------------------------------
+
+#### **Try it! Reshape the `tamu` dataset so that we can find the total amount of the scholarships for each major. Find the top 10 majors in terms of the amount of money awarded by the scholarships. Then export this dataset into a `csv` file.**
+
+```{r}
+# Write and submit code here!
+
+```
+
+**Write sentences here.**
+
+------------------------------------------------------------------------

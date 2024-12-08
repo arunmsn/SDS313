@@ -1,0 +1,119 @@
+---
+title: "Homework 5"
+author: "Arun Mahadevan Sathia Narayanan"
+date: 'Date Published: `r Sys.Date()`'
+output:
+  html_document:
+    theme: united
+    toc: true
+    toc_float:
+      collapsed: true
+---
+
+```{r include = FALSE}
+library(ggplot2)
+library(tidyverse)
+library(rvest)
+library(gghighlight)
+library(RCurl)
+```
+  
+# Question 1
+```{r echo = FALSE}
+# The link used in the homework
+stats = "https://www.basketball-reference.com/wnba/years/2024_totals.html"
+```
+  
+**Using https://www.basketball-reference.com/wnba/years/2024_totals.html, scrape (either manually, exporting into csv or with using rvest) the player stats from the 2024 season. Create a dataframe containing: the names of the players, the minutes played, and their three-point shooting percentage. How many players are in the roster for 2024?**  
+```{r echo = FALSE}
+# To first get the data, we must scrape the table from the website. 
+
+# With websites, we can encounter issues. If the website doesn't exist, we can't use it.
+url_status = url.exists(stats)
+
+# The if statement verifies if the website exists, and wbna is created in one of two ways:
+#   If the website exists, then we get the table from the website using web scraping
+#   If the website doesn't exist, then we use the imported csv file (attached)
+if (url_status) {
+  wnba = data.frame(
+    # In the website, the html element for the table was labeled #totals.
+    # Then, we convert the table to get its values.
+    read_html(stats) |>
+    html_elements("#totals") |>
+    html_table()
+  )
+} else {
+  # We get here if the website doesn't exist, and we can use the imported csv.
+  wnba = read.csv("wnba_stats.csv")
+}
+
+# Since the table was copied incorrectly (as there are several times where each column header appears),
+#   we need to remove every header except for the first one.
+# Since the data is initially copied as characters, we need to convert them to being numeric.
+#   This is done through a mutate and as.numeric([name here]).
+wnba_filtered <- wnba |>
+  select(Player, MP, X3P.) |>
+  filter(Player != "Player") |>
+  mutate(MP = as.numeric(MP), X3P. = as.numeric(X3P.))
+
+# This is simply here to enhance the view of the data (as most would not know what X3P. is).
+wnba_better_titles <- wnba_filtered |>
+  reframe(Player, "Mins Played" = MP, "3-Point Shooting %" = X3P.)
+
+# To display the top 3 and bottom 3 entries in the table.
+head(wnba_better_titles, 3)
+tail(wnba_better_titles, 3)
+```  
+The number of players in the roster for 2024 are **`r length(wnba_filtered$Player)`**.  
+
+# Question 2  
+**Create a graph of the distribution of the three-point shooting percentage made by each players. Report and interpret appropriate statistics.**  
+To approach this, I first had to get rid of the NA values. I didn't do this for Question 1 as we still have to count the NA players.  
+```{r echo = FALSE}
+# When analyzing the data, we see that there are NA values in the table, which we need to remove
+wnba_no_na <- wnba_filtered |> 
+  filter(!is.na(X3P.))
+
+# Now we graph the filtered data (with no NA values).
+# We make it a boxplot since we are only viewing the distribution of a single variable.
+# To better view the data, I converted the axis to be percentage values rather than decimals.
+# I turned the fill of the boxplot to be #FA4616 and the background to be #9FAEE5 as it matches 
+#   the WNBA theme.
+ggplot(wnba_no_na) + 
+  geom_boxplot(aes(x = X3P.*100), fill = "#FA4616", color = "black") + 
+  labs(title = "Distribution of 3-Point Shooting %s", x = "3-Point Shooting %s") + 
+  theme(axis.text.y = element_blank(), axis.ticks.y = element_blank(), panel.background = element_rect(fill = "#9FAEE5"), panel.grid.minor = element_blank()) + 
+  scale_x_continuous(breaks = seq(0, 100, by = 10))
+```  
+  
+Taking a look at the graph, here are the statistics:  
+```{r echo = FALSE}
+# This action gets us the five-number summary (min, 1st Q, med, 3rd Q, max) and the mean.
+# Simply a numerical viewing of the boxplot.
+summary(wnba_no_na$X3P.*100)
+```  
+  
+Observing both the graph and the table, we can easily tell that most of the 3-Point Shooting Percentages are below the 40% mark. Anything above the 50% in the graph is considered an outlier (my condolences to the 13 players who had a 0% 3-Point Shooting Percentage). The median being 31.55% tells us that almost a third of the 3-Point attempts made by players who had a 3-Point Shooting Percentage made it into the hoop. With the third quartile being around the same value (35.98%), we know that 75% of the players score 3-Pointers less than a little over 1/3 of the time.  
+
+# Question 3
+**Create a graph that shows the relationship between the minutes played by each player and their three-point shooting percentage. Choose one particular player, highlight her point on the graph and label it with her name.**  
+```{r echo = FALSE}
+# Now with the no NA data, we can display the relationship between the minutes played by a player
+#   and their 3-Point Shooting percentages.
+# Once again, I made the points of color #FA4616 (matching the theme of the previous question)
+# To highlight one specific point, I had to use the gghighlight library and filter the points
+#   based on the specific data for a random player.
+#   In this case, I chose the player with 305 minutes of playing time and a 50% 3-Point Shooting
+#     percentage, Odessey Sims.
+# Then, I added a label to the point (adjusting the horizontal and vertical positions to not 
+#   block the point).
+ggplot(wnba_no_na) + 
+  geom_point(aes(x = MP, y = X3P.*100), color = "#FA4616") +
+  labs(title = "Minutes Played vs. 3-Point Shooting%s", x = "Minutes Played", y = "3-Point Shooting %s") +
+  scale_y_continuous(breaks = seq(0, 100, by = 10)) +
+  gghighlight(MP == 305 & X3P. == 0.5, use_direct_label = FALSE) + 
+  geom_label(aes(x = 305, y = 50, label = "Odyssey Sims"), hjust = 1, vjust = 1.2, fill = "#FA4616", color = "black")
+```  
+
+Most of the data seems to be horizontal, underneath the 60% mark. What is the relationship between them then? Initial thoughts would be that the longer a player has been in the court, the more 3-Pointers they would have made. To verify this, let's perform the calculation.  
+The relationship between the two variables is `r round(cor(wnba_no_na$MP, wnba_no_na$X3P.), 2)`, which indicates a Weak Positive Correlation. This means that the two variables don't really affect each others' outcomes.

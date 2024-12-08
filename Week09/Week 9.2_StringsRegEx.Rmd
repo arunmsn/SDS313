@@ -1,0 +1,354 @@
+---
+title: "Strings and Regular expressions"
+output: 
+  html_document:
+    toc: true
+    toc_float: true
+    toc_depth: 3
+---
+
+In this worksheet, we will:
+
+-   Manipulate and analyze string data using functions from the `stringr` package
+-   Apply regular expressions (RegEx) to identify patterns within strings
+
+## 0. Set up
+
+Let's load `tidyverse` which contains the `stringr` package:
+
+```{r, message=FALSE}
+# Load package 
+library(tidyverse)
+```
+
+We will refer to some string objects and also manipulate strings within a dataframe containing information about the MetroBike trips taken on Halloween night 2023 (Oct 31, 6pm until Nov 1, 6am):
+
+```{r}
+# Get the dataset from the data portal directly
+metrobike <- read_csv("https://data.austintexas.gov/resource/tyfh-5r8s.csv?$query=SELECT%0A%20%20%60trip_id%60%2C%0A%20%20%60membership_type%60%2C%0A%20%20%60bicycle_id%60%2C%0A%20%20%60bike_type%60%2C%0A%20%20%60checkout_datetime%60%2C%0A%20%20%60checkout_date%60%2C%0A%20%20%60checkout_time%60%2C%0A%20%20%60checkout_kiosk_id%60%2C%0A%20%20%60checkout_kiosk%60%2C%0A%20%20%60return_kiosk_id%60%2C%0A%20%20%60return_kiosk%60%2C%0A%20%20%60trip_duration_minutes%60%2C%0A%20%20%60month%60%2C%0A%20%20%60year%60%0AWHERE%0A%20%20%60checkout_datetime%60%0A%20%20%20%20BETWEEN%20%222023-10-31T18%3A00%3A00%22%20%3A%3A%20floating_timestamp%0A%20%20%20%20AND%20%222023-11-01T06%3A00%3A00%22%20%3A%3A%20floating_timestamp")
+```
+Take a look at the dataset. Which variables are what we call strings?
+
+```{r}
+head(metrobike)
+```
+
+**Write sentences here.**  
+membership_type, bicycle_id, bike_type, checkout_kiosk, return_kiosk
+
+Let's manipulate strings with functions from the `stringr` package: the name of these functions start with `str_`.
+
+## 1. Strings
+
+Strings are defined with either single quotes `'` or double quotes `"`:
+
+### a. Calculating length
+
+The `str_length()` function can help us find the length of a string:
+
+```{r}
+# String length
+str_length("abc")
+
+# How is that different?
+str_length("a b c")
+```
+
+We can apply this function to many strings contained in a vector!
+
+```{r}
+# String length of a vector
+str_length(metrobike$membership_type)
+```
+
+We can also apply this function to create a new variable in a dataframe:
+
+```{r}
+metrobike |>
+  # for distinct values
+  distinct(membership_type) |>
+  # Find the length and create a new variable
+  mutate(length_value = str_length(membership_type))
+```
+
+### b. Combining strings
+
+We can use `str_c()` to combine two or more strings:
+
+```{r}
+# Combine strings
+str_c("Happy", "Halloween", "!")
+
+# By default, no space but we can add the argument sep = 
+str_c("Happy", "Halloween", "!", sep = " ")
+```
+
+------------------------------------------------------------------------
+
+#### **Try it! Combine `checkout_kiosk` with `return_kiosk`: this information represents the route of a trip! What were the top 5 routes on that Halloween night?**
+
+```{r}
+# Write and submit code here!
+metrobike |>
+  mutate(route = str_c("checkout: ", checkout_kiosk, ", return: ", return_kiosk)) |>
+  select(route) |>
+  count(route) |>
+  slice_max(n, n=5)
+```
+
+**Write sentences here.**  
+
+------------------------------------------------------------------------
+
+What if we want to combine all the values of one vector/variable together in one object?
+
+```{r}
+# Use the argument collapse =
+str_c(c("a","b","c"), collapse = "")
+
+# Or separate by a comma and a space
+str_c(c("a","b","c"), collapse = ", ")
+```
+
+We can get all distinct memberships in one object!
+
+```{r}
+metrobike |>
+  # for distinct values
+  distinct(membership_type) |> 
+  # Pull the city as a vector
+  pull() |> 
+  # Collapse all cities together, separated by a comma and a space
+  str_c(collapse = ", ")
+```
+
+### c. Changing cases
+
+We can change the strings from lower to uppercase and vice-versa (also use sentence case):
+
+```{r}
+# To lower case
+str_to_lower("Happy Halloween!")
+
+# To upper case
+str_to_upper("Happy Halloween!")
+
+# To sentence case
+str_to_sentence("Happy Halloween!")
+```
+
+Especially useful if there are some inconsistencies in the categories of a variable!
+
+### d. Subsetting strings
+
+We can focus on a subset of a string with `str_sub()` (only works with indexing positions though):
+
+```{r}
+# Select a position in the string
+str_sub("Happy Halloween!", start = 1, end = 5)
+
+# Or count backwards with -
+str_sub("Happy Halloween!", start = -10, end = -2)
+```
+
+We can also split a string by finding a separator:
+
+```{r}
+# Split given a pattern
+str_split("Happy Halloween!", pattern = " ")
+```
+
+Note that the resulting object is called a list and is difficult to manipulate within dataframes.
+
+### e. Finding (exact) matches in strings
+
+Let's start finding patterns in strings! We can find if a pattern occurs in our data with `str_detect()`:
+
+```{r}
+# Detect the matches
+str_detect("Halloween", pattern = "Ha")
+```
+
+------------------------------------------------------------------------
+
+#### **Try it! Find how many trips in `metrobike` were done with a local membership.**
+
+```{r}
+# Write and submit code here!
+metrobike |>
+  filter(str_detect(membership_type, pattern = "Local")) |>
+  count()
+```
+
+**Write sentences here.**  
+65
+
+------------------------------------------------------------------------
+
+What if we want to replace a pattern with `str_replace()`:
+
+```{r}
+# Replace the matches
+str_replace("Happy Halloween", pattern = "Happy", replacement = "Spooky")
+```
+
+## 2. Regular expressions (Regex)
+
+Regular expressions are used to describe patterns in strings. They're a little weird at first but they can be very useful, especially when we are looking for patterns with some flexibility.
+
+### a. Wildcards
+
+Use `.` to match any character (except a new line):
+
+```{r}
+str_detect(c("Street", "street"), pattern = ".treet")
+```
+
+### b. Anchors
+
+Let's find a match at the beginning of a string with `^` or at the end of a string with `$` :
+
+```{r}
+metrobike |>
+  # for distinct values
+  distinct(membership_type) |> # .keep_all = TRUE would show all columns
+  # Filter membership starting with Local
+  filter(str_detect(membership_type, "^Local")) # the hat filters to start with Local
+```
+
+```{r}
+metrobike |>
+  # for distinct values
+  distinct(checkout_kiosk) |>
+  # Filter membership starting with Local
+  filter(str_detect(checkout_kiosk, "st$"))
+```
+
+### c. Flexible patterns
+
+To look for certain patterns, we will use `[]`. Here are a few useful patterns:
+
+-   `[0-9]` matches any digit
+
+-   `[ ]` matches any single space
+
+-   `[abc]` matches a, b, or c
+
+-   `[a-zA-Z]` matches any letter, lower case or upper case
+
+-   `[a-zA-Z0-9]` matches any alphanumeric character
+
+Let's find any checkout kiosk with a vowel:
+
+```{r}
+metrobike |>
+  # for distinct values
+  distinct(checkout_kiosk) |>
+  # Filter cities starting with A or B
+  filter(str_detect(checkout_kiosk, "[aeiou]$"))
+```
+
+------------------------------------------------------------------------
+
+#### **Try it! Find how many checkout kiosk start with a number.**
+
+```{r}
+# Write and submit code here!
+metrobike |>
+  distinct(checkout_kiosk) |>
+  filter(str_detect(checkout_kiosk, "^[0-9]")) |>
+  count()
+```
+
+**Write sentences here.**  
+25
+------------------------------------------------------------------------
+
+### d. Special characters
+
+In regular expressions, some characters have special meanings (e.g., `.` matches any character, `^` indicates the start of a string, etc.). Sometimes, we may want to search for these special characters themselves rather than their functionality.
+
+To do this, we can "escape" them using a backslash (`\`).
+
+```{r}
+# Actually referring to a quote for a string
+'\''
+```
+
+The trick is that `\` is a special character itself so we sometimes have to use a few of those `\\`:
+
+```{r}
+# Compare these two pieces of code:
+str_replace_all("Happy Halloween.", pattern = ".", replacement = "!")
+str_replace_all("Happy Halloween.", pattern = "\\.", replacement = "!")
+```
+
+------------------------------------------------------------------------
+
+## Group practice
+
+In a group of 3-4 students, investigate the following stories hidden in the `metrobike` dataset for Halloween night in 2023.
+
+1. The Haunted Hour! A rumor says the busiest checkout hour on Halloween night is exactly at the spookiest time: midnight (00:00). Is this true?
+
+```{r}
+# Write and submit code here!
+metrobike |>
+  group_by(checkout_time) |>
+  count() |>
+  arrange(desc(n)) |>
+  head(1)
+print("FALSE")
+```
+
+2. The Phantom’s Route! Some ghostly cyclists seem to haunt kiosks, returning the bike to the same kiosk. Can you find which kiosks are haunted?
+
+```{r}
+# Write and submit code here!
+metrobike |>
+  filter(checkout_kiosk_id == return_kiosk_id) |>
+  group_by(checkout_kiosk_id) |>
+  count() |>
+  arrange(desc(n))
+```
+
+3. Follow the Spooky Places! Check the article https://do512.com/p/where-to-get-scared-in-austin and retrieve the names of some places to get scared in Austin. Are there any kiosks near one of these places? Hint: one of these hotels is haunted!
+
+```{r}
+# Write and submit code here!
+
+```
+
+4. The Longest Ride! Legend has it that one cyclist took an incredibly long trip across town. Can you find at what time was the bicycle that had the longest ride checked out and specify the route?
+
+```{r}
+# Write and submit code here!
+metrobike |>
+  arrange(desc(trip_duration_minutes)) |>
+  head(1) |>
+  mutate(route = str_c(checkout_kiosk, " to ", return_kiosk)) |>
+  select(checkout_time, route)
+```
+
+5. The Curse of the 13th Ride! A chilling tale says that one bike was cursed after completing exactly 13 trips on Halloween night. Riders mysteriously vanished after using this bike. Can you uncover if the curse is real?
+
+```{r}
+# Write and submit code here!
+
+```
+
+6. The Haunted Path of 6th Street! 6th Street, known for its lively (and perhaps otherworldly) nightlife, may have seen eerie bike trips on Halloween. How many spirits rode the bikes down this ghostly path?
+
+```{r}
+# Write and submit code here!
+
+```
+
+7. Unravel your own spooky story!
+
+```{r}
+# Write and submit code here!
+
+```
+
+Share your favorite story on your [group's slide] (https://docs.google.com/presentation/d/1Jknm_4urUcZmychWMq4u0dd0kpaytJGqqLF8OuqUtBI/edit?usp=sharing)
