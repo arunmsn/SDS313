@@ -1,0 +1,876 @@
+---
+title: "Data Sharing Policies - Analysis"
+author: "Analysis by Jessica Minnier, OHSU; github:jminnier"
+date: "February 2, 2017"
+output:
+  pdf_document:
+    toc: yes
+  html_document:
+    code_folding: hide
+    number_sections: yes
+    theme: cerulean
+    toc: yes
+    toc_float: yes
+---
+
+```{r setup, include=FALSE}
+list.of.packages <- c("broom","devtools","dplyr","ggplot2",
+                      "tibble","tidyr","reshape2","stringr","knitr","pander","readxl")
+new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
+if(length(new.packages)) install.packages(new.packages)
+# install.packages(list.of.packages) # run this if some packages are too old and cause errors
+# from http://stackoverflow.com/questions/4090169/elegant-way-to-check-for-missing-packages-and-install-them
+library(ggplot2)
+library(reshape2)
+library(knitr)
+library(pander)
+library(readxl)
+library(tidyverse)
+library(tableone)
+library(magrittr)
+library(irr)
+library(janitor)
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, tidy=TRUE, message = FALSE,fig.path = "figs/",fig.keep=TRUE)
+```
+# Data Processing
+
+Here we read in the data and do some name and format manipulation.
+
+Note, the abbreviation DSM denotes "Data Sharing Mark" and OAM denotes "Open Access Mark."
+
+```{r data_process}
+# read journal data
+exceldat <- read_excel("Data-Sharing-Policies_2017-01-25.xlsx", sheet = "Data",
+                    na = "N/A")
+jdata <- exceldat[-1,] # remove line of info
+jdata <- jdata[-which(is.na(jdata$Journal)),] # remove NAs
+# add labels for DSM
+dsm_labels = c(
+  "Required as condition of publication, barring exceptions",
+  "Required but no explicit statement regarding effect on publication/editorial decisions",
+  "Explicitly encouraged/addressed, but not required.",
+  "Mentioned indirectly",
+  "Only protein, proteomic, and/or genomic data sharing are addressed.",
+  "No mention"
+)
+# Recommended Sharing Method
+rsm_labels = c(
+  "Public Online Repository", "Journal Hosted",
+  "By Reader Request to Authors","Multiple methods equally recommended",
+  "Unspecified"
+)
+journal_host_labels = c(
+  "Journal will host regardless of size",
+"Journal has data hosting file/s size limit","Unspecified"
+)
+# Fix typos:
+# One line has an end line character when should be 'b'
+jdata$`Copyright/Licensing Mark`[jdata$`Copyright/Licensing Mark`=="b\n"] = "b"
+jdata$`Reproducibility Noted Mark`[jdata$`Reproducibility Noted Mark`=="a\n"] = "a"
+# Space after an a
+jdata$`Archival/Retention Mark`[jdata$`Archival/Retention Mark`=="a "] = "a"
+jdata$`Protein, Proteomic, Genomic, or Microaray (Sequence or Structural) Data Sharing Addressed/Required with Deposit to Specific Data Banks`[jdata$`Protein, Proteomic, Genomic, or Microaray (Sequence or Structural) Data Sharing Addressed/Required with Deposit to Specific Data Banks`%in%c("a\n","a ")] = "a"
+jdata$`Protein, Proteomic, Genomic, or Microaray (Sequence or Structural) Data Sharing Addressed/Required with Deposit to Specific Data Banks`[jdata$`Protein, Proteomic, Genomic, or Microaray (Sequence or Structural) Data Sharing Addressed/Required with Deposit to Specific Data Banks`%in%c("b\n","b ")] = "b"
+# easier shorter names
+jdata <- jdata%>%mutate(
+  citable_2013 = `{2013} Citable Articles`,
+  citable_2014 = `2014 Citable Items`,
+  citable_2015 = `2015 Citable Articles`,
+  dsm=as.numeric(`Data Sharing Mark`), 
+  dsm_fac = factor(dsm,levels = 1:6,
+                   labels=dsm_labels),
+  dsm2 = 1*(dsm<3),
+  dsm2_fac = factor(dsm2,levels=0:1,
+                    labels=c("Not Required","Required")),
+  dsm2_fac_flip = factor(dsm2,levels=c(1,0), # reverse levels for for plotting only
+                    labels=c("Required","Not Required")),
+  oam=as.numeric(`Open Access Mark`),
+  oam_fac = factor(oam,levels=0:1,
+                   labels=c("Subscription","Open Access")),
+  if_2013=`2013 Impact Factor`,
+  if_2014=`2014 Impact Factor`,
+  if_2015 = `2015 Impact Factor`,
+  total_cites_2013 = `2013 Total Cites`,
+  total_cites_2014 = `2014 Total Cites`,
+  total_cites_2015 = `2015 Total Cites`,
+  omic_data_sharing_fac = factor(`Protein, Proteomic, Genomic, or Microaray (Sequence or Structural) Data Sharing Addressed/Required with Deposit to Specific Data Banks`,
+                                 levels=c("a","b"),
+                                 labels=c("Yes","No")),
+  rec_pref_sharing_fac = factor(`Recommended/Preferred Sharing Mark`,levels=c("A","B","C","D","E"),
+                   labels=rsm_labels),
+  journal_hosts_fac = factor(`Size Guidelines if Journal Hosted Provided`,levels=c("a","b","c"),labels=journal_host_labels),
+  copyright_licensing_fac = factor(`Copyright/Licensing Mark`,levels=c("a","b"),
+                                   labels=c("Explicitly stated or mentioned","No Mention")),
+  archival_retention_fac = factor(`Archival/Retention Mark`,levels=c("a","b"),
+                                  labels=c("Explicitly stated","No Mention")),
+  reproducibility_noted_fac = factor(`Reproducibility Noted Mark`,levels=c("a","b"),
+                                  labels=c("Explicitly stated","No Mention"))
+)
+# create long data for plotting and dplyr
+jdata_if_long  <- jdata%>%select(Journal,dsm:if_2015)%>%
+  rename(`2013`=if_2013,`2014`=if_2014,`2015`=if_2015)%>%
+  gather(year,impact_factor,`2013`:`2015`)
+jdata_tc_long <- jdata%>%select(Journal,contains("total_cites"))%>%
+  rename(`2013`=total_cites_2013,`2014`=total_cites_2014,`2015`=total_cites_2015)%>%
+  gather(year,total_cites,`2013`:`2015`)
+jdata_cit_long <- jdata%>%select(Journal,contains("citable_"))%>%
+  rename(`2013`=citable_2013,`2014`=citable_2014,`2015`=citable_2015)%>%
+  gather(year,citable_items,`2013`:`2015`)
+jdata_long = left_join(jdata_if_long,jdata_tc_long)
+jdata_long = left_join(jdata_long,jdata_cit_long)
+```
+
+# Data Summaries and Distributions
+
+We have data from `r nrow(jdata)` journals, including impact factor (IF) and total number of citations in years 2013 and 2014.
+
+Data Sharing Mark (DSM) has 6 categories, and we create a collapsed DSM variable that has two categories for "required" (DSM = 1 or 2) and "not required" (DSM = 3, 4, 5 or 6).
+
+The labels for Data Sharing Mark (DSM) are as follows:
+
+```{r dsmlabel}
+kable(tibble("DSM Numeric Value"=1:6,"DSM Description Label"=dsm_labels))
+```
+
+## Summary of Continuous Data
+```{r}
+tmps = summary(jdata%>%select(if_2013:if_2015,
+                              citable_2013:citable_2015,
+                              total_cites_2013:total_cites_2015))
+kable(tmps)
+```
+
+
+## TABLE METHODS X: Distribution of Impact Factors for Journal Titles
+
+We include 2013 values in the manuscript and include 2014 values in the appendix.
+
+This is a table categorizing journal impact factor (JIF) into ranges. The number of journals within each range and the percentage of the total number of journals is presented.
+
+### 2013
+
+```{r, results='asis'}
+jdata$if_2013_cat = cut(jdata$if_2013,breaks = c(0,2,4,6,8,10,30,43),
+                        include.lowest = TRUE,right = FALSE,
+                        labels = c("<2","2-3.99","4-5.99","6-7.99","8-9.99","10-29.99","30-43")
+)
+jdata$if_2014_cat = cut(jdata$if_2014,breaks = c(0,2,4,6,8,10,30,43),
+                        include.lowest = TRUE,right = FALSE,
+                        c("<2","2-3.99","4-5.99","6-7.99","8-9.99","10-29.99","30-43")
+)
+jdata$if_2015_cat = cut(jdata$if_2015,breaks = c(0,2,4,6,8,10,30,43),
+                        include.lowest = TRUE,right = FALSE,
+                        c("<2","2-3.99","4-5.99","6-7.99","8-9.99","10-29.99","30-43")
+)
+jdata%>%group_by(if_2013_cat)%>%summarize("Number"=n())%>%mutate(
+  "# (%)"=paste0(Number,"\t(",round(100*Number/nrow(jdata),1),"%)"))%>%select(-Number)%>%
+  rename("IF 2013 Category"=if_2013_cat)%>%kable()
+```
+
+### 2014, 2015
+
+```{r, results='asis'}
+tmp = jdata%>%group_by(if_2014_cat)%>%summarize("Number"=n())%>%
+  mutate(
+  "2014 # (%)"=paste0(Number,"\t(",round(100*Number/nrow(jdata),1),"%)"))%>%select(-Number)%>%
+  rename("IF Category"=if_2014_cat)
+tmp2 = jdata%>%group_by(if_2015_cat)%>%summarize("Number"=n())%>%
+  mutate(
+  "2015 # (%)"=paste0(Number,"\t(",round(100*Number/nrow(jdata),1),"%)"))%>%select(-Number)%>%
+  rename("IF Category"=if_2015_cat)
+#replace NA
+left_join(tmp,tmp2)%>%mutate(`IF Category`=ifelse(is.na(`IF Category`),
+                                       "Not Reported",as.character(`IF Category`)))%>%kable()
+```
+
+
+## TABLE METHODS X: Distribution of Citable Items for Journal Titles by Category 
+
+
+The total number of citable items per journal is categorized into ranges and the number of journals and percentage of total number of journals in each category is presented.
+
+### 2013
+
+
+
+```{r}
+my_cut_fun <- function(x) {
+  cut(x,
+      breaks=c(0,100,500,1000,32000),
+      labels=c("<100","100-500",
+               "500-1000","1000-32000"),right=FALSE)
+}
+jdata = jdata%>%mutate(citable_2013_cat = my_cut_fun(jdata$citable_2013),
+                       citable_2014_cat = my_cut_fun(jdata$citable_2014),
+                       citable_2015_cat = my_cut_fun(jdata$citable_2015))
+jdata%>%group_by(citable_2013_cat)%>%summarize("Number"=n())%>%
+    mutate(
+  "# (%)"=paste0(Number,"\t(",round(100*Number/nrow(jdata),1),"%)"))%>%select(-Number)%>%
+  rename("Total Citable Items 2013 Category"=citable_2013_cat)%>%kable()
+```
+
+### 2014, 2015
+
+```{r}
+tmp1 = jdata%>%group_by(citable_2014_cat)%>%summarize("Number"=n())%>%
+  rename(`Total Citable Items Category`=citable_2014_cat)%>%
+  mutate(
+    "2014 # (%)"=paste0(Number,"\t(",round(100*Number/nrow(jdata),1),"%)"))%>%select(-Number)
+tmp2 = jdata%>%group_by(citable_2015_cat)%>%summarize("Number"=n())%>%
+    rename(`Total Citable Items Category`=citable_2015_cat)%>%
+  mutate(
+    "2015 # (%)"=paste0(Number,"\t(",round(100*Number/nrow(jdata),1),"%)"))%>%select(-Number)
+left_join(tmp1,tmp2)%>%mutate(`Total Citable Items Category`=ifelse(is.na(`Total Citable Items Category`),
+                                         "Not Reported",
+                                         as.character(`Total Citable Items Category`)))%>%kable()
+```
+
+## TABLE METHODS X: Distribution of Citable Items for Journal Titles
+
+Min, 25th percentile, mean, median, 75th percentile, and max.
+
+```{r}
+tmp1 = jdata_long%>%group_by(year)%>%
+  summarize_at(vars(citable_items),
+               funs(Total="sum",Min="min",
+                    Q25 = quantile(.,probs=.25),Mean="mean",Median="median",
+                    Q75 = quantile(.,probs=.75),Max="max"),na.rm=T)%>%
+  add_column("Journals"="With PLoS One",.after="year")
+  
+tmp2 = jdata_long%>%filter(!Journal=="PLoS One")%>%group_by(year)%>%
+  summarize_at(vars(citable_items),
+               funs(Total="sum",Min="min",
+                    Q25 = quantile(.,probs=.25),Mean="mean",Median="median",
+                    Q75 = quantile(.,probs=.75),Max="max"),na.rm=T) %>%
+  add_column("Journals"="Remove PLoS One",.after="year") 
+  
+tmp = bind_rows(tmp1,tmp2)%>%arrange(Journals,year)
+tmp = tmp%>%arrange(desc(Journals),year)
+kable(tmp,caption="Citable Items by Year",digits=1)
+```
+
+
+
+## TABLE: Number of journals per data sharing mark (DSM)
+
+```{r}
+tmp = jdata%>%group_by(dsm,dsm_fac)%>%
+  summarize("N"=n(),"Percent"=100*n()/nrow(jdata))
+tmp1 = tmp%>%
+  mutate("# Journals (%)" = paste0(N, "\t(",round(Percent,1),"%)"))%>%
+  select(-N,-Percent)%>%
+  rename("DSM"=dsm,"DSM Description"=dsm_fac)
+kable(tmp1)
+```
+
+## TABLE: Publishing Volume by Data Sharing Mark
+
+
+```{r}
+tmp1 = jdata%>%group_by(dsm,dsm_fac)%>%
+  summarize("N"=n(),"Percent"=100*n()/nrow(jdata),
+            "Nc"=sum(citable_2013), 
+            "MedianC"=median(citable_2013,na.rm=T),
+            "PercentC" = 100*sum(citable_2013)/sum(jdata$citable_2013)
+            )%>%
+  mutate("# Journals (%)" = paste0(N, "\t(",round(Percent,1),"%)"),
+         "Median # Citable Items per Journal 2013" = paste(MedianC," "), # need a space or kable malfunctions
+         "# Citable Items 2013 (%)" = paste0(Nc, "\t(",round(PercentC,1),"%)") )%>%
+  select(-N,-Nc,-Percent,-PercentC,-MedianC)%>%
+  rename("DSM"=dsm,"DSM Description"=dsm_fac)
+tmp2 = jdata%>%filter(!Journal=="PLoS One")%>%group_by(dsm,dsm_fac)%>%
+  summarize("N"=n(),"Percent"=100*n()/nrow(jdata),
+            "Nc"=sum(citable_2013), 
+            "PercentC" = 100*sum(citable_2013)/sum(jdata$citable_2013[!jdata$Journal=="PLoS One"])
+            )%>%
+  mutate("# Citable Items 2013, Remove PLoS One (%)" = 
+           paste0(Nc, "\t(",round(PercentC,1),"%)") )%>%
+  select(-N,-Nc,-Percent,-PercentC)%>%
+  rename("DSM"=dsm,"DSM Description"=dsm_fac)
+tmp = left_join(tmp1,tmp2)
+tmp1 = jdata%>%group_by(dsm,dsm_fac)%>%
+  summarize("N"=n(),"Percent"=100*n()/nrow(jdata),
+            "Nc"=sum(citable_2014, na.rm=T), 
+            "MedianC"=median(citable_2014,na.rm=T),
+            "PercentC" = 100*sum(citable_2014,na.rm=T)/sum(jdata$citable_2014,na.rm=T)
+            )%>%
+  mutate("# Journals (%)" = paste0(N, "\t(",round(Percent,1),"%)"),
+        "Median # Citable Items per Journal 2014" = paste(MedianC," "), # need a space or kable malfunctions
+         "# Citable Items 2014 (%)" = paste0(Nc, "\t(",round(PercentC,1),"%)") )%>%
+  select(-N,-Nc,-Percent,-PercentC,-MedianC)%>%
+  rename("DSM"=dsm,"DSM Description"=dsm_fac)
+tmp2 = jdata%>%filter(!Journal=="PLoS One")%>%group_by(dsm,dsm_fac)%>%
+  summarize("N"=n(),"Percent"=100*n()/nrow(jdata),
+            "Nc"=sum(citable_2014,na.rm=T), 
+            "PercentC" = 
+              100*sum(citable_2014,na.rm=T)/sum(jdata$citable_2014[!jdata$Journal=="PLoS One"],na.rm=T)
+            )%>%
+  mutate("# Citable Items 2014, Remove PLoS One (%)" = paste0(Nc, "\t(",round(PercentC,1),"%)") )%>%
+  select(-N,-Nc,-Percent,-PercentC)%>%
+  rename("DSM"=dsm,"DSM Description"=dsm_fac)
+tmp3 = left_join(tmp1,tmp2)
+tmp = left_join(tmp,tmp3)
+tmp1 = jdata%>%group_by(dsm,dsm_fac)%>%
+  summarize("N"=n(),"Percent"=100*n()/nrow(jdata),
+            "Nc"=sum(citable_2015, na.rm=T), 
+            "MedianC"=median(citable_2015,na.rm=T),
+            "PercentC" = 100*sum(citable_2015,na.rm=T)/sum(jdata$citable_2015,na.rm=T)
+            )%>%
+  mutate("# Journals (%)" = paste0(N, "\t(",round(Percent,1),"%)"),
+        "Median # Citable Items per Journal 2015" = paste(MedianC," "), # need a space or kable malfunctions
+         "# Citable Items 2015 (%)" = paste0(Nc, "\t(",round(PercentC,1),"%)") )%>%
+  select(-N,-Nc,-Percent,-PercentC,-MedianC)%>%
+  rename("DSM"=dsm,"DSM Description"=dsm_fac)
+tmp2 = jdata%>%filter(!Journal=="PLoS One")%>%group_by(dsm,dsm_fac)%>%
+  summarize("N"=n(),"Percent"=100*n()/nrow(jdata),
+            "Nc"=sum(citable_2015,na.rm=T), 
+            "PercentC" = 
+              100*sum(citable_2015,na.rm=T)/sum(jdata$citable_2015[!jdata$Journal=="PLoS One"],na.rm=T)
+            )%>%
+  mutate("# Citable Items 2015, Remove PLoS One (%)" = paste0(Nc, "\t(",round(PercentC,1),"%)") )%>%
+  select(-N,-Nc,-Percent,-PercentC)%>%
+  rename("DSM"=dsm,"DSM Description"=dsm_fac)
+tmp3 = left_join(tmp1,tmp2)
+tmp = left_join(tmp,tmp3)
+#kable(tmp)
+tmpt = data_frame("DSM Description"="Total",
+           "# Journals (%)"=paste0(nrow(jdata)," (100%)"),
+           "Median # Citable Items per Journal 2013"  =as.character(median(jdata$citable_2013)),
+           "# Citable Items 2013 (%)"=paste0(sum(jdata$citable_2013)," (100%)"),
+           "# Citable Items 2013, Remove PLoS One (%)"=
+             paste0(sum(jdata$citable_2013[!jdata$Journal=="PLoS One"])," (100%)"),
+           "Median # Citable Items per Journal 2014"  =as.character(median(jdata$citable_2014,na.rm=T)),
+          "# Citable Items 2014 (%)"=paste0(sum(jdata$citable_2014,na.rm=T)," (100%)"),
+           "# Citable Items 2014, Remove PLoS One (%)"=
+             paste0(sum(jdata$citable_2014[!jdata$Journal=="PLoS One"],na.rm=T)," (100%)"),
+            "Median # Citable Items per Journal 2015"  =as.character(median(jdata$citable_2015,na.rm=T)),
+          "# Citable Items 2015 (%)"=paste0(sum(jdata$citable_2015,na.rm=T)," (100%)"),
+           "# Citable Items 2015, Remove PLoS One (%)"=
+             paste0(sum(jdata$citable_2015[!jdata$Journal=="PLoS One"],na.rm=T)," (100%)")
+)
+tmpt = bind_rows(tmp,tmpt)
+kable(tmpt)
+```
+
+
+```{r barplot_pct,fig.width=9,fig.height=7,include=FALSE}
+# 2013
+tmp1 = jdata%>%group_by(dsm,dsm_fac)%>%
+  summarize("N_journals"=n(),"Percent_journals"=100*n()/nrow(jdata),
+            "Nc"=sum(citable_2013), 
+            "MedianC"=median(citable_2013,na.rm=T),
+            "PercentC" = 100*sum(citable_2013)/sum(jdata$citable_2013)
+            )
+tmp1$year = "2013"
+tmp1$plos = "with PLoS One"
+tmp2 = jdata%>%filter(!Journal=="PLoS One")%>%group_by(dsm,dsm_fac)%>%
+  summarize("N_journals"=n(),"Percent_journals"=100*n()/nrow(jdata),
+            "Nc"=sum(citable_2013), 
+            "MedianC"=median(citable_2013,na.rm=T),
+            "PercentC" = 100*sum(citable_2013)/sum(jdata$citable_2013[!jdata$Journal=="PLoS One"])
+            )
+tmp2$year = "2013"
+tmp2$plos = "without PLoS One"
+tmp = bind_rows(tmp1,tmp2)
+# 2013
+tmp1 = jdata%>%group_by(dsm,dsm_fac)%>%
+  summarize("N_journals"=n(),"Percent_journals"=100*n()/nrow(jdata),
+            "Nc"=sum(citable_2014,na.rm=T), 
+            "MedianC"=median(citable_2014,na.rm=T),
+            "PercentC" = 100*sum(citable_2014,na.rm=T)/sum(jdata$citable_2014,na.rm=T)
+            )
+tmp1$year = "2014"
+tmp1$plos = "with PLoS One"
+tmp2 = jdata%>%filter(!Journal=="PLoS One")%>%group_by(dsm,dsm_fac)%>%
+  summarize("N_journals"=n(),"Percent_journals"=100*n()/nrow(jdata),
+            "Nc"=sum(citable_2014,na.rm=T), 
+            "MedianC"=median(citable_2014,na.rm=T),
+            "PercentC" = 100*sum(citable_2014,na.rm=T)/sum(jdata$citable_2014[!jdata$Journal=="PLoS One"],na.rm=T))
+tmp2$year = "2014"
+tmp2$plos = "without PLoS One"
+tmp3 = bind_rows(tmp1,tmp2)
+tmp = bind_rows(tmp,tmp3)
+tmp_n = tmp%>%select(dsm:Percent_journals,year,plos)%>%rename(N=N_journals,Percent=Percent_journals)
+tmp_n$type = "Journal"
+tmp_n = tmp_n%>%filter(plos=="with PLoS One") # basically the same
+tmp_c = tmp%>%select(dsm,dsm_fac,Nc,PercentC,year,plos)%>%rename(N=Nc,Percent=PercentC)
+tmp_c$type = "Citable Items"
+tmplong = bind_rows(tmp_n,tmp_c)
+tmplong = tmplong%>%unite(type2,type,plos,sep=" ",remove = FALSE)
+tmplong$type2[tmplong$type=="Journal"] = "Journals"
+tmplong = tmplong
+tmplong = tmplong%>%filter(year=="2013") #similar by year
+tmplong$type2 = factor(tmplong$type2,levels=c("Journals","Citable Items with PLoS One","Citable Items without PLoS One"))
+ggplot(tmplong,aes(x=dsm,y=Percent,fill=dsm_fac,alpha=type2))+geom_bar(stat="identity",position = "dodge") +
+  geom_text(aes(label=paste0(round(Percent,1),"%"),y=Percent),
+            #alpha=1,
+            position=position_dodge(width=0.9),vjust=1.4,size=2,color="black",show.legend = FALSE)+
+  guides(alpha=guide_legend(title="Percent of",ncol=1),
+         fill = guide_legend(title = "Data Sharing Mark", ncol = 1))+
+#  facet_grid(year~.)+
+  scale_alpha_manual(values = c(0.4, 0.6,0.9))+
+  theme_minimal()+xlab("Data Sharing Mark (1-6)")+xlim(as.character(1:6))+ theme(legend.position = "bottom")
+```
+
+
+```{r barplot_pct_stacked,fig.width=9,fig.height=7,include=FALSE}
+ggplot(tmplong,aes(x=type2,y=Percent,fill=dsm_fac))+geom_bar(stat="identity") +
+  geom_text(aes(label=paste0(round(Percent,1),"%"),y=Percent),
+            #alpha=1,
+            position=position_stack(),vjust=1.4,size=3,color="black",show.legend = FALSE)+
+  guides(alpha=guide_legend(title="Percent of",ncol=1),
+         fill = guide_legend(title = "Data Sharing Mark", ncol = 1))+
+  theme_minimal()+xlab("")+theme(axis.text.x = element_text(angle = 45, hjust = .9))
+```
+
+```{r barplot_pct_stacked_horiz,fig.width=9,fig.height=5}
+tmplong$type1 = factor(tmplong$type2,levels=c("Citable Items without PLoS One","Citable Items with PLoS One","Journals"))
+ggplot(tmplong,aes(x=type1,y=Percent,fill=dsm_fac))+geom_bar(stat="identity") +
+  geom_text(aes(label=paste0(round(Percent,1),"%"),y=Percent),
+            #alpha=1,
+            position=position_stack(),hjust=1.2,size=3,color="black",show.legend = FALSE)+
+  guides(alpha=guide_legend(title="Percent of",ncol=1),
+         fill = guide_legend(title = "Data Sharing Mark", ncol = 1))+
+  theme_minimal()+xlab("")+coord_flip()+ theme(legend.position = "bottom")
+  
+```
+
+## FIGURE 1 - Percentage of journals per each data sharing mark (DSM).
+
+The top bar shows the percentage of all journals for each data sharing mark. The middle bar
+shows the percentage of citable items from each journal (including PLoS One) for each data
+sharing mark. The lower bar shows the percentage of citable items for each journal
+(excluding PLoS One) for each data sharing mark. Because of the journal PLoS One’s high
+publishing activity, we analyzed the percentage of citable items for each data sharing mark
+including and excluding PLoS One. The shades from dark to light represent DSM 1-6.
+
+```{r fig1_barplot_pct_stacked_horiz,fig.width=9,fig.height=4,dpi=500}
+tmplong$type1 = factor(tmplong$type2,levels=c("Citable Items without PLoS One","Citable Items with PLoS One","Journals"))
+tmplong$dsm_fac_reverse = factor(tmplong$dsm_fac,levels=levels(tmplong$dsm_fac)[6:1])
+ggplot(tmplong,aes(x=type1,y=Percent,fill=dsm_fac_reverse))+geom_bar(stat="identity") +
+  geom_text(aes(label=paste0(round(Percent,1),"%"),y=Percent),
+            #alpha=1,
+            position=position_stack(),hjust=1.2,size=3,color="black",show.legend = FALSE)+
+  #scale_fill_brewer(palette="Greys")+
+  scale_fill_manual(values = RColorBrewer::brewer.pal(n=7, name="Blues")[1:6],
+                    breaks=levels(tmplong$dsm_fac),
+                    #labels=levels(tmplong$dsm_fac))+
+                      labels=paste(1:6,levels(tmplong$dsm_fac)))+
+  guides(fill = guide_legend(title = "Data Sharing Mark", ncol = 1))+
+  theme_minimal()+xlab("")+coord_flip()+ theme(legend.position = "bottom")
+  
+```
+
+## TABLE RESULTS X: Number of journals & Citable Items per data sharing 2 categories
+
+
+```{r}
+#summarize citable items
+tmp1 = jdata%>%group_by(dsm2,dsm2_fac)%>%
+  summarize("N"=n(),
+            "Percent"=100*n()/nrow(jdata),
+            "Nc"=sum(citable_2013), 
+            "MedianC"=median(citable_2013,na.rm=T),
+            "PercentC" = 100*sum(citable_2013)/sum(jdata$citable_2013)
+            )%>%
+  mutate("# Journals (%)" = paste0(N, "\t(",round(Percent,1),"%)"),
+         "Median # Citable Items per Journal 2013" = paste(MedianC," "), # need a space or kable malfunctions
+         "# Citable Items 2013 (%)" = paste0(Nc, "\t(",round(PercentC,1),"%)"))%>%
+  select(-N,-Nc,-Percent,-PercentC,-MedianC)%>%
+  rename("DSM"=dsm2,"DSM Description"=dsm2_fac)
+#summarize citable items, removing PLoS One
+#do not need median since removing one journal will not change this except by .5
+tmp2 = jdata%>%filter(!Journal=="PLoS One")%>%group_by(dsm2,dsm2_fac)%>%
+  summarize("N"=n(),"Percent"=100*n()/nrow(jdata),
+            "Nc"=sum(citable_2013), 
+            "PercentC" = 100*sum(citable_2013)/sum(jdata$citable_2013[!jdata$Journal=="PLoS One"])
+            )%>%
+  mutate("# Citable Items 2013, Remove PLoS One (%)" = paste0(Nc, "\t(",round(PercentC,1),"%)") )%>%
+  select(-N,-Nc,-Percent,-PercentC)%>%
+  rename("DSM"=dsm2,"DSM Description"=dsm2_fac)
+tmp = left_join(tmp1,tmp2)
+tmp1 = jdata%>%group_by(dsm2,dsm2_fac)%>%
+  summarize("N"=n(),"Percent"=100*n()/nrow(jdata),
+            "Nc"=sum(citable_2014, na.rm=T), 
+            "MedianC"=median(citable_2014,na.rm=T),
+            "PercentC" = 100*sum(citable_2014,na.rm=T)/sum(jdata$citable_2014,na.rm=T)
+            )%>%
+  mutate("# Journals (%)" = paste0(N, "\t(",round(Percent,1),"%)"),
+         "Median # Citable Items per Journal 2014" = paste(MedianC," "),
+         "# Citable Items 2014 (%)" = paste0(Nc, "\t(",round(PercentC,1),"%)") 
+         )%>%
+  select(-N,-Nc,-Percent,-PercentC,-MedianC)%>%
+  rename("DSM"=dsm2,"DSM Description"=dsm2_fac)
+tmp2 = jdata%>%filter(!Journal=="PLoS One")%>%group_by(dsm2,dsm2_fac)%>%
+  summarize("N"=n(),"Percent"=100*n()/nrow(jdata),
+            "Nc"=sum(citable_2014,na.rm=T), 
+            "PercentC" = 
+              100*sum(citable_2014,na.rm=T)/sum(jdata$citable_2014[!jdata$Journal=="PLoS One"],na.rm=T)
+            )%>%
+  mutate("# Citable Items 2014, Remove PLoS One (%)" = paste0(Nc, "\t(",round(PercentC,1),"%)") )%>%
+  select(-N,-Nc,-Percent,-PercentC)%>%
+  rename("DSM"=dsm2,"DSM Description"=dsm2_fac)
+tmp3 = left_join(tmp1,tmp2)
+tmp = left_join(tmp,tmp3)
+tmp1 = jdata%>%group_by(dsm2,dsm2_fac)%>%
+  summarize("N"=n(),"Percent"=100*n()/nrow(jdata),
+            "Nc"=sum(citable_2015, na.rm=T), 
+            "MedianC"=median(citable_2015,na.rm=T),
+            "PercentC" = 100*sum(citable_2015,na.rm=T)/sum(jdata$citable_2015,na.rm=T)
+            )%>%
+  mutate("# Journals (%)" = paste0(N, "\t(",round(Percent,1),"%)"),
+         "Median # Citable Items per Journal 2015" = paste(MedianC," "),
+         "# Citable Items 2015 (%)" = paste0(Nc, "\t(",round(PercentC,1),"%)") 
+         )%>%
+  select(-N,-Nc,-Percent,-PercentC,-MedianC)%>%
+  rename("DSM"=dsm2,"DSM Description"=dsm2_fac)
+tmp2 = jdata%>%filter(!Journal=="PLoS One")%>%group_by(dsm2,dsm2_fac)%>%
+  summarize("N"=n(),"Percent"=100*n()/nrow(jdata),
+            "Nc"=sum(citable_2015,na.rm=T), 
+            "PercentC" = 
+              100*sum(citable_2015,na.rm=T)/sum(jdata$citable_2015[!jdata$Journal=="PLoS One"],na.rm=T)
+            )%>%
+  mutate("# Citable Items 2015, Remove PLoS One (%)" = paste0(Nc, "\t(",round(PercentC,1),"%)") )%>%
+  select(-N,-Nc,-Percent,-PercentC)%>%
+  rename("DSM"=dsm2,"DSM Description"=dsm2_fac)
+tmp3 = left_join(tmp1,tmp2)
+tmp = left_join(tmp,tmp3)
+tmp = tmp%>%arrange(desc(DSM))
+tmp$DSM[1] = "DSM 1&2"
+tmp$DSM[2] = "DSM 3-6"
+kable(tmp)
+```
+
+
+## TABLE RESULTS X: Distribution of Open Access by Journal and Citable Item
+
+```{r}
+tmp1 = jdata%>%group_by(oam_fac)%>%
+  summarize("N"=n(),"Percent"=100*n()/nrow(jdata),
+            "Nc"=sum(citable_2013), 
+            "MedianC"=median(citable_2013,na.rm=T),
+            "PercentC" = 100*sum(citable_2013)/sum(jdata$citable_2013)
+            )%>%
+  mutate("# Journals (%)" = paste0(N, "\t(",round(Percent,1),"%)"),
+         "Median # Citable Items per Journal 2013" = paste(MedianC," "),
+         "# Citable Items 2013 (%)" = paste0(Nc, "\t(",round(PercentC,1),"%)") )%>%
+  select(-N,-Nc,-Percent,-PercentC,-MedianC)%>%
+  rename("Open Access"=oam_fac)
+tmp2 = jdata%>%filter(!Journal=="PLoS One")%>%group_by(oam_fac)%>%
+  summarize("N"=n(),"Percent"=100*n()/nrow(jdata),
+            "Nc"=sum(citable_2013), 
+            "PercentC" = 100*sum(citable_2013)/sum(jdata$citable_2013[!jdata$Journal=="PLoS One"])
+            )%>%
+  mutate("# Citable Items 2013, Remove PLoS One (%)" = paste0(Nc, "\t(",round(PercentC,1),"%)") )%>%
+  select(-N,-Nc,-Percent,-PercentC)%>%
+  rename("Open Access"=oam_fac)
+tmp = left_join(tmp1,tmp2)
+tmp1 = jdata%>%group_by(oam_fac)%>%
+  summarize("N"=n(),"Percent"=100*n()/nrow(jdata),
+            "Nc"=sum(citable_2014, na.rm =T), 
+            "MedianC"=median(citable_2014,na.rm=T),
+            "PercentC" = 100*sum(citable_2014, na.rm =T)/sum(jdata$citable_2014, na.rm=T)
+            )%>%
+  mutate("# Journals (%)" = paste0(N, "\t(",round(Percent,1),"%)"),
+         "Median # Citable Items per Journal 2014" = paste(MedianC," "), # need  a space or kable malfunctions for some reason
+         "# Citable Items 2014 (%)" = paste0(Nc, "\t(",round(PercentC,1),"%)") )%>%
+  select(-N,-Nc,-Percent,-PercentC,-MedianC)%>%
+  rename("Open Access"=oam_fac)
+tmp2 = jdata%>%filter(!Journal=="PLoS One")%>%group_by(oam_fac)%>%
+  summarize("N"=n(),"Percent"=100*n()/nrow(jdata),
+            "Nc"=sum(citable_2014, na.rm =T), 
+            "PercentC" = 100*sum(citable_2014, na.rm =T)/sum(jdata$citable_2014[!jdata$Journal=="PLoS One"], na.rm=T)
+            )%>%
+  mutate("# Citable Items 2014, Remove PLoS One (%)" = paste0(Nc, "\t(",round(PercentC,1),"%)") )%>%
+  select(-N,-Nc,-Percent,-PercentC)%>%
+  rename("Open Access"=oam_fac)
+tmp3 = left_join(tmp1,tmp2)
+tmp = left_join(tmp,tmp3)
+tmp1 = jdata%>%group_by(oam_fac)%>%
+  summarize("N"=n(),"Percent"=100*n()/nrow(jdata),
+            "Nc"=sum(citable_2015, na.rm =T), 
+            "MedianC"=median(citable_2015,na.rm=T),
+            "PercentC" = 100*sum(citable_2015, na.rm =T)/sum(jdata$citable_2015, na.rm=T)
+            )%>%
+  mutate("# Journals (%)" = paste0(N, "\t(",round(Percent,1),"%)"),
+         "Median # Citable Items per Journal 2015" = paste(MedianC," "), # need  a space or kable malfunctions for some reason
+         "# Citable Items 2015 (%)" = paste0(Nc, "\t(",round(PercentC,1),"%)") )%>%
+  select(-N,-Nc,-Percent,-PercentC,-MedianC)%>%
+  rename("Open Access"=oam_fac)
+tmp2 = jdata%>%filter(!Journal=="PLoS One")%>%group_by(oam_fac)%>%
+  summarize("N"=n(),"Percent"=100*n()/nrow(jdata),
+            "Nc"=sum(citable_2015, na.rm =T), 
+            "PercentC" = 100*sum(citable_2015, na.rm =T)/sum(jdata$citable_2015[!jdata$Journal=="PLoS One"], na.rm=T)
+            )%>%
+  mutate("# Citable Items 2015, Remove PLoS One (%)" = paste0(Nc, "\t(",round(PercentC,1),"%)") )%>%
+  select(-N,-Nc,-Percent,-PercentC)%>%
+  rename("Open Access"=oam_fac)
+tmp3 = left_join(tmp1,tmp2)
+tmp = left_join(tmp,tmp3)
+tmp = tmp%>%arrange(desc(`Open Access`))
+kable(tmp)
+```
+
+
+## TABLE X: DSM by Open Access
+
+Open Access Mark (OAM) has two categories, Subscription and Open Access.
+
+Here we present a table of number of open access or subscription journals (number of citable items) within each DSM as well as the percent of journals (percent of citable items) that are open access within each DSM. For the DSM 1 we present number and percent citable items with and without PLoS One.
+
+```{r, results='asis'}
+# obtain open access counts at journal level
+tmptable = with(jdata,table(dsm,oam_fac))
+tmptable = cbind(tmptable,"% Open Access"=100*tmptable[,2]/rowSums(tmptable))
+tmptable = as_data_frame(tmptable)
+tmptable = tmptable%>%add_column()
+# obtain open access counts at citable item level
+jcit = left_join(
+  left_join(jdata%>%group_by(dsm)%>%summarize("tot_cit"=sum(citable_2013)),
+            jdata%>%filter(oam_fac=="Subscription")%>%group_by(dsm)%>%summarize("sub_cit"=sum(citable_2013))),
+  jdata%>%filter(oam_fac=="Open Access")%>%group_by(dsm)%>%summarize(open_cit = sum(citable_2013))
+)
+jcit$open_cit[is.na(jcit$open_cit)] = 0
+jcit$pct_open_cit = 100*jcit$open_cit/jcit$tot_cit
+  
+#without Plos One
+open_cit = jdata%>%filter(Journal!="PLoS One",
+               oam_fac=="Open Access",
+               dsm==1)%>%summarize("open_cit"=sum(citable_2013))
+tot_cit = jdata%>%filter(Journal!="PLoS One",
+               dsm==1)%>%summarize("open_cit"=sum(citable_2013))
+pct_cit = round(100*open_cit/tot_cit,2)
+printtab = data_frame(
+  "DSM"=dsm_labels,
+  "Subscription"=paste0(tmptable$Subscription," (",jcit$sub_cit,")"),
+  "Open Access"=paste0(tmptable$`Open Access`," (",jcit$open_cit,")"),
+  "% Open Access"=paste0(round(tmptable$`% Open Access`,2),"% (",
+                         round(jcit$pct_open_cit,2),"%)")
+)
+# add in without Plos One #s
+printtab[1,3] = gsub(")",paste0("; ",open_cit,"*)"),printtab[1,3])
+printtab[1,4] = gsub(")",paste0("; ",pct_cit,"%*)"),printtab[1,4])
+kable(printtab)
+```
+
+*After removing PLoS One
+
+## Table of 2 category DSM by Open Access
+
+```{r}
+# obtain open access counts at journal level
+tmptable = with(jdata,table(dsm2,oam_fac))
+tmptable = cbind(tmptable,"% Open Access"=100*tmptable[,2]/rowSums(tmptable))
+tmptable = as_data_frame(tmptable)
+# obtain open access counts at citable item level
+jcit = left_join(
+  left_join(jdata%>%group_by(dsm2)%>%summarize("tot_cit"=sum(citable_2013)),
+            jdata%>%filter(oam_fac=="Subscription")%>%group_by(dsm2)%>%
+              summarize("sub_cit"=sum(citable_2013))),
+  jdata%>%filter(oam_fac=="Open Access")%>%group_by(dsm2)%>%summarize(open_cit = sum(citable_2013))
+)
+jcit$open_cit[is.na(jcit$open_cit)] = 0
+jcit$pct_open_cit = 100*jcit$open_cit/jcit$tot_cit
+  
+#without Plos One
+open_cit = jdata%>%filter(Journal!="PLoS One",
+               oam_fac=="Open Access",
+               dsm2==1)%>%summarize("open_cit"=sum(citable_2013))
+tot_cit = jdata%>%filter(Journal!="PLoS One",
+               dsm2==1)%>%summarize("open_cit"=sum(citable_2013))
+pct_cit = round(100*open_cit/tot_cit,2)
+printtab = data_frame(
+  "DSM"=levels(jdata$dsm2_fac),
+  "Subscription"=paste0(tmptable$Subscription," (",jcit$sub_cit,")"),
+  "Open Access"=paste0(tmptable$`Open Access`," (",jcit$open_cit,")"),
+  "% Open Access"=paste0(round(tmptable$`% Open Access`,2),"% (",
+                         round(jcit$pct_open_cit,2),"%)")
+)
+printtab = printtab%>%arrange(desc(DSM))
+# add in without Plos One #s
+printtab[1,3] = gsub(")",paste0("; ",open_cit,"*)"),printtab[1,3])
+printtab[1,4] = gsub(")",paste0("; ",pct_cit,"%*)"),printtab[1,4])
+kable(printtab)
+```
+
+*After removing PLoS One
+
+
+
+## TABLE X: Frequencies of Data Sharing Policies
+
+```{r}
+jdata$omic_data_sharing_fac = relevel(jdata$omic_data_sharing_fac,ref="No")
+jdata$copyright_licensing_fac = relevel(jdata$copyright_licensing_fac,ref="No Mention")
+jdata$archival_retention_fac = relevel(jdata$archival_retention_fac,ref="No Mention")
+jdata$reproducibility_noted_fac = relevel(jdata$reproducibility_noted_fac,ref="No Mention")
+varlist = c("omic_data_sharing_fac","rec_pref_sharing_fac","journal_hosts_fac","copyright_licensing_fac",
+            "archival_retention_fac","reproducibility_noted_fac")
+t1 = CreateTableOne(varlist,data = jdata)
+x1 <- print(t1,printToggle = FALSE,noSpaces = FALSE)
+tmp = rownames(x1)
+tmptab = as_data_frame(x1)%>%add_column("Variable"=tmp,.before = "Overall")
+tmptab$Variable = gsub("omic_data_sharing_fac","Omic Data Sharing Required",tmptab$Variable)
+tmptab$Variable = gsub("rec_pref_sharing_fac","Recommended Sharing Method",tmptab$Variable)
+tmptab$Variable = gsub("journal_hosts_fac","Journal Hosting Limit",tmptab$Variable)
+tmptab$Variable = gsub("copyright_licensing_fac","Copyright Licensing of Data",tmptab$Variable)
+tmptab$Variable = gsub("archival_retention_fac","Archival Retention Policy",tmptab$Variable)
+tmptab$Variable = gsub("reproducibility_noted_fac","Reproducibility or Analogous Concepts Noted as Purpose of Data Policy",tmptab$Variable)
+tmptab$Overall =  gsub(")","%)",tmptab$Overall)
+kable(tmptab)
+```
+
+
+We can also visualize the distribution with a boxplot of IF by DSM type.
+
+*Boxplot description*: The lower and upper "hinges" correspond to the first and third quartiles (the 25th and 75th percentiles). The upper whisker extends from the hinge to the highest value that is within 1.5 * IQR of the hinge, where IQR is the inter-quartile range, or distance between the first and third quartiles. The lower whisker extends from the hinge to the lowest value within 1.5 * IQR of the hinge. Data beyond the end of the whiskers are outliers and plotted as points (as specified by Tukey). (from `geom_boxplot` help page in the R `ggplot2` package.) The Triangle represents the mean.
+
+
+
+```{r boxplot_if_dsm_1314,fig.width=9,fig.height=7}
+ggplot(jdata_long%>%filter(year!=2015),aes(x=dsm,y=impact_factor,fill=dsm_fac,alpha=year))+
+  geom_boxplot(position=position_dodge(.9))+theme_minimal()+
+  scale_alpha_manual(values=c(0.3,0.7))+
+  stat_summary(fun.y=mean,geom="point",position=position_dodge(.9),
+               aes(x=dsm,y=impact_factor,shape="triangle"))+
+  scale_shape_manual(values = 2)+
+  guides(alpha="none",shape="none",fill=guide_legend(title="Data Sharing Mark",ncol=1))+
+  xlab("Data Sharing Mark (1-6), Year (2013 light, 2014 dark)")+
+  ylab("Impact Factor")+
+  #ggtitle("Boxplot of Impact Factor by Data Sharing Mark")+
+  scale_x_continuous(breaks=1:6)+
+  theme(legend.position="bottom")
+```
+
+```{r boxplot_if_dsm,fig.width=9,fig.height=7}
+ggplot(jdata_long,aes(x=dsm,y=impact_factor,fill=dsm_fac,alpha=year))+
+  geom_boxplot(position=position_dodge(.9))+theme_minimal()+
+  scale_alpha_manual(values=c(0.3,0.5,0.8))+
+  stat_summary(fun.y=mean,geom="point",position=position_dodge(.9),
+               aes(x=dsm,y=impact_factor,shape="triangle"))+
+  scale_shape_manual(values = 2)+
+  guides(alpha="none",shape="none",fill=guide_legend(title="Data Sharing Mark",ncol=1))+
+  xlab("Data Sharing Mark (1-6), Year (2013-2015 light-dark)")+
+  ylab("Impact Factor")+
+  #ggtitle("Boxplot of Impact Factor by Data Sharing Mark")+
+  scale_x_continuous(breaks=1:6)+
+  theme(legend.position="bottom")
+```
+
+## FIGURE 2: Impact factors were higher for journals with the strongest data sharing policies (DSM 1) compared to journals with no mention of data sharing (DSM 6).
+
+The median Impact Factor was calculated for the journals with each data sharing mark for
+each report year (light color=2013, dark color=2014). The lower and upper hinges of the
+boxplots represent the first and third quartiles of journal Impact Factor, the horizontal line
+represents the median, the triangle represents the mean, and the upper and lower whiskers
+extend from the hinge to the highest (lowest) value that is within 1.5 times the interquartile
+range of the hinge, with journals outside this range represented as points.
+
+```{r fig2_boxplot_if_dsm_1314,fig.width=9,fig.height=7,dpi=500}
+tmplong = jdata_long%>%filter(year!=2015)
+tmplong$dsm_fac_reverse = factor(tmplong$dsm_fac,levels=levels(tmplong$dsm_fac)[6:1])
+ggplot(tmplong,aes(x=dsm,y=impact_factor,alpha=year,fill=dsm_fac_reverse))+
+  geom_boxplot(position=position_dodge(.9))+theme_minimal()+
+  scale_alpha_manual(values=c(0.7,0.9))+ 
+  stat_summary(fun.y=mean,geom="point",position=position_dodge(.9),
+               aes(x=dsm,y=impact_factor,shape="triangle"))+
+  scale_shape_manual(values = 2)+
+  scale_fill_manual(values = RColorBrewer::brewer.pal(n=7, name="Blues")[2:7],
+                    #values=RColorBrewer::brewer.pal(n=6,name="Blues"),
+                    breaks=levels(tmplong$dsm_fac),
+                    labels=paste(1:6,levels(tmplong$dsm_fac)))+
+  guides(alpha="none",shape="none",
+         fill=guide_legend(title="Data Sharing Mark",ncol=1))+
+  xlab("Data Sharing Mark (1-6), Year (2013 light, 2014 dark)")+
+  ylab("Impact Factor")+
+  #ggtitle("Boxplot of Impact Factor by Data Sharing Mark")+
+  scale_x_continuous(breaks=1:6)+
+  theme(legend.position="bottom")
+```
+
+```{r boxplot_citable_dsm_1314,fig.width=9,fig.height=7,include=FALSE}
+ggplot(jdata_long%>%filter(!Journal=="PLoS One",year!=2015),aes(x=dsm,y=citable_items,fill=dsm_fac,alpha=year))+
+  geom_boxplot(position=position_dodge(.9))+theme_minimal()+
+  scale_alpha_manual(values=c(0.3,0.7))+
+  stat_summary(fun.y=mean,geom="point",position=position_dodge(.9),
+               aes(x=dsm,y=citable_items,shape="triangle"))+
+  scale_shape_manual(values = 2)+
+  guides(alpha="none",shape="none",fill="none")+
+  xlab("Data Sharing Mark (1-6), Year (2013 light, 2014 dark)")+
+  #ggtitle("Number of Citable Items per Journal by Data Sharing Mark")+
+  ylab("Number of Citable Items per Journal")+scale_x_continuous(breaks=1:6)+
+  theme(legend.position="bottom")
+```
+
+```{r boxplot_citable_dsm,fig.width=9,fig.height=7}
+ggplot(jdata_long%>%filter(!Journal=="PLoS One"),aes(x=dsm,y=citable_items,fill=dsm_fac,alpha=year))+
+  geom_boxplot(position=position_dodge(.9))+theme_minimal()+
+  scale_alpha_manual(values=c(0.3,0.5,0.8))+
+  stat_summary(fun.y=mean,geom="point",position=position_dodge(.9),
+               aes(x=dsm,y=citable_items,shape="triangle"))+
+  scale_shape_manual(values = 2)+
+  guides(alpha="none",shape="none",fill="none")+
+  xlab("Data Sharing Mark (1-6), Year (2013-2015 light-dark)")+
+  #ggtitle("Number of Citable Items per Journal by Data Sharing Mark")+
+  ylab("Number of Citable Items per Journal")+scale_x_continuous(breaks=1:6)+
+  theme(legend.position="bottom")
+```
+
+Collapsing DSM into two categories:
+
+```{r impact_factor_dsm_2cat_table}
+tmpsum = jdata_long%>%group_by(dsm2_fac,year)%>%summarize(
+  "Number of Journals"=n(),
+  "min_IF"=min(impact_factor,na.rm=T),
+  "mean_IF"=mean(impact_factor,na.rm=T),
+  "median_IF"=median(impact_factor,na.rm=T),
+  "max_IF"=max(impact_factor,na.rm=T),
+  "min_TotalCites"=min(total_cites,na.rm=T),
+  "mean_TotalCites"=mean(total_cites,na.rm=T),
+  "median_TotalCites"=median(total_cites,na.rm=T),
+  "max_TotalCites"=max(total_cites,na.rm=T)
+)
+tmpsum = tmpsum%>%rename(DSM=dsm2_fac)
+kable(tmpsum,digits=2)
+tmpsum_IF_within_DSM2 = tmpsum
+```
+
+```{r boxplot_if_dsm_2cat,fig.width=9,fig.height=5}
+ggplot(jdata_long,aes(x=dsm2_fac_flip,y=impact_factor,fill=dsm2_fac_flip,alpha=year))+
+  geom_boxplot(position=position_dodge(.9))+theme_minimal()+
+  scale_alpha_manual(values=c(0.3,0.5,0.8))+
+    stat_summary(fun.y=mean,geom="point",position=position_dodge(.9),
+               aes(x=dsm2_fac,y=impact_factor,shape="triangle"))+
+  scale_shape_manual(values = 2)+
+  guides(alpha="none",shape="none",fill=guide_legend(title="Data Sharing"))+
+  xlab("Data Sharing Required (No, Yes), Year (2013-2015 light-dark)")+
+  #ggtitle("Boxplot of Impact Factor by Data Sharing Requirement")+
+  ylab("Impact Factor")
+```
+
+
+```{r boxplot_citable_dsm_2cat,fig.width=9,fig.height=5}
+ggplot(jdata_long%>%filter(!Journal=="PLoS One"),
+       aes(x=dsm2_fac_flip,y=citable_items,fill=dsm2_fac_flip,alpha=year))+
+  geom_boxplot(position=position_dodge(.9))+theme_minimal()+
+    stat_summary(fun.y=mean,geom="point",position=position_dodge(.9),
+               aes(x=dsm2_fac,y=citable_items,shape="triangle"))+
+  scale_alpha_manual(values=c(0.3,0.5,0.8))+
+  scale_shape_manual(values = 2)+
+  guides(alpha="none",shape="none",fill=guide_legend(title="Data Sharing"))+
+  xlab("Data Sharing Required (No, Yes), Year (2013-2015 light-dark)")+
+  #ggtitle("Number of Citable Items per Journal by Data Sharing Requirement")+
+  ylab("Number of Citable Items per Journal")
+```
+
+
+
+
+# Session Info
+
+This analysis was performed in R/Rstudio using knitr with the following session:
+
+```{r sessioninfo}
+devtools::session_info()
+```
+Footer

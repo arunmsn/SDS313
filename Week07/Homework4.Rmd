@@ -1,0 +1,166 @@
+---
+title: "Homework 4"
+author: "Arun Mahadevan Sathia Narayanan"
+date: 'Date Published: `r Sys.Date()`'
+output:
+  html_document:
+    theme: journal
+    toc: true
+    toc_float:
+      collapsed: true
+---
+
+```{r include = FALSE}
+library(ggplot2)
+library(tidyverse)
+library(lubridate)
+```
+
+# Part 1
+
+### 1.0.  
+**Create a subset that contains all of the bonds from Travis County.**  
+**Parse the election date variable and ensure that it was converted to a date variable correctly.**  
+**Investigate any dates that don’t make sense and either fix them or remove them from the dataset.**  
+**Briefly describe what you did in your report and provide the final number of bonds in your Travis County subset (use this subset for #2 and #3 below).**  
+```{r}
+bonds = read.csv("Homework1_Bonds.csv")
+food = read.csv("Homework4_food.csv")
+```
+
+```{r}
+travis <- bonds |>
+  filter(County == "Travis") |>
+  mutate(ElectionDate = parse_date_time(ElectionDate, orders = c("mdy", "ymd", "dmy"))) |>
+  arrange(ElectionDate) |>
+  mutate(month = month(ElectionDate), weekday = wday(ElectionDate, , label = TRUE), year = year(ElectionDate))
+
+travis <- travis |>
+  filter(year < 2025)
+
+# To verify the result
+head(travis |> select(Name, County, ElectionDate), 5)
+tail(travis |> select(Name, County, ElectionDate), 5)
+```
+  
+To ensure all of the requirements were met, I first filtered the original dataset to only contain elections from Travis County, then used parse_date_time on ElectionDate giving in a specific amount of orders to ensure the dates in the new dataset all followed the same year-month-date convention. I then arranged the dataset by the years in order to remove any dates that don't make sense more easily (the 2059 election to be specific), and finally added three new columns to the data set - month, weekday, and year - to enable any easy counting per month/day/year to be done. **In total, there were `r nrow(travis)` elections in Travis.**  
+
+### 2.1.  
+**What month had the most bond election dates?**  
+```{r}
+table(travis$month)
+
+travis |>
+  group_by(month) |>
+  arrange(month) |>
+  ggplot() + geom_bar(aes(x = month)) + labs(title = "Distribution of Bond Elections By Month", x = "Month", y = "Count") + scale_x_continuous(breaks = seq(0, 12, by = 1)) + scale_y_continuous(breaks = seq(0, 150, by = 10))
+```
+  
+As seen from the table and the bar graph above, the observed month with the most amount of bond elections was May, with 140 elections.  
+
+### 2.2.  
+**Which day of the week had the most election dates?**  
+```{r}
+table(travis$weekday)
+
+travis |>
+  ggplot() + geom_bar(aes(x = weekday)) + labs(title = "Distribution of Bond Elections By Weekday", x = "Weekday", y = "Count") + scale_y_continuous(breaks = seq(0, 200, by = 10))
+```
+  
+Here, we can again look at the table and bar graph above, and see that Saturday had the most amount of bond elections, coming in with 181 elections.  
+
+### 3.0.  
+**Make a graph that compares the percentages of bonds that were carried across months and another graph to compare the percentages that were carried across days of the week.** 
+**Briefly summarize what your graphs show in a few sentences.**  
+```{r}
+travis_carried_month <- travis |>
+  group_by(month) |>
+  reframe(TotalBonds = n(), Carried = sum(Result == "Carried"), 
+            PercentCarried = Carried / TotalBonds * 100)
+ggplot(travis_carried_month) + geom_point(aes(x = month, y = PercentCarried)) +
+  labs(title = "Percent of Bonds Approved by Month", x = "Month", y = "Percentage of Bonds") + scale_x_continuous(breaks = seq(0, 12, by = 1))
+```
+```{r}
+summary(travis_carried_month$PercentCarried)
+cor(travis_carried_month$PercentCarried, travis_carried_month$month)
+```
+  
+Per month, it is a varying amount, as seen by the graph. For March, April, June, July, and October, we can see that 100% of the bonds were approved. January comes in at the lowest amount of 80%. You will notice that December (12) is missing from the Month axis. Interestingly enough, there were no bond elections in Travis County that happened in December. Looking at some statistics, the average percentage of bonds that won per month was 93.64%, and the median was 97.83%. When analyzing the relationship between the two variables, we can see a correlation of 0.4, a weak positive correlation, indicating that there is somewhat of a relationship but one does not influence the other by much.  
+
+```{r}
+travis_carried_weekday <- travis |>
+  group_by(weekday) |>
+  reframe(TotalBonds = n(), Carried = sum(Result == "Carried"), 
+            PercentCarried = Carried / TotalBonds * 100)
+ggplot(travis_carried_weekday) + geom_point(aes(x = weekday, y = PercentCarried)) +
+  labs(title = "Percent of Bonds Approved by Weekday", x = "Weekday", y = "Percentage of Bonds")
+```
+  
+```{r}
+summary(travis_carried_weekday$PercentCarried)
+travis <- bonds |>
+  filter(County == "Travis") |>
+  mutate(ElectionDate = parse_date_time(ElectionDate, orders = c("mdy", "ymd", "dmy"))) |>
+  arrange(ElectionDate) |>
+  mutate(month = month(ElectionDate), weekday = wday(ElectionDate), year = year(ElectionDate))
+travis_carried_weekday <- travis |>
+  group_by(weekday) |>
+  reframe(TotalBonds = n(), Carried = sum(Result == "Carried"), 
+            PercentCarried = Carried / TotalBonds * 100)
+round(cor(travis_carried_weekday$PercentCarried, travis_carried_weekday$weekday),2)
+```
+When analyzing the day of the week the bonds were approved on in Travis County, Monday, Wednesday, and Thursday are all missing. Every single bond election that has happened in Travis County has happened only on four days: Sunday, Tuesday, Friday, and Saturday. So let's analyze these four days:  
+Sunday and Friday are both days where 100% of the bonds in the elections were approved, and Tuesday comes in the lowest with 89%. On the weekdays, the average percentage of approved bonds was 94.6%, with the median being 94.75%. When analyzing the correlation between these two variables, we get -0.29, which is a weak negative correlation, indicating that these have somewhat of an inverse relationship, but yet again, one does not really affect the other.  
+
+# Part 2  
+
+### 4.0.  
+**Select one set of population count values for 0.5, 1, 10, and 20 miles from the closest supermarket (either children, low income people, people, or seniors).**
+**Create a dataset that contains only your set of 4 columns related to your selected population variable as well as the first 3 variables of the dataset.** 
+**Rename all “back-tick” variables to follow good naming convention. Include a sentence in the report that provides the population set you chose.**  
+```{r}
+food_people <- data.frame(County = food$County, 
+                          Population = food$Population, 
+                          State = food$State, 
+                          "People_0.5" = food$Low.Access.Numbers.People.1.2.Mile, 
+                          "People_1" = food$Low.Access.Numbers.People.1.Mile, 
+                          "People_10" = food$Low.Access.Numbers.People.10.Miles,
+                          "People_20" = food$Low.Access.Numbers.People.20.Miles)
+food_people <- food_people |>
+  reframe(County = County,
+          Population = Population,
+          State = State,
+          "0.5" = People_0.5,
+          "1.0" = People_1,
+          "10" = People_10,
+          "20" = People_20)
+
+head(food_people)
+```
+The population I chose for the dataset was the `Low.Access.Numbers.People`.  
+
+### 5.0.  
+**Reshape your new dataset so that it contains a numeric variable called “distance” with values of 0.5, 1, 10, or 20, and a variable called “pop_count” that contains the correct value for each row. Sort your dataset by county and output the first 10 rows of every variable in your reshaped dataset in your R Markdown report.**  
+```{r}
+
+organized <- pivot_longer(food_people, cols = c("0.5", "1.0", "10", "20"), 
+                          names_to = "distance", values_to = "pop_count") |>
+  arrange(by = County)
+organized <- data.frame(organized)
+head(organized, 10)
+```
+  
+Here, we can observe that the distance column makes it so that each County gets four rows, one for each distance. 
+  
+### 6.0.  
+**Output a nicely formatted table that contains the mean population count (of your chosen population group) for each distance, averaging across all counties in the dataset.**  
+```{r}
+means <- organized |>
+  group_by(distance) |>
+  reframe("Mean_Pop" = mean(pop_count))
+colnames(means)[1] = "Distance"
+means <- data.frame(means)
+means
+```
+  
+The population with the largest average distance are those who live within 0.5 miles of their closest supermarket. Interestingly enough, we can see a declining average population from the 0.5 miles to the 20 miles.
