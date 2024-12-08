@@ -1,0 +1,331 @@
+---
+title: "SDS 313  More Visualizing and Describing Data"
+output: html_document
+---
+
+In this worksheet, we will:
+
+-   Create plots with many different options using `ggplot`
+-   Consider different themes and scales
+-   Export our graphs as a *pdf* file
+
+A very popular graphics package that can make it easier to create nice looking graphs is [ggplot2](https://ggplot2.tidyverse.org/index.html). Let's check that we have the necessary package installed:
+
+```{r}
+library(ggplot2)
+```
+
+The code for `ggplot` functions looks a little different than base R plots.
+
+## 0. Import Dataset
+
+The following data was collected at Baystate Medical Center, Springfield, MA in 1986.
+
+```{r}
+birthwt <- read.csv('birthwt.csv')
+```
+
+| **Variable** | **Description**                                       |
+|--------------|-------------------------------------------------------|
+| `low`        | Indicator of birth weight less than 2.5 kg            |
+| `age`        | Mother's age (years)                                  |
+| `lwt`        | Mother's weight (lbs)                                 |
+| `race`       | Mother's race (1 = white, 2 = black, 3 = other).      |
+| `smoke`      | Smoking status during pregnancy                       |
+| `ptl`        | Number of previous premature labors                   |
+| `ht`         | History of hypertension                               |
+| `ui`         | Presence of uterine irritability                      |
+| `ftv`        | Number of physician visits during the first trimester |
+| `bwt`        | Birth weight (grams)                                  |
+
+What code can we use to get familiar with the dataset?
+
+```{r}
+# Get familiar with the dataset
+str(birthwt)
+summary(birthwt)
+head(birthwt)
+```
+
+## 1. Creating plots with `ggplot`
+
+### a. Define a plot
+
+The `ggplot()` function helps us build a plot. Within this function, we specify the dataframe to explore:
+
+```{r}
+# Create a ggplot
+bw_ggplot <- ggplot(birthwt)
+
+# How does the plot looks like?
+bw_ggplot
+```
+
+It’s empty because we haven’t specified how to represent the variables! We need to represent variables by mapping them with a geometric object using `aes()`. The type of geometric object depends on the type of data.
+
+```{r}
+# 1 numeric variable
+bw_ggplot + geom_histogram(aes(x = bwt))
+bw_ggplot + geom_boxplot(aes(x = bwt))
+
+# 1 categorical variable
+bw_ggplot + geom_bar(aes(x = smoke))
+
+# 2 numeric variables
+bw_ggplot + geom_point(aes(x = lwt, y = bwt))
+```
+
+### b. More on histograms
+
+When looking at the histogram of the birth weight, can you tell which range of values is the most common?
+
+```{r}
+bw_ggplot + geom_histogram(aes(x = bwt))
+```
+
+See the message: by default, the number of bins is 30 in `ggplot`. Let's adjust that:
+
+```{r}
+bw_ggplot + geom_histogram(aes(x = bwt), 
+                 # Set bin width and center (half of the bin width)
+                 binwidth = 1000, center = 500)
+```
+
+Try some different bin widths! Note how the general shape of the histogram might change depending on how we define the bins. We usually recommend to have at least 10 different bins to be able to “see” the variation in our data.
+
+```{r}
+bw_ggplot + geom_histogram(aes(x = bwt), 
+                 # Set bin width and center (half of the bin width)
+                 binwidth = 100, center = 50)
+```
+
+### c. Map to color, shape, size
+
+We can change customize colors on our plot (outside of the aesthetics):
+
+```{r}
+# What does color vs fill do? 
+bw_ggplot + geom_histogram(aes(x = bwt), color = "blue", fill = "orange")
+bw_ggplot + geom_boxplot(aes(x = bwt), color = "blue", fill = "orange")
+bw_ggplot + geom_bar(aes(x = smoke), color = "blue", fill = "orange")
+bw_ggplot + geom_point(aes(x = lwt, y = bwt), color = "blue", fill = "orange")
+```
+
+```{r}
+# What does shape vs size vs alpha do? 
+bw_ggplot + geom_point(aes(x = lwt, y = bwt), shape = 0.5)
+bw_ggplot + geom_point(aes(x = lwt, y = bwt), size = 0.5)
+bw_ggplot + geom_point(aes(x = lwt, y = bwt), alpha = 0.5)
+```
+
+All these options only change the general appearance of the graph but we can change the appearance of some part of the graph by mapping variables to other types of aesthetics:
+
+```{r}
+# Adjust color by the categories of a variable
+bw_ggplot + geom_point(aes(x = lwt, y = bwt, color = smoke))
+
+# Adjust shape by the categories of a variable
+bw_ggplot + geom_point(aes(x = lwt, y = bwt, shape = low))
+
+# Adjust size by the numeric values of a variable
+bw_ggplot + geom_point(aes(x = lwt, y = bwt, size = age))
+```
+
+Note: adding too many variables to a single plot can make it difficult to interpret.
+
+A special case for representing 2 categorical variables:
+
+```{r}
+bw_ggplot + geom_bar(aes(x = smoke, fill = low))
+bw_ggplot + geom_bar(aes(x = smoke, fill = low), position = "fill") 
+# notice how the vertical axis is wrong? we'll fix that later.
+```
+
+Does the label on the last y-axis make sense? Let's see how to fix it!
+
+## 2. Layering
+
+We can add more layers to our plot by adding other components with `+`.
+
+### a. Adding labels
+
+Remember to **always** add labels to your plots:
+
+```{r}
+bw_ggplot + geom_bar(aes(x = smoke, fill = low), position = "fill") +
+  #  Add labels
+  labs(
+    # Title
+    title = "Impact of smoking status on birth weight",
+    # Caption with source of data
+    caption = "Data obtained from Baystate Medical Center, Springfield, MA in 1986",
+    # Label x-axis and y-axis
+    x = "The mother smoked during pregnancy",
+    y = "Proportion",
+    # Legend of color
+    fill = "Baby was born with a low birth weight")
+```
+
+### b. Controlling scales
+
+We can adjust the limits on the axes:
+
+```{r}
+bw_ggplot + geom_point(aes(x = lwt, y = bwt)) +
+  xlim(c(0,250)) + ylim(c(0,5000))
+```
+
+We can set specific tick marks for better readability:
+
+```{r}
+bw_ggplot + geom_histogram(aes(x = bwt), binwidth = 500, center = 250,
+                           color = "blue", fill ="orange") +
+  # Adjust the tick marks of the x-axis
+  scale_x_continuous(limits = c(0,5000), breaks = seq(0,5000,500)) 
+```
+
+Or instead remove unnecessary scale on one axis:
+
+```{r}
+bw_ggplot + geom_boxplot(aes(x = bwt)) + 
+  scale_y_continuous(labels = NULL)
+```
+
+### c. Faceting
+
+We can produce a plot for each category of a variable with faceting:
+
+```{r}
+bw_ggplot + geom_histogram(aes(x = bwt)) +
+  facet_wrap(~ftv)
+
+# or for better comparisons
+bw_ggplot + geom_histogram(aes(x = bwt)) +
+  facet_wrap(~ftv, nrow = 3)
+```
+
+------------------------------------------------------------------------
+
+## Group Practice
+
+1.  Is mother's age related to birth weight? Make a plot to display this relationship.
+2.  Within your plot, come up with a way to highlight, or in someway distinguish, babies with `low` birth weight (Hint: you can use colors, shapes, faceting, ...).
+3.  Include labels of course!
+4.  Post your graph on your group's slide [here](https://docs.google.com/presentation/d/1ppw-3etZL_fFghN8aRkW00gVpPgoMacZ1cwhSuJiNkI/edit?usp=sharing).
+
+```{r}
+# Group practice plot:
+bw_ggplot + geom_point(aes(x = age, y = bwt, color = low)) + 
+
+  labs(
+    # Title
+    title = "Impact of mother's age on birth weight",
+    # Caption with source of data
+    caption = "Data obtained from Baystate Medical Center, Springfield, MA in 1986",
+    # Label x-axis and y-axis
+    x = "Age of mother during pregnancy",
+    y = "Birth weight of baby") + 
+  
+  facet_wrap(~ftv)
+```
+
+------------------------------------------------------------------------
+
+### d. Looking for trends
+
+We can look for trends in our data:
+
+```{r}
+# General trend
+bw_ggplot + geom_point(aes(x = lwt, y = bwt)) +
+  geom_smooth(aes(x = lwt, y = bwt))
+
+# Linear trend
+bw_ggplot + geom_point(aes(x = lwt, y = bwt)) +
+  geom_smooth(aes(x = lwt, y = bwt), method = "lm", se = FALSE) +
+  # Add lines representing means
+  geom_vline(xintercept = mean(birthwt$lwt), color = "green") +
+  geom_hline(yintercept = mean(birthwt$bwt), color = "orange")
+
+# Smooth histogram
+bw_ggplot + geom_density(aes(x = bwt))
+
+# Smooth boxplots
+bw_ggplot + geom_violin(aes(x = bwt, y = smoke))
+```
+
+### e. Palettes and themes
+
+We can customize many aspects of our graphs by hand (colors, scales, background color, grid, …) or we can use some themes or palettes other than the defaults.
+
+If you want to get rid of classic "gray box" background:
+
+```{r}
+bw_ggplot + geom_point(aes(x = lwt, y = bwt)) + theme_classic()
+# there are several themes, explore them!
+```
+
+We can use some specific palettes from the **color brewer** that are color-blind friendly:
+
+```{r}
+library(RColorBrewer)
+display.brewer.all(colorblindFriendly = TRUE)
+```
+
+```{r}
+bw_ggplot + geom_bar(aes(x = smoke, fill = low)) + 
+  scale_fill_brewer(palette = 'Set2')
+```
+
+These palettes only works for a limited number of colors. What if we color our data with a numeric variable:
+
+```{r}
+bw_ggplot + geom_point(aes(x = lwt, y = bwt, color = age)) +
+  scale_color_gradient(low = "lightblue", high = "darkblue")
+```
+
+## 3. Exporting a graph
+
+You can use RStudio's user-friendly buttons to export plots, or use code. If using code, exporting a graph takes 3 steps:
+
+1.  Naming a file to write to.
+2.  Running the graph function(s).
+3.  Closing the file.
+
+```{r}
+# Where is this plot saved to?
+pdf('mygraph.pdf') 
+bw_ggplot
+dev.off()
+```
+
+------------------------------------------------------------------------
+
+## Group Practice
+
+Within your group, pick one of the following question to answer with a plot:
+
+a.  Is smoking during pregnancy associated with lower values of birth weights?
+
+b.  Is a history of hypertension associated with the presence of uterine irritability?
+
+c.  Is the mother's age associated with more physician visits during the first trimester?
+
+Make an appropriate plot to answer the question. Adjust the labels and add colors. Post your graph on your group's slide [here](https://docs.google.com/presentation/d/1ppw-3etZL_fFghN8aRkW00gVpPgoMacZ1cwhSuJiNkI/edit?usp=sharing).
+
+```{r}
+# Group practice plot:
+bw_ggplot + geom_boxplot(aes(x = ftv, y = age, color = ftv)) +
+  labs(
+    y = "Age of Mother",
+    x = "Number of visits"
+  )
+```
+
+------------------------------------------------------------------------
+
+Here are some other resources that can help make your `ggplot`s look nicer:
+
+-   [Function reference](https://ggplot2.tidyverse.org/reference/index.html)
+-   [R Cookbook](http://www.cookbook-r.com/Graphs/)
+-   [ggplot Cheat sheet](https://github.com/rstudio/cheatsheets/blob/main/data-visualization.pdf)

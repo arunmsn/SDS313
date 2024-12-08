@@ -1,0 +1,326 @@
+---
+title: "SDS 313 Visualizing and Describing Data"
+output: html_document
+---
+
+In this worksheet, we will:
+
+-   Choose how to plot different types of data with basic R plots
+-   Report univariate and bivariate descriptive statistics
+-   Include titles and labels to our plots
+
+We will be working with *R Markdown* files during lectures throughout the rest of the semester (you will learn to make our own in a couple of weeks). The advantage of an R Markdown document is that it incorporates R code in chunks within the text.
+
+Hit the run button (little green triangle) in the upper right to see this in action:
+
+```{r}
+# Run this code chunk
+5+1+2
+```
+
+## 0. Import Dataset
+
+The default working directory of any *R Markdown* file will be the folder where it is saved. Always make sure that your dataset is in the same folder as the *R Markdown* file, so you won't need to worry about file paths:
+
+```{r}
+med <- read.csv('medicaldata.csv')
+```
+
+What code can we use to get familiar with the structure of this dataset? What type of variables does it contain?
+
+```{r}
+# Explore the structure of this dataset
+str(med)
+```
+
+We can also take a quick look at descriptive statistics for all variables in the dataset:
+
+```{r}
+# Summarize all variables in the dataset
+summary(med)
+```
+
+The units for the variables are: `Age` (years), `Cholesterol` (mg/dL), `Glucose` (mg/dL), `BP` (mmHg), `BMI` (kg/m\^2), `Platelet` (count in thousands).
+
+## 1. Summarizing one variable
+
+### a. One Categorical Variable
+
+A categorical variable defines membership in a group. When describing categorical variables, we pay attention to which category are the most and least common.
+
+```{r}
+# Frequencies of each category of Diabetic
+table(med$Diabetic)
+
+# Proportions of each category of Diabetic (relative to total)
+prop.table(table(med$Diabetic))
+```
+
+```{r}
+# Represent frequencies with bars
+barplot(table(med$Diabetic))
+```
+
+What do 0 and 1 represent though? We could choose to label the categories:
+
+```{r}
+# Change the labels of the categories
+med$Diabetic <- factor(med$Diabetic, labels = c('No','Yes'))
+
+# Update bar plot
+barplot(table(med$Diabetic))
+```
+
+> Tip: we should always add a title and labels to our plot to ensure that there is enough information about the data being presented.
+
+```{r}
+# A better version of the bar plot
+barplot(table(med$Diabetic),
+        # add a title
+        main = 'Frequency of Diabetic Status',
+        # add labels to the axes
+        xlab = 'Diabetic Status', ylab = 'Frequency of Patients',
+        # adjust limits to the y-axis
+        ylim = c(0,100),
+        # adjust colors of the bars
+        col=c('aquamarine','purple'))
+```
+
+In summary, for 1 categorical variable:
+
+-   Describe with: *frequencies or proportions*
+-   Display with: *bar plot*
+
+### b. One Numeric Variable
+
+A numeric variable is a quantitative measurement. When describing numeric variables, we pay attention to what a typical value is (center) and how the values vary from each other (spread), what values are most common and what values are rare.
+
+```{r}
+# Represent numeric values in bins with a histrogram
+hist(med$Cholesterol)
+```
+
+In statistics, center is a measure that represents a typical value for a numeric variable (we typically report the *mean* or *median*). The *mean* is the arithmetic average of the numeric values: it is the sum of all data values divided by the number of observations. The *median* splits the data in two halves: into the lowest 50% values and the highest 50% values.
+
+```{r}
+# Compare the values of mean and median
+mean(med$Cholesterol)
+median(med$Cholesterol)
+```
+
+Since, usually, not all values are the same, we should also report the spread of a numeric variable. In statistics, we usually use standard deviation or the five-number summary. The standard deviation is the average distance between each data point and the mean of the dataset. In the five-number summary, the first quartile, Q1, separates the data from the lowest 25% values and the third quartile, Q3, separate the data from the highest 25% values).
+
+```{r}
+# Compare the values of sd vs Q1 and Q3
+sd(med$Cholesterol)
+fivenum(med$Cholesterol)
+```
+
+```{r}
+# Represent the five-number summary with a boxplot
+boxplot(med$Cholesterol)
+```
+
+> Tip: we can use some options to improve our plots with more options.
+
+```{r}
+# A better version of the boxplot
+boxplot(med$Cholesterol,
+        # add a title
+        main = 'Boxplot of Cholesterol',
+        # add labels to the axes
+        xlab = 'Cholesterol (mg/dL)',
+        # adjust colors of the box
+        col = 'lightgreen',
+        # adjust the appearance of the points 
+        pch = 20, 
+        # make the boxplot horizontal
+        horizontal = TRUE)
+```
+
+In summary, for 1 numeric variable:
+
+-   Describe with:
+    -   Center: *mean or median*
+    -   Spread: *standard deviation or quartiles*
+-   Display with: *histogram or boxplot*
+
+------------------------------------------------------------------------
+
+## Group Practice
+
+1.  Pick a variable from this dataset (other than `Diabetic` or `Cholesterol`). Describe and display its distribution with an appropriate plot.
+2.  Change the default color of your plot and update the title and axis labels.
+3.  Post your graph on your group's slide [here](https://docs.google.com/presentation/d/1ppw-3etZL_fFghN8aRkW00gVpPgoMacZ1cwhSuJiNkI/edit?usp=sharing).
+
+```{r}
+# Group practice plot:
+table(med$BMI)
+sd(med$BMI)
+fivenum(med$BMI)
+boxplot(med$BMI,
+        # add a title
+        main = 'Boxplot of BMI',
+        # add labels to the axes
+        xlab = 'BMI (kg/m^2)',
+        # adjust colors of the box
+        col = 'limegreen',
+        # adjust the appearance of the points 
+        pch = 11, 
+        # make the boxplot horizontal
+        horizontal = TRUE)
+```
+
+------------------------------------------------------------------------
+
+## 2. Summarizing two variables (bivariate relationship)
+
+### a. Two Numeric Variables
+
+When comparing two numeric variables, we may wonder if high values on one variable are associated with high/low values for another variable.
+
+Correlation describes the strength of a (linear) relationship between two variables. With the function `cor`, we refer by default to the Pearson correlation coefficient which takes values between -1 (strong negative correlation) and 1 (strong positive correlation) with 0 indicating that there is no correlation.
+
+```{r}
+# Find the correlation coefficient
+cor(med$BMI,med$BP)
+```
+
+```{r}
+# Represent relationship with a scatterplot
+plot(med$BMI,med$BP)
+```
+
+> Tip: we can use some options to improve our scatterplots.
+
+```{r}
+# A better version of the bar plot
+plot(med$BMI,med$BP,
+        # add a title
+        main = 'Relationship between BMI and Blood Pressure',
+        # add labels to the axes
+        xlab = 'BMI (kg/m^2)', ylab = 'Blood Pressure (mmHg)',
+        # adjust appearance of points
+        pch = 20)
+```
+
+In summary, with 2 numeric variables:
+
+-   Describe with: *correlation*
+-   Display with: *scatterplot*
+
+### b. One Numeric and One Categorical Variable
+
+When comparing a numeric variable for different categories, we may wonder if the distribution of the numeric variable (center, spread) is about the same across all categories or not.
+
+```{r}
+# Compare means
+aggregate(BP ~ Diabetic, data = med, mean)
+
+# What about the standard deviations of each group?
+
+```
+
+```{r}
+# Compare distributions with a grouped boxplot
+boxplot(med$BP~med$Diabetic, 
+        main = 'Diastolic Blood Pressure',
+        ylab = 'Blood Pressure (mg/dL)',
+        xlab = 'Diabetic Status',
+        col = c('blue','red'))
+```
+
+```{r}
+# Create subsets for each Diabetic group:
+Diabetic <- med[med$Diabetic == "Yes",]
+NonDiabetic <- med[med$Diabetic == "No",]
+Diabetic
+NonDiabetic
+```
+
+```{r}
+# Then make a histogram for each group (use same limits on the axes)
+hist(Diabetic$BP, 
+     main='Histogram of Blood Pressure for Diabetic Patients',
+     xlab='Blood Pressure (mmHg))',
+     col='lightgreen',
+     ylim=c(0,25), xlim=c(40,100))
+
+hist(NonDiabetic$BP, 
+     main='Histogram of Blood Pressure for Non-Diabetic Patients',
+     xlab='Blood Pressure (mmHg))',
+     col='lightblue',
+     ylim=c(0,25), xlim=c(40,100))
+```
+
+In summary, with 1 numeric variable and 1 categorical variable:
+
+-   Describe with: *compare center and spread of each group*
+-   Display with: *grouped histogram or grouped boxplot*
+
+### c. Two Categorical Variables
+
+When comparing two categorical variables, we may wonder what are the most and least common categories of one variable across categories of the other variable.
+
+Let's label the `Edema` status variable like we did for `Diabetic` status:
+
+```{r}
+# Change the labels of the categories
+med$Edema <- factor(med$Edema, labels=c('No','Yes'))
+
+# Build a contingency table
+table(med$Edema, med$Diabetic, dnn = c("Edema", "Diabetic"))
+
+# Two ways to look at proportions
+prop.table(table(med$Edema, med$Diabetic, dnn = c("Edema", "Diabetic")), 1) # rows
+prop.table(table(med$Edema, med$Diabetic, dnn = c("Edema", "Diabetic")), 2) # columns
+```
+
+```{r}
+# Compare Edema status for Diabetic vs Non-Diabetic
+barplot(table(med$Edema, med$Diabetic),
+        main = 'Diabetes and Edema Status',
+        xlab = 'Diabetic Status', ylab = 'Frequency',
+        col = c('lightcoral','lightgreen'),
+        legend = TRUE)
+
+# Add a legend
+#legend("topright", 
+#       legend = c("No", "Yes"), 
+#       fill = c('lightcoral','lightgreen'), 
+#       title = "Edema Status")
+```
+
+```{r}
+# Compare Edema status for Diabetic vs Non-Diabetic, relatively
+barplot(prop.table(table(med$Edema, med$Diabetic),2),
+        main = 'Diabetes and Edema Status', 
+        ylab = 'Proportion', xlab = 'Edema Status',
+        col = c('lightcoral','lightgreen'),
+        legend = TRUE)
+```
+
+In summary, with 2 categorical variables:
+
+-   Describe with: *row or column proportions*
+-   Display with: *two-way frequency table or grouped bar chart*
+
+------------------------------------------------------------------------
+
+## Group Practice
+
+1.  Pick a variable that might be related to Saliva Glucose Level (Glucose). Describe and display the bivariate relationship.
+2.  Add your graph on your group's slide [here](https://docs.google.com/presentation/d/1ppw-3etZL_fFghN8aRkW00gVpPgoMacZ1cwhSuJiNkI/edit?usp=sharing).
+
+```{r}
+# Group practice plot:
+
+```
+
+------------------------------------------------------------------------
+
+Here are some other resources that can help make your base R plots look nicer:
+
+-   [Graph parameters](http://www.statmethods.net/advgraphs/parameters.html)
+-   [Color list](http://www.stat.columbia.edu/~tzheng/files/Rcolor.pdf)
+-   [Nice color palettes](http://colorbrewer2.org/)
