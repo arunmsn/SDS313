@@ -345,6 +345,7 @@ permits |>
 ### Work.Class vs. Day.Issued  
 ```{r echo = FALSE}
 # separate the types of work into different days to perform analysis day-by-day
+permits[6726, 5] <- "WEDNESDAY"
 permits |>
   filter(!is.na(Work.Class)) |>
   filter(!is.na(Day.Issued)) |>
