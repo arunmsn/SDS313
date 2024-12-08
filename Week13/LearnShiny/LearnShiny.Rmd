@@ -1,0 +1,31 @@
+```{r}
+library(shiny)
+runExample("01_hello")
+```
+
+```{r}
+# Shiny apps are contained in a single script called app.R. 
+# The script app.R lives in a directory (for example, newdir/) 
+#   and the app can be run with runApp("newdir").
+# app.R has 3 components:
+#   a UI                    - controls layout and appearance of app
+#   a server                - contains the instructions the computer needs to build the app
+#   and a call to shinyApp  - creates the ShinyApp objects from an explicit UI/server pair
+```
+
+```{r}
+# Below is the basic format for a Shiny App
+library(shiny)
+
+user_int <- ...
+serv <- ...
+shinyApp(ui = user_int, server = serv)
+# any App.R file must end with a call to shinyApp
+# if a Shiny App is in a directory called "my_app", then the following would be done:
+runApp("my_app")
+```
+
+```{r}
+runApp("App-1", display.mode = "showcase")
+runApp("App-1.1", display.mode = "showcase")
+```
