@@ -1,0 +1,29 @@
+---
+title: "Leprosy Report Code - Homework 2"
+output: html_document
+date: "2024-09-16"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+data <- read.csv('Homework2_leprosy.csv')
+library(ggplot2)
+```
+
+```{r leprosy, echo = FALSE}
+new_cases_per_100k <- ggplot(data)
+new_cases_per_100k + geom_point(aes(x = Country, y = New_Cases / (Population/100000))) + 
+  labs(
+    title = "New Cases per 100k in Population",
+    y = "Cases per 100k"
+  )
+fivenum((data$New_Cases / (data$Population / 100000)))
+data <- data[order(data$New_Cases, decreasing = TRUE),]
+result <- data.frame(Country = data$Country, New_Cases = data$New_Cases, Cases_per_100k = data$New_Cases / (data$Population / 100000), Population = data$Population)
+result
+ggplot(data, aes(x = Code, y = New_Cases / (Population / 100000))) + geom_point() + facet_wrap(~Region, nrow = 5) + 
+  labs(
+    y = 'Cases per 100k',
+    x = 'Country'
+  )
+```

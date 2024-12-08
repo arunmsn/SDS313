@@ -1,0 +1,120 @@
+ID,Intake.Type,Species,Sex,Age.Intake,Condition,Intake.Weight,Adopted.Weight,Days.to.Adoption
+1,Stray,Dog,Female,10,Sick,3.3,4.8,86
+2,Stray,Dog,Male,3,Injured,54,55,37
+3,Stray,Dog,Female,6,Normal,9.5,9.6,24
+4,Owner Surrender,Cat,Female,15,Normal,9.8,9.9,79
+5,Stray,Dog,Female,3,Normal,48.25,48.4,49
+6,Owner Surrender,Cat,Female,2,Normal,10.5,10.5,28
+7,Stray,Cat,Male,3,Normal,4.5,4.7,28
+8,Owner Surrender,Dog,Male,3,Normal,55.3,55.8,16
+9,Stray,Dog,Male,5,Normal,15.3,15.1,29
+10,Owner Surrender,Dog,Male,2,Normal,12.3,11.9,15
+11,Stray,Cat,Female,4,Sick,10.8,11.1,22
+12,Owner Surrender,Dog,Female,5,Normal,15.8,16.5,28
+13,Stray,Dog,Female,5,Normal,13.5,13.6,52
+14,Owner Surrender,Dog,Male,6,Normal,11,11.6,28
+15,Owner Surrender,Dog,Female,8,Normal,54,53.6,46
+16,Stray,Dog,Male,3,Normal,7.8,8.1,28
+17,Stray,Cat,Male,3,Injured,9,9.5,30
+18,Stray,Cat,Male,3,Normal,10,10.8,16
+19,Stray,Dog,Female,7,Injured,19.3,19.8,62
+20,Public Assist,Dog,Male,2,Sick,56,57.3,27
+21,Stray,Dog,Female,6,Normal,33,34.1,27
+22,Stray,Dog,Female,13,Normal,66,65.3,67
+23,Stray,Dog,Female,8,Normal,47,47.1,42
+24,Stray,Dog,Male,4,Normal,11,11.2,14
+25,Owner Surrender,Cat,Male,9,Normal,8.8,8.9,37
+26,Owner Surrender,Cat,Female,9,Normal,8.5,7.8,31
+27,Stray,Dog,Male,3,Normal,58,57.9,46
+28,Stray,Dog,Female,4,Injured,21.5,22.2,66
+29,Stray,Dog,Male,3,Injured,71.5,71.6,53
+30,Stray,Cat,Female,2,Injured,7,6.8,36
+31,Owner Surrender,Dog,Female,2,Normal,44,43.4,17
+32,Owner Surrender,Dog,Male,2,Normal,13.5,13.4,14
+33,Owner Surrender,Dog,Female,10,Normal,5.5,4.9,45
+34,Stray,Cat,Male,3,Injured,2.5,3.6,53
+35,Stray,Dog,Female,3,Sick,57.25,57.4,77
+36,Stray,Dog,Female,4,Normal,10,9.5,39
+37,Stray,Cat,Female,5,Normal,10,10.2,14
+38,Stray,Dog,Male,6,Normal,8.8,8.5,67
+39,Public Assist,Dog,Female,5,Normal,18.25,18.9,34
+40,Stray,Cat,Male,2,Sick,0.3,1,49
+41,Stray,Dog,Male,2,Sick,16,16,56
+42,Stray,Cat,Male,2,Sick,1,1.5,46
+43,Stray,Dog,Male,3,Normal,13.5,14.5,4
+44,Stray,Cat,Female,2,Sick,7.75,9.2,39
+45,Stray,Cat,Female,5,Sick,3,3.1,69
+46,Stray,Cat,Male,5,Normal,0.3,0.3,22
+47,Stray,Cat,Female,5,Sick,4.75,5.4,52
+48,Owner Surrender,Dog,Male,4,Normal,19,18.6,29
+49,Stray,Dog,Male,2,Normal,70,70.3,50
+50,Stray,Cat,Female,2,Normal,2.3,1.7,48
+51,Owner Surrender,Cat,Female,2,Injured,8.5,8.4,30
+52,Owner Surrender,Dog,Male,2,Normal,18.5,19.6,27
+53,Stray,Cat,Male,5,Normal,1,1.6,55
+54,Stray,Dog,Female,5,Normal,6,6.5,38
+55,Stray,Cat,Female,4,Sick,2.75,4.1,53
+56,Owner Surrender,Cat,Male,2,Sick,1.5,2.2,34
+57,Owner Surrender,Cat,Male,4,Sick,2.25,2.9,37
+58,Stray,Cat,Male,3,Normal,2.25,3.2,50
+59,Stray,Cat,Female,4,Normal,1.3,1.6,51
+60,Stray,Dog,Female,4,Normal,10.75,11.7,17
+61,Owner Surrender,Cat,Male,5,Sick,2.5,3.1,59
+62,Stray,Dog,Male,2,Sick,42,43.5,26
+63,Stray,Cat,Male,6,Injured,3.5,4.6,82
+64,Stray,Dog,Female,3,Normal,12.5,12.4,9
+65,Stray,Cat,Female,3,Normal,3.75,4.2,22
+66,Stray,Cat,Female,3,Injured,2,3.3,50
+67,Stray,Dog,Female,3,Normal,26.25,27.1,41
+68,Stray,Dog,Female,2,Normal,45,45.1,58
+69,Stray,Cat,Female,4,Sick,2.5,3.3,51
+70,Owner Surrender,Cat,Female,2,Sick,2,3.3,57
+71,Stray,Cat,Male,5,Sick,2,2.9,29
+72,Stray,Cat,Female,3,Injured,2.25,3.1,78
+73,Stray,Cat,Female,2,Sick,2,2.7,49
+74,Stray,Dog,Male,2,Normal,29,28.4,33
+75,Owner Surrender,Cat,Male,3,Normal,2,2.1,29
+76,Owner Surrender,Cat,Female,5,Injured,1.25,1.3,23
+77,Stray,Cat,Female,2,Normal,2.75,2.5,43
+78,Stray,Cat,Male,6,Injured,2.75,2.5,82
+79,Stray,Cat,Male,3,Normal,3,3.8,22
+80,Stray,Cat,Male,3,Injured,2.25,1.9,56
+81,Stray,Dog,Male,5,Normal,13.25,14.1,43
+82,Stray,Dog,Female,2,Normal,6,6.8,34
+83,Owner Surrender,Dog,Female,5,Sick,13.5,13.9,70
+84,Stray,Cat,Female,3,Normal,4,4.5,28
+85,Owner Surrender,Dog,Female,2,Normal,57,56.3,13
+86,Stray,Cat,Male,4,Sick,4,5.2,61
+87,Stray,Dog,Male,10,Normal,16.5,16,51
+88,Stray,Cat,Male,3,Injured,2.25,2.4,36
+89,Owner Surrender,Dog,Male,4,Normal,10.75,11.7,27
+90,Owner Surrender,Cat,Male,2,Normal,2.25,1.6,16
+91,Stray,Dog,Female,5,Normal,8.25,7.9,11
+92,Owner Surrender,Dog,Female,4,Normal,38.25,37.8,18
+93,Owner Surrender,Cat,Female,9,Normal,11.5,11,48
+94,Stray,Cat,Female,5,Injured,8.25,8.2,78
+95,Stray,Cat,Male,5,Normal,2,1.1,58
+96,Owner Surrender,Dog,Male,2,Normal,12.75,12.1,5
+97,Stray,Cat,Female,2,Injured,6.75,6.5,22
+98,Stray,Dog,Female,2,Normal,32,32.2,16
+99,Stray,Cat,Male,2,Normal,1.5,0.8,18
+100,Stray,Cat,Female,2,Sick,3,3.7,33
+101,Stray,Dog,Male,3,Normal,59,58.5,12
+102,Stray,Cat,Male,4,Sick,5.5,7.1,34
+103,Public Assist,Cat,Female,5,Normal,2.5,2.6,34
+104,Stray,Dog,Male,4,Normal,11.75,11.4,35
+105,Stray,Cat,Female,4,Normal,2.25,2.2,33
+106,Stray,Dog,Female,2,Normal,15,15.9,36
+107,Stray,Cat,Male,3,Normal,4.25,3.7,34
+108,Stray,Dog,Male,2,Injured,48.25,47.9,45
+109,Stray,Dog,Female,3,Normal,11,11.6,6
+110,Owner Surrender,Dog,Male,5,Normal,6.5,5.6,41
+111,Stray,Cat,Male,4,Injured,2.5,3.6,52
+112,Owner Surrender,Cat,Male,6,Normal,9,9.5,40
+113,Stray,Dog,Female,4,Normal,6.25,6.6,11
+114,Stray,Dog,Female,8,Normal,60.5,60.5,27
+115,Stray,Dog,Male,2,Normal,8.5,9.3,16
+116,Stray,Dog,Female,3,Normal,10,10.1,47
+117,Stray,Dog,Male,2,Normal,9.25,10.2,18
+118,Stray,Dog,Female,4,Normal,8.5,8.8,11
+119,Stray,Dog,Male,2,Normal,12,11.4,5

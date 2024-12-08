@@ -1,0 +1,108 @@
+---
+title: "Leprosy Report - Homework 2"
+output: html_document
+---
+##### Arun Mahadevan Sathia Narayanan
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+data <- read.csv('Homework2_leprosy.csv')
+library(ggplot2)
+```
+
+**1. Which country had the highest number of new leprosy cases in 2022? Why is it not a fair comparison to look at the raw number of cases when comparing prevalence of the disease across different countries?**  
+The country to have the highest number of new leprosy cases in 2022 was India (IND) with 103819 new cases. It is not a fair comparison to look at the raw number of cases when comparing prevalence of the disease across different countries as the raw numbers do not take into account the population and the land area of each country. Since leprosy spreads through the air, countries with high populations and smaller land areas can have a higher number of cases than other countries, alongside any other natural features such as weather and temperature affecting the spread of the disease. 
+```{r echo = FALSE}
+data <- data[order(data$New_Cases, decreasing = TRUE),]
+result <- data.frame(Country = data$Country, New_Cases = data$New_Cases, Cases_per_100k = data$New_Cases / (data$Population / 100000), Population = data$Population)
+for (value in result$Cases_per_100k)
+  result$Cases_per_100k = round(result$Cases_per_100k, digits = 2)
+head(result)
+```
+
+**2. Create a new variable in the dataset that provides the leprosy cases per 100K people in each country. Graph this new variable’s distribution and provide the relevant summary statistics inline within a short paragraph describing the distribution.**  
+
+Graph below:  
+
+```{r echo = FALSE}
+clear_data <- data[!is.na(data$New_Cases), ]
+ggplot(clear_data) + geom_boxplot(aes(New_Cases / (Population / 100000))) + labs(
+  title = "Leprosy Cases per 100k people in each country",
+  x = "Cases per 100k"
+)
+```
+  
+This graph compares (per country) the number of cases of leprosy per 100k people.  
+Below is the five-number summary (top) and more statistics (mean, sd):  
+
+```{r echo = FALSE}
+round(summary((clear_data$New_Cases / clear_data$Population) * 100000), digits = 2)
+round(sum(clear_data$New_Cases) / sum(data$Population) * 100000, digits = 2)
+round(sd((clear_data$New_Cases / clear_data$Population) * 100000), digits = 2)
+```
+  
+As we can see from the summary (the data excludes the countries with N/A cases) and the graph, a majority of the countries actually have less than 10 per 100k people with leprosy. The median number of cases for all countries (including the outliers), is just 0.11 cases per 100k people, meaning every 1 out of a million people have leprosy. The second data point is the mean, which shows that on average, across the world, for every 100k people, there is around 3 cases of leprosy (with a standard deviation of around 3 cases/100k people). Performing a calculation for each country and getting their averages gives us a little more than 1 case per 100k people.
+
+**3. We want to compare cases per 100K across the different regions in this dataset. In a single plot, show the distribution of cases per 100K split by region. Output a nicely formatted table that provides the region name, number of countries in that region, and the median cases per 100K for each region. Include a short paragraph summarizing differences in leprosy prevalence across regions.**
+```{r echo = FALSE}
+clear_data <- data[!is.na(data$New_Cases), ]
+ggplot(clear_data) + geom_boxplot(aes(x = Region, y = New_Cases / (Population / 100000))) +  
+  labs(
+    y = 'Cases per 100k',
+    x = 'Region',
+    title = "Cases per 100k by Region"
+  ) + facet_wrap(~Region, nrow = 1) + theme(axis.text.x = element_blank(), axis.ticks.x = element_blank())
+```
+  
+Below is a table showing how, per region, the number of countries in the region and the median number of leprosy cases vary.  
+
+```{r echo = FALSE}
+clear_data$per100k = clear_data$New_Cases / (clear_data$Population / 100000)
+result <- data.frame(aggregate(per100k ~ Region, data = clear_data, median), table(data$Region))
+result$Var1 <- NULL
+for (value in result$per100k)
+  result$per100k <- round(result$per100k, digits = 2)
+result
+```
+  
+From the table, we can inquire that Europe (even though it has the largest number of countries) has the lowest median number of cases per 100k people. The highest median value, as observed, is from Africa, which has the second highest number of countries. The Middle East, with the lowest number of countries (20), has the second lower median number of cases per 100k people.   
+
+**4. Investigate the relationship between cases per 100K and one of the other variables in the dataset (other than region) by making the appropriate bivariate graph and providing the relevant summary statistic inline within a short paragraph describing the relationship.**  
+Let's investigate the relationship between cases per 100k and the land area of each country.  
+
+```{r echo = FALSE}
+ggplot(clear_data, aes(x = Land_Area, y = New_Cases / (Population / 100000))) + geom_point() + 
+  labs(
+    y = 'Cases per 100k',
+    x = 'Land Area',
+    title = "Cases per 100k by Land Area"
+  )
+```
+  
+From the graph we can see that the graph is very distributive, but there is a cluster of points closer to the smaller land areas and smaller cases per 100k. Performing a correlation calculation, we get:  
+```{r echo = FALSE}
+round(cor(clear_data$Land_Area, clear_data$per100k), digits = 2)
+```
+  
+which means there is some, but very low correlation between the points. This shows that there is not a clear relationship between land area and number of contracted leprosy cases per 100k. This is important to note, as most people (including myself) would think land area affects the number of cases, but the data proves otherwise.  
+Now that we've analyzed how leprosy and land area are related, let's analyze how cases per 100k varies between countries due to their populations. Graph below:  
+```{r echo = FALSE}
+ggplot(clear_data) + geom_point(aes(x = Population, y = New_Cases / (Population / 100000))) + 
+  labs(
+    y = 'Cases per 100k',
+    x = 'Population',
+    title = "Cases per 100k by Population"
+  )
+```
+  
+Once again, we see that there is a cluster between smaller population and lesser cases per 100k, but let's analyze the correlation for this one:  
+```{r echo = FALSE}
+round(cor(clear_data$Population, clear_data$per100k), digits = 2)
+```
+  
+Yet again we see that the correlation is very low, meaning there is almost no relationship between the number of cases of leprosy in a country and its population. The data goes directly against what I believed before performing the report.  
+
+**5. Write a brief conclusion to your analysis summarizing what you found. Include a hyperlink to the website for the International Leprosy Association for readers wanting more information about this disease.**  
+In conclusion, we can see that leprosy is a very uncommon disease in most parts of the world, and the maximum it ever was in 2022 (with the use of recorded data) was around 29 cases per 100,000 people. When analyzing the distribution of the number of cases per region by country, it was interesting to see that Africa has the largest range of values, with the Middle East coming in second. A quick analysis here could be the variation in temperature: Africa is the hottest, the Middle East is pretty warm, the Americas are a bit less warmer, Asia has a somewhat temperate climate, and Europe is generally quite cold. Without data, this cannot be proven but it is an interesting topic to research. However, we did have the data for Land Area and Population, but the number of leprosy cases had a very low correlation between these variables. 
+  
+If you want to learn more about Leprosy, you can head over to the International Leprosy Association (https://www.internationalleprosyassociation.org) and see the different strategies the ILA has used and also receive training to be a health worker for the ILA.

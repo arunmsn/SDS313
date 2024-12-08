@@ -1,0 +1,24 @@
+---
+title: "Condition vs Days to Adoption"
+author: "Arun Mahadevan Sathia Narayanan, Eshaan Singh, Prady Kandi"
+date: "r Sys.Date()"
+output: powerpoint_presentation
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+In this analysis, we are comparing how days to adoption varies depending upon the shelter animal's condition.  
+  
+When comparing the box plots, the animals with normal condition have less days taken to be adopted than those that are sick or injured. Injured seems to be the worst of the three (when comparing their medians).
+
+```{r echo = FALSE}
+shelter <- read.csv("shelter.csv")
+library(ggplot2)
+ggplot(shelter) + geom_boxplot(aes(x = Days.to.Adoption, Condition)) + labs(x = "Days to Adoption", y = "Condition")
+aggregate(Days.to.Adoption ~ Condition, data = shelter, median)
+```
+```{r}
+```
+
