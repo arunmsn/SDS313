@@ -1,0 +1,258 @@
+---
+title: "Simulations"
+output: 
+  html_document:
+    toc: true
+    toc_float: true
+    toc_depth: 3
+---
+
+In this worksheet, we will::
+
+-   Discuss R's random number generating capabilities.
+-   Build some common probability distributions.
+-   Use loops and random number generation to simulate random events.
+
+Because we always come back to `tidyverse` at some point:
+
+```{r, warning=FALSE}
+library(tidyverse)
+```
+
+## 1. Generating random numbers
+
+Any software that can produce a "random" process typically relies on a **pseudo-random number generator.** In R, it is called the *Mersenne-Twister*, which is considered very good, repeating only once every $2^{19,937} - 1$ iterations.
+
+### a. Random numbers among some values
+
+We can use this generator to sample from a given list of values:
+
+```{r}
+# Define a list of values
+x <- 1:10
+
+# Take 1 sample value
+sample(x, size = 1)
+```
+
+Did we all get the same thing? Why/Why not?
+
+**Write sentences here.**  
+It's random, so we did not all get the same thing.  
+
+
+We can also get a sample of more than 1 value:
+
+```{r}
+# What's the difference between these two pieces of code?
+sample(x, size = 3,replace = TRUE)
+sample(x, size = 3,replace = FALSE)
+```
+
+**Write sentences here.**  
+If replace is True, the sample is taken with the numbers put back into the sample.  
+If replace is False, the sample will remove the chosen numbers (meaning the max sample will be length of list).  
+
+
+Note that we can make sure that we all have the same "random sample". Let's use `set.seed`:
+
+```{r}
+# Set a unique seed
+set.seed(125281927)
+
+# Then run the random process
+sample(x, size = 3,replace = TRUE)
+```
+
+We would have to set the seed each time we want to use a random process.
+
+### b. Random numbers from a probability distribution
+
+You will come across common probability distributions (uniform, normal, etc.) throughout the SDS curriculum. Here are some examples:
+
+```{r}
+# Uniform distribution of values between 0 and 1
+runif(n = 10, min = 0, max = 1)
+```
+
+What if we sampled many values and plotted these values with a histogram:
+
+```{r}
+# Make a vector of one million values between 0 and 1
+x_unif <- runif(n = 1000000, min = 0, max = 1)
+hist(x_unif, main = 'Uniform (0,1) Distribution')
+```
+
+Why does it make sense to see what we see?
+
+**Write sentences here.**  
+All values are equally likely to appear.  
+
+
+Another common distribution is the normal distribution that is defined by a mean value and a standard deviation with a symmetric shape (bell-shaped).
+
+```{r}
+# Normal distribution of mean 0 and standard deviation 1
+rnorm(n = 10, mean = 0, sd = 1)
+```
+
+Representing many values:
+
+```{r}
+# Make a vector of one million values between 0 and 1
+x_norm <- rnorm(n = 1000000, mean = 0, sd = 1)
+hist(x_norm, main = 'Normal (0,1) Distribution')
+```
+
+You can find all of the probability distributions R can sample from [here](https://www.statmethods.net/advgraphs/probability.html).
+
+------------------------------------------------------------------------
+
+### Group practice
+
+Let's consider the following dataset:
+
+```{r}
+# Upload data from GitHub
+pokemon <- read_csv("https://raw.githubusercontent.com/laylaguyot/datasets/main//pokemon.csv")
+
+# Take a look 
+head(pokemon)
+```
+
+In your group, you will:
+
+1.  Pick one numeric variable (`Total`, `HP`, ..., or `Speed`). Take a look at the distribution of this variable with a histogram and find the value of the mean and standard deviation.
+
+```{r}
+# Write code here
+hist(pokemon$SpAtk, main = "Special Attack Dist.", xlab = "SpAtk", ylab = "Power")
+print(c("Mean:", mean(pokemon$SpAtk)))
+print(c("SD:", sd(pokemon$SpAtk)))
+```
+
+2.  Take a sample of 30 values of this variable and find the mean. Do all group members get the same mean? How does this mean compare with the overall mean from above?
+
+```{r}
+# Write code here
+mean(sample(pokemon$SpAtk, size = 30))
+```
+
+3.  Now, repeat the sampling process 100 times: each time, take a sample of 30 values and find the mean. You should get 100 (different) mean values overall! Represent the distribution of these means with an histogram and find then find the mean (of the means!). How does this mean compare with the overall mean from way above?
+
+```{r}
+# Write code here
+x <- replicate(100, mean(sample(pokemon$SpAtk, size = 30)))
+hist(x)
+print(c("Mean", mean(x)))
+```
+
+4.  Share both histograms (of the entire variable and of the means) along with the values of the means on your [group's slide] (<https://docs.google.com/presentation/d/1v_0h8w1YspWKaKt5K1CYiewiokwMyjETLVJBTm0AUEw/edit?usp=sharing>)
+
+You just demonstrated an important theorem in probability, called the Central Limit Theorem!
+
+------------------------------------------------------------------------
+
+## 2. Some applications of simulations
+
+We can use simulations to help us investigate probabilities.
+
+### a. Rolling dice
+
+Let's start with an intuitive example, like rolling dice:
+
+```{r}
+set.seed(313)
+# This is a roll
+sample(x = 1:6, size = 1)
+```
+
+What was the probability of rolling a 4?
+
+**Write sentences here.**  
+1/6  
+
+
+What if we roll the dice 10 times:
+
+```{r}
+# Roll the dice and check how many times it happened
+myrolls <- sample(x = 1:6, size = 10, replace = TRUE)
+barplot(table(myrolls))
+```
+
+What appears to be the probability of rolling a 4 given these results?  
+
+**Write sentences here.**  
+2/10  
+
+What if we roll the dice 5,000 times:
+
+```{r}
+# Roll the dice and check how many times it happened
+myrolls <- sample(x = 1:6, size = 5000, replace = TRUE)
+barplot(table(myrolls))
+table(myrolls)
+```
+
+What appears to be the probability of rolling a 4 given these results?
+
+**Write sentences here.**  
+801/5000
+
+Let's keep track of the probability of rolling a 4 as we roll the dice many times (using a loop!):
+
+```{r}
+# Initialize values for rolls and probabilities
+myrolls <- c()
+myprob <- c()
+
+for (i in 1:5000) {
+  myrolls[i] <- sample(x = 1:6, size = 1) # roll 1 die
+  myprob[i] <- sum(myrolls == 4)/i # divide how many times we rolled a 4 by how many times we rolled
+}
+
+plot(1:5000, myprob, type = 'l', xlab = "Number of rolls")
+abline(h = 1/6, lty = 2, col = 'red')
+```
+
+What do you notice about the probability of rolling a 4 as the number of rolls increases?
+
+**Write sentences here.**
+
+You just demonstrated an important theorem in probability, called the Law of Large Numbers! It is especially useful when the probability itself is not easy to determine but we could repeat an experiment a large number of times.
+
+### b. Birthday problem
+
+*What is the probability that at least 2 people in the room today share the same birthday?*
+
+This question does not have an easy answer. But let's use a simulation to explore:
+
+```{r}
+# Create a vector representing all possible birthdays
+birthdays = 1:365
+
+# Pick 40 birthdays (uniformly = with an equal chance and with replacement), at random
+mybirthdays <- sample(birthdays, size = 40, replace = TRUE)
+
+# Are there any doubles? 
+any(table(mybirthdays) > 1) # If TRUE, then at least two students have the same birthday
+```
+
+Do we just get that result by chance?
+
+------------------------------------------------------------------------
+
+#### **Try it! Repeat the process above 5,000 times and find out how many times 2 out of 40 students did share a birthday.**
+
+```{r}
+# Write code here
+func <- function() {
+  birthdays = 1:365
+  mybirthdays <- sample(birthdays, size = 42, replace = TRUE)
+  return (any(table(mybirthdays) > 1))
+}
+sum(replicate(5000, func()))/5000 * 100
+```
+
+------------------------------------------------------------------------

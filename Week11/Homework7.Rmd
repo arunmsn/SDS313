@@ -1,0 +1,103 @@
+---
+title: "Homework 7"
+author: "Arun Mahadevan Sathia Narayanan"
+date: 'Date Published: `r Sys.Date()`'
+output:
+  html_document:
+    theme: darkly
+    toc: true
+    toc_float:
+      collapsed: true
+---
+
+```{r warning = FALSE}
+library(tidyverse)
+shelter <- read.csv("Homework7_APA.csv")
+```
+  
+# Question 1  
+**Write a loop that outputs the means and standard deviations of all the numeric variables in this dataset. Make it clear what each part of the output refers to. Print the results in your report.**  
+```{r}
+for (variable in names(shelter)) {
+  if (is.numeric(shelter[[variable]])) {
+    mean <- round(mean(shelter[[variable]]), 2)
+    std_dev <- round(sd(shelter[[variable]]), 2)
+    cat("Mean of", variable, ":", mean, "| ")
+    cat("Standard Deviation of", variable, ":", std_dev, "\n")
+  }
+}
+```
+  
+# Question 2  
+**Write a loop that outputs the frequencies of all the categorical variables (excluding the impound number unique identifier) in this dataset.  Make it clear what each part of the output refers to.  Print the results in your report.**  
+```{r}
+for (variable in names(shelter)) {
+  if (variable != "Impound_No") {
+    if (is.character(shelter[[variable]])) {
+      cat(variable, "\n----------------")
+      print(table(shelter[[variable]]))
+      cat("\n")
+    }
+  }
+}
+``` 
+  
+# Question 3  
+**Suppose you want to view the descriptive statistics and univariate graph for a variable from this dataset but only for cats or dogs (not both combined).  Write a function that outputs the correct descriptive statistics and an appropriate univariate graph for a specified variable from this dataset for a specified subset of observations based on the Species variable. Demonstrate that your function works by feeding it an example of each variable type and species combination.**  
+```{r}
+analysis <- function(animal, var) {
+  animal_set <- shelter |>
+    group_by(Species) |>
+    filter(Species == animal)
+  
+  base <- ggplot(animal_set)
+  
+  for (v in names(shelter)) {
+    if (var == v) {
+      if (is.numeric(animal_set[[var]])) {
+        print(summary(animal_set[[var]]))
+        return (
+          base + 
+          geom_boxplot(aes(x = !!sym(var))) +
+          labs(title = paste("Distribution of", var, "for", animal), x = var) + 
+          theme(axis.text.y = element_blank(), 
+                axis.ticks.y = element_blank(), 
+                panel.grid.minor = element_blank())
+        )
+      }
+      else if (is.character(animal_set[[var]])) {
+        ordered_set <- animal_set |>
+          count(animal_set[[var]]) |>
+          arrange(desc(n))
+        
+        print(table(animal_set[[var]]))
+        
+        counts = length(animal_set[[var]])
+        lowest = tail(ordered_set, 1)[2]
+        lowest_occ = as.numeric(tail(ordered_set, 1)[3])
+        lowest_percent = round(lowest_occ/counts * 100, 2)
+        most = head(ordered_set, 1)[2]
+        most_occ = as.numeric(head(ordered_set, 1)[3])
+        most_percent = round(most_occ/counts * 100, 2)
+        print(paste("Lowest occurrences was with |", lowest, "| having", lowest_occ, "occurrences, or",
+                    lowest_percent, "percent"))
+        print(paste("Most occurrences was with |", most, "| having", most_occ, "occurrences, or",
+                    most_percent, "percent"))
+        return (
+          base +
+            geom_bar(aes(x = !!sym(var))) +
+            labs(title = paste("Distribution of", var, "for", animal), x = var, y = "Occurrences")
+        )
+      }
+    }
+  }
+}
+```
+
+```{r}
+analysis("Cat", "Intake_Type")          # categorical test for cats
+analysis("Dog", "Age")                  # numerical test for dogs
+analysis("Cat", "Weight")               # numerical test for cats
+analysis("Dog", "SixMonth_Outcome")     # categorical test for dogs
+analysis("Cat", "NotAColumn")           # testing of a non-existent column
+```

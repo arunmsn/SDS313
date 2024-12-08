@@ -1,0 +1,432 @@
+Impound_No,Intake_Type,Species,Neutered,Sex,Age,Condition,Weight,SixMonth_Outcome
+K12-000031,Stray,Dog,Yes,Female,10,Injured or Sick,3.3,At shelter
+K12-000037,Stray,Dog,No,Female,3,Normal,7.5,Return to Owner
+K12-000125,Stray,Dog,Yes,Male,0,Normal,22,Adoption
+K12-000157,Stray,Dog,Yes,Male,3,Injured or Sick,54,At shelter
+K12-000286,Stray,Dog,Yes,Male,5,Normal,4.8,Return to Owner
+K12-000384,Stray,Dog,Yes,Female,1,Normal,10,At shelter
+K12-000416,Public Assist,Dog,Yes,Female,1,Injured or Sick,6,Return to Owner
+K12-000497,Stray,Dog,Yes,Female,6,Normal,9.5,Adoption
+K12-000498,Stray,Dog,Yes,Male,1,Normal,16.5,Adoption
+K12-000599,Stray,Dog,Yes,Female,1,Normal,46,Adoption
+K12-000616,Stray,Dog,Yes,Male,8,Normal,34,At shelter
+K12-000642,Owner Surrender,Cat,Yes,Female,15,Normal,9.8,At shelter
+K12-000653,Stray,Cat,Yes,Male,4,Normal,13,Return to Owner
+K12-000712,Owner Surrender,Dog,Yes,Female,5,Normal,62,At shelter
+K12-000798,Owner Surrender,Cat,Yes,Female,4,Normal,9,At shelter
+K12-000804,Stray,Dog,Yes,Female,3,Normal,48.25,Adoption
+K12-000893,Owner Surrender,Cat,Yes,Female,2,Normal,10.5,Adoption
+K12-000903,Stray,Cat,Yes,Male,0,Normal,4.5,Adoption
+K12-000957,Owner Surrender,Dog,Yes,Male,3,Normal,55.3,Adoption
+K12-000967,Stray,Dog,Yes,Female,7,Normal,57,Return to Owner
+K12-000975,Stray,Cat,Yes,Male,2,Injured or Sick,6.3,Return to Owner
+K12-001015,Stray,Dog,Yes,Female,2,Normal,57,At shelter
+K12-001080,Stray,Dog,Yes,Male,7,Normal,4.3,Return to Owner
+K12-001092,Stray,Dog,Yes,Female,3,Normal,43,Return to Owner
+K12-001109,Stray,Dog,Yes,Male,5,Normal,15.3,Adoption
+K12-001213,Owner Surrender,Dog,Yes,Male,0,Normal,12.3,Adoption
+K12-001228,Stray,Dog,Yes,Male,2,Normal,47.5,At shelter
+K12-001282,Stray,Dog,Yes,Male,7,Normal,3.3,At shelter
+K12-001295,Owner Surrender,Dog,Yes,Male,0,Normal,15.5,Adoption
+K12-001302,Stray,Cat,Yes,Female,4,Injured or Sick,10.8,Adoption
+K12-001429,Stray,Dog,Yes,Female,0,Normal,9.5,Adoption
+K12-001449,Stray,Dog,Yes,Male,0,Normal,13,Adoption
+K12-001451,Stray,Dog,Yes,Male,4,Normal,15.3,At shelter
+K12-001478,Stray,Dog,No,Male,13,Injured or Sick,85,Return to Owner
+K12-001671,Owner Surrender,Dog,Yes,Female,1,Normal,63,Adoption
+K12-001692,Owner Surrender,Dog,Yes,Male,1,Injured or Sick,9.8,Return to Owner
+K12-001761,Owner Surrender,Dog,Yes,Female,5,Normal,15.8,Adoption
+K12-001766,Stray,Cat,Yes,Male,0,Normal,4.3,Adoption
+K12-001805,Stray,Dog,Yes,Female,5,Normal,13.5,Adoption
+K12-001842,Owner Surrender,Dog,Yes,Male,6,Normal,11,Adoption
+K12-001851,Owner Surrender,Dog,Yes,Female,8,Normal,54,Adoption
+K12-001885,Owner Surrender,Dog,Yes,Male,1,Normal,53.5,At shelter
+K12-001898,Stray,Dog,Yes,Male,0,Normal,7.8,Adoption
+K12-002078,Stray,Dog,No,Male,1,Normal,7.8,Return to Owner
+K12-002109,Stray,Dog,Yes,Male,8,Normal,56,Return to Owner
+K12-002148,Owner Surrender,Dog,Yes,Male,3,Normal,36.3,At shelter
+K12-002176,Stray,Cat,Yes,Male,3,Injured or Sick,9,At shelter
+K12-002177,Stray,Dog,Yes,Male,1,Normal,36,At shelter
+K12-002274,Owner Surrender,Dog,Yes,Female,5,Normal,13.5,At shelter
+K12-002284,Stray,Dog,Yes,Female,1,Normal,53,Return to Owner
+K12-002373,Owner Surrender,Dog,Yes,Female,3,Normal,30,At shelter
+K12-002400,Stray,Dog,Yes,Male,2,Normal,10.5,Return to Owner
+K12-002486,Stray,Dog,Yes,Male,1,Normal,31,Adoption
+K12-002514,Stray,Cat,Yes,Male,3,Normal,10,Adoption
+K12-002536,Stray,Dog,Yes,Female,7,Injured or Sick,19.3,At shelter
+K12-002558,Stray,Dog,Yes,Male,1,Normal,15.5,Return to Owner
+K12-002641,Public Assist,Dog,Yes,Male,2,Normal,56,Adoption
+K12-002647,Stray,Dog,No,Male,3,Normal,58.8,Return to Owner
+K12-002669,Stray,Dog,Yes,Female,0,Normal,10.8,At shelter
+K12-002676,Owner Surrender,Dog,Yes,Female,3,Normal,6.5,At shelter
+K12-002781,Stray,Dog,Yes,Male,13,Normal,7.3,At shelter
+K12-002875,Stray,Cat,Yes,Male,2,Normal,8,At shelter
+K12-002891,Owner Surrender,Dog,Yes,Male,0,Normal,23.5,Adoption
+K12-002954,Owner Surrender,Dog,Yes,Female,0,Normal,13.8,At shelter
+K12-003001,Stray,Cat,Yes,Male,2,Normal,9.3,At shelter
+K12-003007,Stray,Dog,Yes,Female,6,Normal,33,Adoption
+K12-003017,Public Assist,Cat,Yes,Female,1,Normal,5.8,At shelter
+K12-003034,Stray,Dog,Yes,Female,0,Normal,64,At shelter
+K12-003117,Stray,Cat,Yes,Male,3,Normal,11,At shelter
+K12-003143,Stray,Dog,Yes,Female,13,Normal,66,Adoption
+K12-003157,Stray,Dog,Yes,Female,8,Normal,47,Adoption
+K12-003186,Stray,Cat,Yes,Male,0,Normal,1.5,At shelter
+K12-003559,Stray,Cat,Yes,Female,0,Normal,0.8,At shelter
+K12-003567,Public Assist,Dog,Yes,Male,1,Normal,28,Return to Owner
+K12-003593,Stray,Dog,Yes,Male,4,Normal,11,Adoption
+K12-003619,Stray,Cat,Yes,Male,2,Normal,5.8,At shelter
+K12-003644,Owner Surrender,Cat,Yes,Male,9,Normal,8.8,Adoption
+K12-003810,Owner Surrender,Cat,Yes,Female,9,Normal,8.5,Adoption
+K12-003841,Stray,Cat,Yes,Male,1,Normal,7,At shelter
+K12-003922,Owner Surrender,Dog,Yes,Male,0,Normal,23.8,Adoption
+K12-003936,Stray,Dog,Yes,Male,0,Normal,9.8,Adoption
+K12-004064,Owner Surrender,Dog,Yes,Male,1,Normal,62.3,At shelter
+K12-004081,Stray,Dog,Yes,Male,3,Normal,58,Adoption
+K12-004085,Stray,Dog,Yes,Female,0,Injured or Sick,21.5,Adoption
+K12-004099,Stray,Dog,Yes,Male,3,Normal,71.5,Adoption
+K12-004139,Stray,Dog,Yes,Male,0,Normal,16,Adoption
+K12-004141,Owner Surrender,Dog,Yes,Male,5,Normal,40,At shelter
+K12-004168,Stray,Cat,Yes,Female,2,Injured or Sick,7,Adoption
+K12-004288,Stray,Dog,Yes,Female,1,Normal,55,At shelter
+K12-004333,Owner Surrender,Dog,Yes,Female,2,Normal,44,Adoption
+K12-004488,Stray,Cat,Yes,Male,3,Normal,9.5,Return to Owner
+K12-004511,Owner Surrender,Dog,Yes,Male,5,Normal,73,Return to Owner
+K12-004641,Owner Surrender,Dog,Yes,Male,2,Normal,13.5,Adoption
+K12-004652,Stray,Dog,Yes,Female,0,Normal,11,Adoption
+K12-004663,Stray,Dog,Yes,Female,1,Normal,36.5,Adoption
+K12-004666,Owner Surrender,Cat,Yes,Male,0,Normal,2,Adoption
+K12-004715,Owner Surrender,Cat,Yes,Female,2,Normal,8.3,Adoption
+K12-004788,Public Assist,Dog,Yes,Male,3,Normal,70,Return to Owner
+K12-004906,Owner Surrender,Dog,Yes,Female,10,Normal,5.5,Adoption
+K12-004937,Stray,Cat,Yes,Male,0,Injured or Sick,2.5,Adoption
+K12-004938,Stray,Dog,Yes,Female,2,Normal,43,Adoption
+K12-005019,Stray,Dog,Yes,Female,3,Normal,57.25,Adoption
+K12-005100,Stray,Dog,Yes,Female,0,Normal,4.5,Adoption
+K12-005122,Stray,Dog,Yes,Female,0,Normal,33.5,Adoption
+K12-005125,Stray,Dog,Yes,Female,4,Normal,10,Adoption
+K12-005126,Stray,Dog,Yes,Male,1,Normal,43,Return to Owner
+K12-005261,Stray,Dog,Yes,Male,2,Normal,66,Return to Owner
+K12-005302,Owner Surrender,Cat,Yes,Female,4,Normal,8.5,At shelter
+K12-005317,Stray,Cat,Yes,Female,5,Normal,10,Adoption
+K12-005394,Stray,Cat,Yes,Male,0,Injured or Sick,0.8,At shelter
+K12-005406,Stray,Dog,Yes,Female,5,Normal,6.5,At shelter
+K12-005513,Stray,Dog,Yes,Male,6,Normal,8.8,At shelter
+K12-005691,Stray,Cat,Yes,Male,0,Normal,0.8,At shelter
+K12-005797,Public Assist,Dog,Yes,Female,5,Normal,18.25,Adoption
+K12-005800,Public Assist,Dog,Yes,Female,4,Normal,7.8,At shelter
+K12-005829,Stray,Cat,Yes,Female,2,Injured or Sick,7.5,At shelter
+K12-005847,Stray,Cat,Yes,Male,0,Injured or Sick,0.3,Adoption
+K12-005865,Stray,Dog,Yes,Male,0,Normal,16,Adoption
+K12-005882,Stray,Cat,Yes,Male,0,Injured or Sick,0.8,At shelter
+K12-005905,Stray,Cat,No,Male,0,Normal,1,Adoption
+K12-005944,Stray,Dog,Yes,Male,3,Normal,13.5,Adoption
+K12-005966,Stray,Cat,Yes,Female,2,Injured or Sick,7.75,At shelter
+K12-006015,Stray,Cat,Yes,Female,3,Normal,7.3,At shelter
+K12-006024,Owner Surrender,Cat,Yes,Female,12,Normal,8.5,At shelter
+K12-006051,Owner Surrender,Cat,Yes,Male,0,Injured or Sick,2.8,Adoption
+K12-006095,Stray,Dog,Yes,Male,1,Normal,45,Adoption
+K12-006120,Owner Surrender,Cat,Yes,Female,0,Normal,2.5,Adoption
+K12-006207,Stray,Dog,Yes,Male,1,Normal,16,Return to Owner
+K12-006221,Stray,Dog,Yes,Female,5,Normal,60,At shelter
+K12-006316,Stray,Cat,Yes,Female,0,Injured or Sick,3,Adoption
+K12-006359,Stray,Cat,Yes,Female,0,Injured or Sick,0.8,At shelter
+K12-006419,Stray,Dog,Yes,Female,2,Normal,60,Return to Owner
+K12-006487,Stray,Dog,Yes,Female,0,Normal,12,Adoption
+K12-006543,Stray,Cat,Yes,Male,0,Normal,0.3,Adoption
+K12-006740,Stray,Cat,Yes,Female,3,Normal,9,At shelter
+K12-006743,Stray,Dog,Yes,Male,10,Normal,27,Return to Owner
+K12-006758,Stray,Cat,Yes,Female,0,Injured or Sick,0.8,At shelter
+K12-006799,Owner Surrender,Dog,Yes,Male,1,Normal,13.8,Adoption
+K12-006829,Owner Surrender,Cat,Yes,Female,11,Normal,10.3,Return to Owner
+K12-006835,Stray,Cat,Yes,Female,0,Injured or Sick,4.75,Adoption
+K12-006891,Owner Surrender,Dog,Yes,Male,4,Normal,19,Adoption
+K12-006924,Owner Surrender,Dog,Yes,Female,5,Normal,30,At shelter
+K12-006925,Owner Surrender,Dog,Yes,Male,0,Normal,20,At shelter
+K12-007017,Stray,Dog,Yes,Male,2,Normal,70,Adoption
+K12-007045,Owner Surrender,Dog,Yes,Male,1,Normal,63,Adoption
+K12-007190,Stray,Cat,No,Female,0,Normal,0.5,At shelter
+K12-007255,Public Assist,Dog,No,Female,2,Normal,42,Return to Owner
+K12-007406,Stray,Cat,Yes,Male,0,Injured or Sick,0.8,At shelter
+K12-007459,Public Assist,Dog,Yes,Male,6,Normal,131,Return to Owner
+K12-007462,Public Assist,Dog,Yes,Male,2,Normal,22,Return to Owner
+K12-007487,Stray,Cat,Yes,Female,0,Normal,3.5,Adoption
+K12-007559,Stray,Dog,Yes,Male,0,Normal,27.5,Adoption
+K12-007736,Stray,Cat,Yes,Female,0,Normal,2.3,Adoption
+K12-007824,Owner Surrender,Cat,Yes,Female,0,Normal,3.3,Adoption
+K12-007827,Owner Surrender,Cat,Yes,Female,2,Injured or Sick,8.5,At shelter
+K12-008117,Stray,Dog,Yes,Female,2,Normal,11.8,Adoption
+K12-008279,Stray,Dog,Yes,Male,2,Injured or Sick,10,At shelter
+K12-008316,Owner Surrender,Dog,Yes,Male,2,Normal,18.5,Adoption
+K12-008358,Stray,Cat,Yes,Male,0,Normal,1,Adoption
+K12-008370,Stray,Cat,Yes,Male,0,Normal,2,At shelter
+K12-008406,Stray,Dog,Yes,Female,5,Normal,6,Adoption
+K12-008445,Stray,Cat,Yes,Female,0,Normal,2.75,Adoption
+K12-008494,Owner Surrender,Dog,Yes,Male,0,Normal,23,At shelter
+K12-008512,Stray,Dog,Yes,Female,5,Normal,35.99,At shelter
+K12-008514,Stray,Cat,Yes,Female,0,Normal,1.8,Adoption
+K12-008589,Stray,Cat,Yes,Female,0,Normal,2.3,At shelter
+K12-008710,Owner Surrender,Cat,Yes,Female,0,Normal,3.5,Adoption
+K12-008910,Stray,Dog,Yes,Female,3,Normal,55,Return to Owner
+K12-008933,Owner Surrender,Cat,Yes,Male,0,Normal,2,Adoption
+K12-008968,Stray,Dog,Yes,Male,1,Normal,68,Return to Owner
+K12-008970,Stray,Dog,Yes,Male,0,Normal,7.8,Adoption
+K12-009155,Stray,Cat,Yes,Female,0,Injured or Sick,0.8,At shelter
+K12-009163,Owner Surrender,Cat,Yes,Male,0,Injured or Sick,1.5,Adoption
+K12-009243,Owner Surrender,Cat,Yes,Male,0,Normal,2.3,At shelter
+K12-009333,Public Assist,Cat,Yes,Female,4,Normal,8.8,Return to Owner
+K12-009345,Stray,Dog,Yes,Female,0,Injured or Sick,2.8,At shelter
+K12-009515,Owner Surrender,Dog,Yes,Male,1,Injured or Sick,4,At shelter
+K12-009549,Stray,Cat,No,Female,0,Injured or Sick,1,At shelter
+K12-009596,Stray,Cat,Yes,Female,0,Normal,2.25,At shelter
+K12-009618,Stray,Cat,Yes,Female,0,Normal,1.5,At shelter
+K12-009648,Owner Surrender,Cat,Yes,Male,0,Normal,2.25,Adoption
+K12-009700,Stray,Cat,Yes,Male,0,Normal,2.25,Adoption
+K12-009787,Stray,Cat,Yes,Female,0,Normal,1.3,Adoption
+K12-009908,Stray,Cat,Yes,Female,1,Normal,4.75,At shelter
+K12-010001,Stray,Dog,Yes,Female,8,Normal,40,Return to Owner
+K12-010129,Owner Surrender,Dog,Yes,Male,2,Injured or Sick,30,At shelter
+K12-010149,Stray,Dog,Yes,Female,4,Normal,10.75,Adoption
+K12-010166,Owner Surrender,Cat,Yes,Male,0,Normal,2.5,Adoption
+K12-010195,Stray,Dog,Yes,Male,2,Normal,42,Adoption
+K12-010197,Stray,Cat,Yes,Male,0,Normal,3.5,Adoption
+K12-010276,Owner Surrender,Dog,Yes,Male,0,Injured or Sick,7.25,Adoption
+K12-010457,Stray,Dog,Yes,Female,1,Normal,53,Adoption
+K12-010475,Owner Surrender,Cat,Yes,Male,0,Normal,2.5,At shelter
+K12-010510,Stray,Dog,Yes,Female,2,Normal,80.5,Return to Owner
+K12-010554,Stray,Cat,Yes,Male,0,Normal,3,Adoption
+K12-010602,Stray,Dog,Yes,Female,3,Normal,12.5,Adoption
+K12-010733,Stray,Dog,Yes,Female,0,Normal,10.25,Adoption
+K12-010739,Stray,Dog,Yes,Female,9,Injured or Sick,7.75,At shelter
+K12-010787,Owner Surrender,Dog,Yes,Male,7,Injured or Sick,97,At shelter
+K12-010830,Stray,Dog,Yes,Female,2,Injured or Sick,38,At shelter
+K12-010891,Owner Surrender,Cat,Yes,Female,0,Normal,1.75,At shelter
+K12-010912,Stray,Cat,Yes,Male,5,Normal,9.75,At shelter
+K12-011011,Stray,Dog,Yes,Male,2,Normal,77.5,Return to Owner
+K12-011034,Stray,Cat,Yes,Female,0,Normal,2.25,Adoption
+K12-011112,Owner Surrender,Cat,No,Female,0,Injured or Sick,0.25,At shelter
+K12-011207,Stray,Cat,No,Female,0,Normal,0.5,At shelter
+K12-011262,Stray,Dog,Yes,Male,1,Normal,20.75,Adoption
+K12-011284,Stray,Cat,Yes,Female,0,Normal,2.75,At shelter
+K12-011380,Stray,Dog,Yes,Male,1,Normal,8.25,Adoption
+K12-011441,Stray,Cat,Yes,Female,0,Normal,3,Adoption
+K12-011443,Stray,Dog,Yes,Male,7,Normal,45,Return to Owner
+K12-011527,Stray,Cat,Yes,Female,0,Normal,3.75,Adoption
+K12-011537,Owner Surrender,Dog,Yes,Male,0,Normal,14,Adoption
+K12-011551,Owner Surrender,Cat,Yes,Female,0,Normal,1.25,Adoption
+K12-011584,Stray,Dog,Yes,Female,0,Normal,17.25,Adoption
+K12-011646,Stray,Cat,Yes,Female,0,Normal,2,Adoption
+K12-011712,Owner Surrender,Cat,Yes,Female,2,Normal,6.5,Adoption
+K12-011789,Stray,Dog,Yes,Male,0,Normal,8,Adoption
+K12-011796,Stray,Dog,Yes,Female,0,Normal,26.25,Adoption
+K12-011803,Stray,Dog,Yes,Female,2,Normal,45,Adoption
+K12-011840,Stray,Dog,No,Male,5,Normal,10.75,At shelter
+K12-011865,Stray,Cat,No,Female,0,Normal,0.75,Adoption
+K12-011913,Stray,Dog,Yes,Female,1,Normal,17,Adoption
+K12-011947,Stray,Dog,Yes,Male,0,Normal,4.5,Adoption
+K12-012085,Stray,Cat,Yes,Male,0,Normal,2.25,Adoption
+K12-012196,Stray,Cat,Yes,Male,0,Normal,3.75,Adoption
+K12-012342,Stray,Cat,Yes,Female,0,Injured or Sick,2.5,Adoption
+K12-012424,Stray,Cat,No,Male,0,Normal,0.5,Adoption
+K12-012536,Stray,Dog,Yes,Female,3,Normal,39,Return to Owner
+K12-012562,Owner Surrender,Cat,Yes,Female,0,Normal,2,Adoption
+K12-012668,Stray,Dog,No,Female,0,Normal,4.25,Return to Owner
+K12-012681,Stray,Cat,Yes,Female,0,Normal,1,Adoption
+K12-012718,Owner Surrender,Dog,Yes,Male,5,Normal,53,At shelter
+K12-012747,Stray,Cat,No,Female,0,Normal,0.5,Return to Owner
+K12-012797,Stray,Dog,Yes,Male,0,Normal,2.5,Adoption
+K12-012824,Stray,Cat,Yes,Male,0,Normal,0.75,At shelter
+K12-012935,Stray,Cat,Yes,Female,0,Normal,4.25,Adoption
+K12-012984,Stray,Dog,Yes,Male,0,Injured or Sick,35,Adoption
+K12-013030,Stray,Dog,Yes,Male,0,Normal,12.5,Adoption
+K12-013050,Owner Surrender,Dog,Yes,Male,0,Normal,3.75,At shelter
+K12-013078,Stray,Cat,Yes,Male,0,Injured or Sick,2,Adoption
+K12-013081,Stray,Cat,Yes,Female,0,Injured or Sick,2.25,Adoption
+K12-013106,Owner Surrender,Cat,No,Male,3,Normal,8.5,At shelter
+K12-013174,Owner Surrender,Dog,Yes,Female,0,Normal,8.5,At shelter
+K12-013289,Stray,Cat,Yes,Female,0,Injured or Sick,2,Adoption
+K12-013337,Stray,Cat,No,Female,0,Normal,0.75,At shelter
+K12-013351,Stray,Cat,No,Male,0,Normal,0.75,At shelter
+K12-013442,Stray,Dog,Yes,Male,1,Normal,35,Return to Owner
+K12-013477,Stray,Cat,No,Male,0,Injured or Sick,0.75,At shelter
+K12-013542,Stray,Dog,No,Female,5,Normal,25,At shelter
+K12-013561,Stray,Dog,Yes,Female,1,Normal,33,Adoption
+K12-013562,Stray,Dog,Yes,Female,0,Normal,13.25,Adoption
+K12-013589,Stray,Dog,Yes,Male,0,Normal,29,Adoption
+K12-013608,Stray,Cat,No,Male,0,Injured or Sick,0.5,At shelter
+K12-013664,Public Assist,Dog,Yes,Male,9,Normal,89.5,Return to Owner
+K12-013679,Owner Surrender,Cat,Yes,Male,0,Normal,2,Adoption
+K12-013733,Public Assist,Dog,Yes,Male,7,Normal,51,Return to Owner
+K12-013759,Stray,Dog,Yes,Female,1,Normal,11.5,Adoption
+K12-013763,Owner Surrender,Dog,Yes,Male,5,Normal,84,At shelter
+K12-013796,Owner Surrender,Cat,Yes,Male,0,Normal,3.75,Adoption
+K12-013834,Stray,Cat,No,Male,0,Normal,0.5,At shelter
+K12-013865,Stray,Dog,Yes,Male,6,Normal,14,Return to Owner
+K12-014031,Stray,Dog,Yes,Female,4,Normal,35,Return to Owner
+K12-014074,Stray,Cat,Yes,Male,0,Normal,2.25,At shelter
+K12-014100,Stray,Dog,Yes,Male,0,Normal,30,At shelter
+K12-014285,Owner Surrender,Cat,Yes,Female,0,Injured or Sick,1.25,Adoption
+K12-014365,Stray,Cat,Yes,Female,0,Normal,2.75,Adoption
+K12-014366,Stray,Cat,Yes,Male,0,Normal,2.75,Adoption
+K12-014431,Owner Surrender,Cat,Yes,Male,0,Normal,2.75,Adoption
+K12-014491,Stray,Dog,Yes,Female,2,Injured or Sick,8.25,At shelter
+K12-014492,Stray,Dog,Yes,Male,1,Normal,33,Adoption
+K12-014506,Stray,Dog,Yes,Male,3,Normal,31.25,At shelter
+K12-014526,Stray,Cat,Yes,Male,0,Normal,3,Adoption
+K12-014537,Stray,Cat,Yes,Male,0,Normal,2.25,Adoption
+K12-014580,Stray,Cat,Yes,Male,0,Normal,0.5,At shelter
+K12-014606,Owner Surrender,Dog,Yes,Male,0,Normal,38.5,Adoption
+K12-014615,Stray,Cat,Yes,Female,2,Normal,7.5,Adoption
+K12-014740,Owner Surrender,Dog,No,Male,5,Normal,10.99,At shelter
+K12-014823,Stray,Dog,Yes,Male,5,Normal,13.25,Adoption
+K12-014912,Stray,Dog,Yes,Female,0,Normal,6,Adoption
+K12-014929,Stray,Dog,Yes,Female,1,Normal,13.75,Adoption
+K12-014980,Stray,Dog,Yes,Female,1,Normal,50,Return to Owner
+K12-014983,Owner Surrender,Dog,Yes,Female,0,Normal,7.5,Adoption
+K12-015028,Owner Surrender,Cat,Yes,Male,0,Normal,5,Adoption
+K12-015035,Owner Surrender,Dog,Yes,Female,5,Normal,13.5,Adoption
+K12-015040,Stray,Cat,Yes,Female,0,Normal,4,Adoption
+K12-015042,Stray,Dog,Yes,Female,0,Normal,28,Adoption
+K12-015112,Owner Surrender,Dog,Yes,Male,1,Normal,44,Adoption
+K12-015204,Owner Surrender,Cat,No,Male,0,Normal,1.25,Adoption
+K12-015323,Owner Surrender,Dog,Yes,Female,2,Normal,57,Adoption
+K12-015352,Stray,Dog,Yes,Male,0,Normal,27,Adoption
+K12-015461,Public Assist,Dog,Yes,Female,1,Normal,47,Return to Owner
+K12-015493,Stray,Cat,No,Male,0,Normal,0.75,Adoption
+K12-015517,Stray,Cat,Yes,Male,6,Normal,7.75,At shelter
+K12-015558,Owner Surrender,Dog,Yes,Female,0,Normal,9.25,Adoption
+K12-015624,Public Assist,Dog,Yes,Female,2,Normal,27,Return to Owner
+K12-015663,Stray,Dog,Yes,Female,1,Normal,37.5,Adoption
+K12-015733,Owner Surrender,Dog,Yes,Female,0,Normal,8.25,Adoption
+K12-015761,Owner Surrender,Dog,Yes,Male,0,Normal,36,Adoption
+K12-015838,Stray,Cat,Yes,Male,0,Normal,4,Adoption
+K12-015874,Stray,Dog,Yes,Female,8,Normal,55,Return to Owner
+K12-015892,Owner Surrender,Dog,Yes,Male,0,Injured or Sick,11.5,Adoption
+K12-015918,Stray,Dog,No,Male,1,Normal,7.75,Adoption
+K12-015935,Public Assist,Dog,Yes,Male,7,Normal,55,Return to Owner
+K12-015971,Stray,Dog,Yes,Female,3,Normal,68.5,Return to Owner
+K12-016105,Owner Surrender,Dog,Yes,Female,0,Normal,13.75,Adoption
+K12-016163,Stray,Cat,Yes,Female,8,Normal,13.5,Return to Owner
+K12-016197,Stray,Dog,Yes,Female,1,Normal,7.25,Adoption
+K12-016234,Stray,Dog,Yes,Male,1,Normal,80.25,Return to Owner
+K12-016235,Stray,Dog,No,Female,13,Normal,41,Return to Owner
+K12-016256,Owner Surrender,Cat,Yes,Male,0,Normal,1.75,Adoption
+K12-016273,Owner Surrender,Dog,Yes,Female,0,Injured or Sick,42,Adoption
+K12-016297,Stray,Dog,Yes,Female,7,Normal,18,At shelter
+K12-016389,Owner Surrender,Dog,Yes,Male,1,Normal,16,Adoption
+K12-016396,Owner Surrender,Dog,Yes,Female,2,Normal,40.99,At shelter
+K12-016457,Stray,Dog,Yes,Male,10,Normal,16.5,At shelter
+K12-016477,Stray,Dog,Yes,Female,0,Normal,19.5,Adoption
+K12-016539,Stray,Cat,Yes,Male,0,Injured or Sick,2.25,Adoption
+K12-016723,Stray,Cat,No,Male,0,Injured or Sick,0.75,At shelter
+K12-016785,Stray,Dog,No,Male,6,Normal,63,Return to Owner
+K12-016918,Stray,Dog,No,Male,0,Normal,35.99,Adoption
+K12-016943,Owner Surrender,Dog,Yes,Male,1,Normal,60.5,Adoption
+K12-016949,Stray,Dog,Yes,Male,9,Normal,54,Return to Owner
+K12-017010,Owner Surrender,Dog,Yes,Male,4,Normal,10.75,Adoption
+K12-017050,Stray,Cat,No,Male,0,Normal,1,Adoption
+K12-017211,Owner Surrender,Cat,Yes,Male,0,Normal,2.25,Adoption
+K12-017472,Stray,Dog,Yes,Female,5,Normal,8.25,At shelter
+K12-017492,Owner Surrender,Dog,Yes,Female,4,Normal,38.25,Adoption
+K12-017504,Owner Surrender,Cat,Yes,Female,9,Normal,11.5,Adoption
+K12-017507,Stray,Cat,Yes,Female,5,Normal,8.25,At shelter
+K12-017509,Stray,Cat,Yes,Male,0,Normal,2,Adoption
+K12-017686,Stray,Cat,No,Male,0,Injured or Sick,0.5,At shelter
+K12-017693,Stray,Dog,Yes,Male,0,Normal,5.75,Adoption
+K12-017727,Owner Surrender,Cat,Yes,Female,0,Normal,3.5,Adoption
+K12-017766,Stray,Dog,Yes,Female,1,Injured or Sick,35.5,Adoption
+K12-017795,Stray,Cat,No,Female,0,Normal,1.25,Adoption
+K12-017797,Stray,Dog,Yes,Male,11,Normal,55.5,Return to Owner
+K12-017827,Stray,Cat,Yes,Female,2,Normal,8,At shelter
+K12-017849,Owner Surrender,Dog,Yes,Male,2,Normal,12.75,Adoption
+K12-017872,Stray,Cat,Yes,Female,2,Injured or Sick,6.75,Adoption
+K12-017961,Stray,Dog,Yes,Female,2,Normal,32,Adoption
+K12-017990,Stray,Cat,No,Female,0,Normal,0.25,Adoption
+K12-018048,Stray,Dog,No,Female,9,Normal,38.25,Return to Owner
+K12-018064,Stray,Cat,Yes,Male,0,Normal,1.5,Adoption
+K12-018107,Stray,Cat,No,Female,0,Normal,0.5,At shelter
+K12-018170,Stray,Cat,No,Male,0,Normal,1,At shelter
+K12-018459,Stray,Dog,Yes,Female,1,Normal,52,Adoption
+K12-018467,Stray,Dog,Yes,Female,5,Normal,67,Return to Owner
+K12-018514,Stray,Dog,Yes,Male,1,Normal,30,Adoption
+K12-018722,Stray,Cat,Yes,Female,1,Normal,7.25,At shelter
+K12-018827,Stray,Cat,Yes,Female,0,Injured or Sick,3,Adoption
+K12-018829,Stray,Dog,Yes,Female,6,Normal,27,Return to Owner
+K12-018868,Stray,Dog,Yes,Male,3,Normal,59,Adoption
+K12-018882,Owner Surrender,Dog,Yes,Male,0,Normal,55,Adoption
+K12-018901,Stray,Dog,Yes,Male,0,Normal,9.5,Adoption
+K12-019050,Stray,Dog,Yes,Male,7,Normal,6.5,Return to Owner
+K12-019088,Stray,Dog,Yes,Male,2,Normal,35.5,Return to Owner
+K12-019119,Owner Surrender,Cat,Yes,Male,0,Normal,3.5,At shelter
+K12-019121,Owner Surrender,Cat,Yes,Male,0,Normal,4.75,Adoption
+K12-019143,Stray,Cat,Yes,Male,0,Normal,5.5,Adoption
+K12-019152,Stray,Cat,No,Female,0,Normal,1,At shelter
+K12-019178,Stray,Dog,Yes,Male,3,Normal,59.5,Return to Owner
+K12-019214,Stray,Dog,Yes,Male,1,Normal,62.25,At shelter
+K12-019223,Public Assist,Cat,Yes,Female,0,Normal,2.5,Adoption
+K12-019228,Owner Surrender,Cat,Yes,Male,2,Normal,9.25,At shelter
+K12-019356,Stray,Dog,Yes,Female,1,Normal,9.5,Return to Owner
+K12-019411,Stray,Dog,Yes,Male,0,Normal,11.75,Adoption
+K12-019463,Owner Surrender,Dog,Yes,Male,4,Injured or Sick,7,At shelter
+K12-019734,Stray,Dog,Yes,Male,0,Normal,6.25,Adoption
+K12-019867,Stray,Dog,Yes,Female,8,Normal,43,At shelter
+K12-019892,Owner Surrender,Cat,Yes,Male,0,Normal,6,Adoption
+K12-019948,Stray,Cat,Yes,Male,1,Normal,9.75,Adoption
+K12-019963,Stray,Dog,Yes,Male,1,Injured or Sick,59,Adoption
+K12-020061,Stray,Dog,Yes,Female,0,Normal,4.25,At shelter
+K12-020126,Stray,Cat,Yes,Male,5,Normal,11.5,At shelter
+K12-020197,Stray,Cat,No,Male,0,Normal,2,At shelter
+K12-020205,Stray,Cat,No,Male,0,Normal,1.25,At shelter
+K12-020294,Stray,Cat,No,Male,0,Normal,0.75,At shelter
+K12-020320,Owner Surrender,Dog,Yes,Male,1,Normal,26.5,At shelter
+K12-020543,Owner Surrender,Dog,Yes,Female,1,Normal,55,Adoption
+K12-020563,Owner Surrender,Dog,Yes,Female,2,Normal,48,At shelter
+K12-020570,Stray,Dog,Yes,Female,1,Normal,29,Return to Owner
+K12-020631,Stray,Cat,Yes,Female,0,Normal,2.25,Adoption
+K12-020656,Stray,Dog,Yes,Female,0,Normal,12.75,Adoption
+K12-020669,Stray,Dog,Yes,Female,1,Normal,39,Adoption
+K12-020696,Owner Surrender,Dog,Yes,Female,0,Normal,5,Adoption
+K12-020709,Stray,Dog,Yes,Female,2,Normal,15,Adoption
+K12-020738,Stray,Cat,Yes,Male,0,Normal,4.25,Adoption
+K12-020743,Stray,Dog,Yes,Male,2,Injured or Sick,48.25,Adoption
+K12-020744,Stray,Dog,Yes,Female,3,Normal,11,Adoption
+K12-020752,Owner Surrender,Dog,No,Male,0,Normal,13.25,Adoption
+K12-021100,Owner Surrender,Dog,Yes,Male,5,Normal,6.5,Adoption
+K12-021140,Stray,Cat,Yes,Female,2,Normal,8,At shelter
+K12-021224,Stray,Dog,No,Male,3,Normal,13,At shelter
+K12-021252,Stray,Dog,No,Male,4,Normal,42,At shelter
+K12-021347,Stray,Cat,Yes,Female,0,Normal,2,Adoption
+K12-021512,Owner Surrender,Cat,Yes,Female,1,Normal,6.5,At shelter
+K12-021519,Stray,Cat,Yes,Male,1,Normal,9.25,Adoption
+K12-021596,Public Assist,Dog,Yes,Male,4,Normal,17.25,Return to Owner
+K12-021670,Stray,Cat,Yes,Male,0,Normal,2.5,Adoption
+K12-021673,Public Assist,Dog,Yes,Female,2,Normal,26,Return to Owner
+K12-021752,Stray,Cat,Yes,Female,0,Injured or Sick,2.5,At shelter
+K12-021838,Stray,Cat,Yes,Female,3,Normal,8,At shelter
+K12-021864,Stray,Dog,Yes,Female,8,Normal,94,Return to Owner
+K12-021903,Stray,Dog,Yes,Female,1,Normal,49,Adoption
+K12-021908,Stray,Dog,Yes,Female,1,Normal,18,Adoption
+K12-021997,Public Assist,Dog,Yes,Male,3,Normal,45.5,Return to Owner
+K12-022013,Stray,Dog,Yes,Male,3,Normal,20.5,Return to Owner
+K12-022020,Owner Surrender,Cat,Yes,Female,0,Normal,4.25,Adoption
+K12-022077,Owner Surrender,Cat,Yes,Male,6,Normal,9,At shelter
+K12-022120,Stray,Dog,Yes,Female,4,Normal,6.25,Adoption
+K12-022168,Stray,Cat,Yes,Female,0,Normal,4,Adoption
+K12-022216,Stray,Dog,No,Female,8,Normal,60.5,Adoption
+K12-022328,Stray,Dog,Yes,Male,2,Normal,8.5,Adoption
+K12-022363,Public Assist,Dog,Yes,Male,2,Normal,51,Return to Owner
+K12-022379,Stray,Dog,Yes,Female,3,Normal,10,Adoption
+K12-022399,Stray,Dog,Yes,Male,2,Normal,9.25,Adoption
+K12-022434,Owner Surrender,Dog,Yes,Male,7,Normal,29,At shelter
+K12-022495,Stray,Dog,Yes,Female,4,Normal,8.5,Adoption
+K12-022496,Owner Surrender,Dog,No,Female,0,Normal,8.75,Adoption
+K12-022502,Stray,Dog,Yes,Female,5,Normal,45,Return to Owner
+K12-022529,Stray,Cat,Yes,Female,0,Normal,3.25,Adoption
+K12-022532,Stray,Dog,Yes,Male,2,Normal,14.25,At shelter
+K12-022538,Stray,Dog,Yes,Male,2,Normal,53.5,At shelter
+K12-022585,Stray,Dog,Yes,Male,8,Normal,82.5,Return to Owner
+K12-022595,Stray,Dog,Yes,Male,0,Normal,7.5,Adoption
+K12-022596,Owner Surrender,Dog,No,Female,1,Injured or Sick,5.75,At shelter
+K12-022688,Stray,Cat,Yes,Male,0,Normal,4,Adoption
+K12-022743,Owner Surrender,Cat,No,Male,0,Normal,1.75,At shelter
+K12-022885,Stray,Dog,No,Male,2,Normal,13.5,Return to Owner
+K12-022889,Stray,Dog,Yes,Male,2,Normal,12,Adoption

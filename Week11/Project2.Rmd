@@ -1,0 +1,439 @@
+---
+title: "P2 - Approved Building Permits | Austin, TX | 2023"
+author: "Arun Mahadevan Sathia Narayanan | as235872 | arunmsnarayanan@utexas.edu"
+date: 'Date Published: `r Sys.Date()`'
+output:
+  html_document:
+    theme: darkly
+    toc: true
+    toc_float:
+      collapsed: true
+---
+
+```{r include = FALSE}
+# import libraries
+library(ggplot2)
+library(tidyverse)
+library(knitr)
+library(RColorBrewer)
+library(lubridate)
+library(stringr)
+```
+
+![The construction of the Google Sailboat Building. (Source: <https://i.redd.it/dh75zlho59o71.jpg>)](https://i.redd.it/dh75zlho59o71.jpg)
+
+# **1. Introduction**
+
+```{r echo = FALSE}
+# read csv, put into dataframe
+permits = read.csv("Issued_Construction_permits_20241102.csv")
+```
+
+Population -- it's a very important statistic to measure. And lately, we can see a huge incoming population to Texas, especially Austin. In fact, in 2020, the measured population was **965,827**, with the estimated population in 2024 being **984,567**, nearly a ***2%*** increase in population.
+
+The data was collection from [HERE](https://data.austintexas.gov/Building-and-Development/Building-Permits-Issued-in-2015/ayav-qckq), the City of Austin Data Portal. By simply changing the `Calendar Year Issued` date to be ***equals 2023***, I was able to retrieve the csv data.
+
+From the data, I will be investigating the following:
+
+-   The **zip codes** that appears most frequently
+
+-   What kinds of **work** were done often
+
+-   **When** were most projects *approved*
+
+-   **When** the projects were *completed*
+
+-   During what **day of the week** most projects take place
+
+Just to name a few...
+
+# **2. Data Preparation**
+
+```{r echo = FALSE}
+# refactor the columns for better data analysis
+permits$Applied.Date = as.Date(permits$Applied.Date)
+permits$Issued.Date = as.Date(permits$Issued.Date)
+permits$Expires.Date = as.Date(permits$Expires.Date)
+permits$Completed.Date = as.Date(permits$Completed.Date)
+# permits$Status.Date = as.Date(permits$Status.Date)
+# head(permits, 1)
+```
+
+I obtained the data by downloading the CSV file from the website.
+
+Since the date columns were classified as _chr_, I had to turn them into _Date_ columns.   
+The date columns were as follows: **`Applied.Data`, `Issued.Date`, `Expires.Date`**, and **`Completed.Date`**.
+
+I attempted to change the **Status.Date** column to be of type _Date_, but was encountering some issues in conversions, so I left it as is. This means that when performing analyses, this column cannot be worked on. I will rather rely on the **Status.Current** column to analyze the projects. 
+
+After the re-factoring of columns, The only columns to have `NA` values are the **`Completed.Date`** and **`Applied.Date`** columns. These `NA` values are important as the `Completed.Date` NA's signify that the project is yet to be completed or the project was withdrawn and the `Applied.Date` NA's signify that no one applied for the project but was just rather issued to be done (which could be the government issuing its own project).  
+
+The column names didn't have to be changed (as the names are already quite descriptive and the only changes would be to remove the .'s from the names).
+
+# **3. Variable Descriptions**
+
+```{r echo = FALSE}
+# choose which columns to work on
+permits <- permits |>
+  select(Permit.Class.Mapped, Work.Class, Applied.Date, Issued.Date, Day.Issued, Calendar.Year.Issued, Fiscal.Year.Issued, Status.Current, Expires.Date, Completed.Date, Original.Address.1, Original.Zip)
+
+# get a dataframe of all the names of the columns to work on
+variable_info <- data.frame(
+  Type = sapply(permits, class),
+  Description = c(
+    "Type of Permit",
+    "Type of Work",
+    "Permit Application Date",
+    "Permit Issuance Date",
+    "Day of Week Permit was Issued",
+    "Calendar Year Permit was Issued",
+    "Fiscal Year Permit was Issued",
+    "Current Status of Project",
+    "Expiration Date of Project",
+    "Completion Date of Project",
+    "Address of Project",
+    "Zip Code of Project"
+  )
+)
+
+# turn dataframe into a visual table using kable
+kable(variable_info)
+```
+  
+# **4. Univariate Analyses**  
+I chose the 4 following variables to analyze:  
+
+-   Work.Class
+
+-   Day.Issued
+
+-   Status.Current
+
+-   Original.Zip  
+
+### Work.Class  
+```{r echo = FALSE}
+# make a column graph to observe the frequencies of the types of work
+permits |>
+  count(Work.Class) |>
+  arrange(n) |>
+  mutate(Work.Class = factor(Work.Class, levels = Work.Class)) |> # orders them from largest to smallest
+  ggplot() + 
+    geom_col(aes(x = n, y = Work.Class, fill = Work.Class), show.legend = FALSE) +
+    scale_fill_brewer(palette = "BrBG") +
+    labs(title = "Frequencies of Types of Work", x = "Occurrences", y = "Type of Work")
+```
+  
+From the graph here, we can see that the types of work with the lowest number of occurrences are _Remodel Mobile Home_ and _Life Safety_, with _Relocation_ and _Addition_ also having very few occurrences. The most amount of work happens when constructing something _New_ or performing a _Remodel_.  
+
+### Day.Issued  
+```{r echo = FALSE}
+# make a column graph to analyze which day had the most projets and which day had the least projects issued
+permits |>
+  count(Day.Issued) |>
+  arrange(n) |>
+  mutate(Day.Issued = factor(Day.Issued, levels = Day.Issued)) |>
+  ggplot() + 
+    geom_col(aes(x = n, y = Day.Issued, fill = Day.Issued), show.legend = FALSE) + 
+    scale_fill_brewer(palette = "YlGnBu") +
+    labs(title = "Frequencies of Days Issued", x = "Occurrences", y = "Day of Week")
+```
+  
+Seems like `Thursday` is the most popular day to issue a building permit, and `Sunday` is the least popular day. It is quite interesting to see that the weekends have the lowest number of occurrences, but it does make sense since the least amount of officials will be working on the weekends.  
+
+### Status.Current  
+```{r echo = FALSE}
+# make a column graph to analyze the varying statuses of the projects
+permits |>
+  count(Status.Current) |>
+  arrange(n) |>
+  mutate(Status.Current = factor(Status.Current, levels = Status.Current)) |>
+  ggplot() + 
+    geom_col(aes(x = n, y = Status.Current, fill = Status.Current), show.legend = FALSE) + 
+    scale_fill_brewer(palette = "RdBu") +
+    labs(title = "Statuses of Projects", x = "Occurrences", y = "Status") + 
+    scale_x_continuous(breaks = seq(0, 8000, by = 3000))
+```
+  
+Analyzing the graph here, most of the projects that were approved did go to completion, as indicated by the large differences in occurrences between `Final` and the other statuses. A large amount of the approved permits (projects) remained `Active` or had `Expired`, which is interesting. Even though the permits were approved, some of the projects remained unfinished. This could be for several reasons.  
+1) It could be that the project rolled over and was completed in 2024, and thus remained active.  
+2) Some of the projects ended up needing more money or time necessary to be completed, therefore expiring.  
+
+### Original.Zip  
+```{r echo = FALSE}
+# make a column graph to see which zip codes got the most work done on
+permits |>
+  filter(!is.na(Original.Zip)) |>
+  count(Original.Zip) |>
+  arrange(n) |>
+  mutate(Original.Zip = factor(Original.Zip, levels = Original.Zip)) |>
+  ggplot() + 
+    geom_col(aes(x = n, y = Original.Zip, fill = Original.Zip), show.legend = FALSE) + 
+    labs(title = "Most Frequent Zip Codes", x = "Occurrences", y = "Zip Codes")
+```
+  
+I think the analysis can be done pretty obviously here -- just by looking at the graph, it is easy to say that most of the permits for construction were approved for the zip code 78704. 78704 is where Zilker Park, South Lamar, and St. Edward's University are, making them high-population areas (just south of UT Austin). Because of its proximity to downtown Austin, it makes most sense for most building permits to be approved for that area. The second highest zip code occurrences happens in 78745, which is right below 78704.  
+
+# **5. Bivariate Analyses**  
+I chose the following variable relationships to analyze:  
+
+-   Issued.Date - Applied.Date (Approval Time)
+
+-   Expires.Date - Issued.Date (Project Length)
+
+-   Approval Time vs. Project Length (Do longer projects take more approval time?)
+
+-   Work.Class vs. Project Length (How does the type of project relate to given time?)
+
+-   Work.Class vs. Day.Issued (How does the type of project relate to the day issued?)  
+
+-   Work.Class vs. Status.Current (How does the type of project relate to it's completion?)  
+
+### Approval Time  
+```{r echo = FALSE, warning = FALSE}
+# get the difference between the application date and issuing date and turn this into a boxplot for analysis
+permits |>
+  filter(!is.na(Applied.Date)) |>
+  filter(!is.na(Issued.Date)) |>
+  ggplot() + 
+    geom_boxplot(aes(log(as.numeric(Issued.Date - Applied.Date))), fill = "red", show.legend = FALSE) + 
+    labs(title = "Approval Time Lengths", x = "log(Day Difference)") + 
+    theme(axis.text.y = element_blank(), axis.ticks.y = element_blank(), panel.grid.minor = element_blank())
+```
+  
+With the graph above, we can view time it took for the projects to be approved. Since the approval time for some of the projects took several years, there was data in the 15000s. This made the boxplot nearly unusable, and thus I chose to use `log` for convenient viewing.  
+However, we do need the real data, and so the summary of the data is below:  
+```{r echo = FALSE}
+# get the numerical version of the boxplot for easier data collection
+summary(as.numeric(permits$Issued.Date - permits$Applied.Date))
+```
+  
+Notice how there's a negative approval time? When I looked at the data the portal gave me from the website, it has it so that the issuing date is before the applied date, which makes no sense. So I dug a little deeper (going [HERE](https://data.austintexas.gov/Building-and-Development/Issued-Construction-Permits/3syk-w9eu/data_preview)), and doing a quick search of the address giving me the negative approval time gave me the correct information. The applied date was correct, but the issuing date was indeed wrong (which meant the day issued was also wrong). To fix this, I have manually change this.  
+```{r echo = FALSE}
+# using the [x,y] format to change the specific value of a cell in the dataframe
+permits[6726, 5] <- wday("2024-10-10")
+permits[6726, 5] <- ymd("2024-10-10")
+write.csv(permits, "permits", row.names = FALSE)
+```
+  
+With this, let's revisit the distribution and summary:  
+```{r echo = FALSE, warning = FALSE}
+# same boxplot as before, now with the data corrected
+permits |>
+  filter(!is.na(Applied.Date)) |>
+  filter(!is.na(Issued.Date)) |>
+  ggplot() + 
+    geom_boxplot(aes(log(as.numeric(Issued.Date - Applied.Date))), fill = "red", show.legend = FALSE) + 
+    labs(title = "Approval Time Lengths", x = "log(Day Difference)") + 
+    theme(axis.text.y = element_blank(), axis.ticks.y = element_blank(), panel.grid.minor = element_blank())
+
+# the summary now has the negative values removed
+summary(as.numeric(permits$Issued.Date - permits$Applied.Date))
+```
+  
+And there we go, the summary now has a minimum of 0 days. It's interesting to see that _**75%**_ of the approvals (as seen from the 3rd Quartile) takes less than 194 days, but there are those which take up to more than 15,000 days, which is more than 41 years!  
+Another interesting piece of data is the NA's. For some reason, there is an address (if you want to know, 804 PARK BLVD) which had an Issued.Date but an NA for the Applied.Date. This is why we are getting the NA values in the summary.  
+
+### Project Length  
+```{r echo = FALSE, warning = FALSE}
+# get the difference between the completed date and issuing date and turn this into a boxplot for analysis
+permits |>
+  filter(!is.na(Issued.Date)) |>
+  filter(!is.na(Completed.Date)) |>
+  ggplot() + 
+    geom_boxplot(aes(log(as.numeric(Completed.Date - Issued.Date))), fill = "blue", show.legend = FALSE) + 
+    labs(title = "Project Lengths", x = "Day Difference") + 
+    theme(axis.text.y = element_blank(), axis.ticks.y = element_blank(), panel.grid.minor = element_blank())
+```
+  
+Similar to the last one, let's view the summary:  
+```{r echo = FALSE}
+# get the numerical data from the boxplot for easier data processing
+summary(as.numeric(permits$Completed.Date - permits$Issued.Date))
+```
+  
+Once again, we are getting the negative values.  
+But before we attack the negatives, there's a column from the summary labelled `NA's`, which is interesting. This is derived due to some of the projects (in this case, 4276) not having a completed date (thus set to NA) but having an issued date. When subtracting values from NA, the result ends up being, you guessed it, NA. The projects with statuses Active, Expired, and VOID all had NA completed dates, with each having `r sum(str_count(permits$Status.Current, "Active"))`, `r sum(str_count(permits$Status.Current, "Expired"))`, and `r sum(str_count(permits$Status.Current, "VOID"))`, respectively. These total up to 4263, because Withdrawn, Pending Permit, and On Hold all have their amount of NA's (which total up to 13), giving us the 4276.
+  
+Let's filter the negative and NA values out and view the graph and data.  
+```{r echo = FALSE}
+# removes the negative values from the data and the NA values from the data, putting them into a new dataframe
+no_neg <- permits |>
+  filter(!is.na(Issued.Date)) |>
+  filter(!is.na(Completed.Date)) |>
+  filter(!is.na(as.numeric(Completed.Date - Issued.Date))) |>
+  filter(as.numeric(Completed.Date - Issued.Date) >= 0)
+
+# get the graph of the dataframe we made, looks similar to the previous one
+no_neg |>
+  ggplot() + 
+    geom_boxplot(aes(as.numeric(Completed.Date - Issued.Date)), fill = "blue", show.legend = FALSE) + 
+    labs(title = "Project Lengths", x = "Day Difference") + 
+    theme(axis.text.y = element_blank(), axis.ticks.y = element_blank(), panel.grid.minor = element_blank())
+
+# once again, turn the boxplot data into numbers
+summary(as.numeric(no_neg$Completed.Date - no_neg$Issued.Date))
+```
+  
+Now we can visualize that the average time it took for a project to be completed was 165 (nearly 166) days, with the maximum being 667 days. More than _**75%**_ of the day differences are below 246 days.   
+
+For the sake of repetition, I will mutate the dataframe to have the above two as additional columns.  
+```{r echo = FALSE}
+# mutate the columns in the dataframe for easier and more efficient processing of data
+permits <- permits |>
+  mutate(IssuedDayDiff = as.numeric(Issued.Date - Applied.Date)) |>
+  mutate(ExpiredDayDiff = as.numeric(Expires.Date - Issued.Date)) |>
+  mutate(ProjectLength = as.numeric(Completed.Date - Issued.Date))
+```
+  
+### Approval Time vs. Project Length  
+```{r echo = FALSE}
+# a scatterplot of the data comparing the approval time and the length of the project
+permits |>
+  filter(!is.na(IssuedDayDiff)) |>
+  filter(!is.na(ExpiredDayDiff)) |>
+  filter(!is.na(ProjectLength)) |>
+  ggplot() + 
+    geom_point(aes(x = ProjectLength, y = IssuedDayDiff)) + 
+    labs(title = "Approval Time vs. Project Length", x = "Project Length", y = "Approval Time")
+```
+  
+Wait, the data looks awkward, right? How were some projects completed before they were even issued (as seen with the negative Project Lengths)? Digging some more into this, I went back to the record (the link I had to replace the error before), and it has the same information. To not spread misinformation, I will filter out the negative lengths and view the graph that way.  
+```{r echo = FALSE}
+# removed the NA and negative values from the dataframe for more accurate results
+temp <- permits |>
+  filter(!is.na(IssuedDayDiff)) |>
+  filter(!is.na(ExpiredDayDiff)) |>
+  filter(!is.na(ProjectLength)) |>
+  filter(ProjectLength > -1)
+
+# get the graph similar to the one before with the correct data
+temp |>
+  ggplot() + 
+    geom_point(aes(x = ProjectLength, y = IssuedDayDiff)) + 
+    labs(title = "Approval Time vs. Project Length (Neg. Removed)", x = "Project Length", y = "Approval Time")
+```
+  
+Looking at the graph, most of the cluster is below an Approval Time of 2500 days. But the question is how do these two relate? From previous analyses, we can know that the more horizontal/vertical a graph is, the less correlation the two variables are, and the graphs with a slope have a correlation. This graph is both horizontal and vertical, so let's see how this turns out.  
+```{r echo = FALSE}
+# getting the correlation to see the relationship between the two variables
+round(cor(temp$ProjectLength, temp$IssuedDayDiff), 2)
+```
+  
+Well, this graph shows a `r round(cor(temp$ProjectLength, temp$IssuedDayDiff), 2)` correlation, which is a *Weak Negative* relationship. Anything with no correlation is bad enough, but this is worse! These two variables move in opposite directions - the longer the project length, the shorter the approval time (essentially, the graph is downward sloping rather than upward sloping). Thing is, it would be vital if the correlation was more negative than it is, but with -0.04, that's basically nothing. In the end, it just means that these two variables have very little effect on each other, but the general trend is somewhat (very, very slightly) negative sloping.  
+
+### Work.Class vs. Project Length  
+```{r echo = FALSE}
+# since this is a categorical data, boxplot is the easier way to go to analyze the differences between the types of work
+permits |>
+  filter(!is.na(ProjectLength)) |>
+  filter(ProjectLength > -1) |>
+  ggplot() + 
+    geom_boxplot(aes(x = ProjectLength, y = Work.Class)) + 
+    labs(title = "Type of Work vs. Project Length", x = "Project Length", y = "Type of Work")
+```  
+  
+The type of work that had the largest median project length was `Shell`. `Shell` is a construction term used to describe the exterior and the core of the building (which would be walls, roofing, foundation, windows, etc.). In contrast, `Life Safety` had the lowest median project length. `Addition and Remodel` had the largest project length (which would be 667, as observed from the **Project Lengths** analysis). `New` had the second largest max, with `Repair` coming in third and `Remodel` coming in fourth. Interestingly, `Life Safety`, alongside having the lowest median project length (and maximum project length for that matter), also has the lowest number of occurrences. `New` has the most amount of occurrences.  
+```{r echo = FALSE, include = FALSE}
+# just a bit of organized data -- to see, remove the include = FALSE portion
+permits |>
+  group_by(Work.Class) |>
+  count() |>
+  arrange(desc(n))
+```
+  
+### Work.Class vs. Day.Issued  
+```{r echo = FALSE}
+# separate the types of work into different days to perform analysis day-by-day
+permits |>
+  filter(!is.na(Work.Class)) |>
+  filter(!is.na(Day.Issued)) |>
+  arrange(desc(Day.Issued)) |>
+  ggplot() + 
+    geom_bar(aes(y = Work.Class, fill = Day.Issued), show.legend = FALSE) +
+    labs(title = "Type of Work vs. Day Issued", 
+         x = "Occurences", 
+         y = "Type of Work") + 
+    scale_fill_brewer(palette = "Paired") + 
+    facet_wrap(~Day.Issued)
+```
+  
+For the weekdays (M, T, W, Th, F), we can see that the `New` category leads in occurrences. On the weekends (Sat, Sun), due to the lower quantity of work being done, it's harder to see which one really takes the lead, but on a high level, `New` takes the lead for Saturday and `Addition and Remodel` takes the lead on Sunday.  
+One patterns of types of work is similar on Mondays, Tuesdays, and Fridays while another is similar on Wednesdays and Thursdays.  
+The analysis we can perform here is simple: more work is assigned on weekdays than weekends. Since the pattern is quite similar for all weekdays, there would be no correlation between the type of work done and the day the project is issued on.  
+
+### Work.Class vs. Status.Current  
+```{r echo = FALSE}
+# a barplot comparing the types of work and how much of them were completed, active, etc.
+permits |>
+  filter(!is.na(Work.Class)) |>
+  ggplot() + 
+    geom_bar(aes(y = Work.Class, fill = Status.Current)) +
+    labs(title = "Type of Work vs. Completion Status", 
+         x = "Occurences", 
+         y = "Type of Work") + 
+    scale_fill_brewer(palette = "Set3")
+```
+  
+Here, we can see that a majority of the projects did end up going to completion, but even if the `New` column had the most amount of completed projects, it also had the largest amount of active projects. `Repair` had the largest amount of expired projects, and `Remodel` had the largest amount of withdrawn projects. 
+
+Seeing as how interesting it was to analyze the graphs before, let's try to create a MULTIVARIATE plot, which has 3 variables compared against each other.  
+```{r echo = FALSE}
+# a multivariate plot that joins the fifth graph and the sixth graph to perform the data analysis on the sixth graph day-by-day
+permits |>
+  filter(!is.na(Work.Class)) |>
+  ggplot() + 
+    geom_bar(aes(y = Work.Class, fill = Status.Current)) +
+    labs(title = "Type of Work vs. Completion Status per Day", 
+         x = "Occurences", 
+         y = "Type of Work") + 
+    scale_fill_brewer(palette = "RdGy") +
+    facet_wrap(~Day.Issued)
+```
+  
+Above is the relationship between three variables: Work.Class, Status.Current, and Day.Issued. As seen, a majority of the projects were finalized, but a large proportion of them for each day remained active. Here, we are basically looking at the same data as the sixth analysis  (Type of Work vs. Completion Status), but now we've split them up into days. Nevertheless, the pattern remains the same: the weekdays get a majority of the projects, with New being the highest for them all and the patterns of the data heights matching with other days.  
+
+# **6. Reproducibility Resources**  
+Link to GitHub -> [{GitHub}](https://github.com/arunmsn/SDS313_Project2.git)  
+The repository contains the _Project2.Rmd_, _Project2.html_, and _Issued_Construction_permits_20241102.csv_ files.  
+The **Project2.Rmd** file contains the code for the project.  
+The **Project2.html** file contains the html view of the base project. This file will not be modified until the code in the Rmd is changed and the file is knit.  
+The **Issued_Construction_permits_20241102.csv** file is the csv that contains the data. This is directly what the permits dataframe reads into.  
+
+# **7. Choice Elements**  
+The choice elements I have are A, D, E, G, and I.  
+
+### A  
+**A.1** - Line 238 - Getting the count of `Active` occurrences in Status.Current  
+**A.2** - Line 238 - Getting the count of `Expired` occurrences in Status.Current  
+**A.3** - Line 238 - Getting the count of `VOID` occurrences in Status.Current  
+**A.4** - Line 294 - Getting the correlation between Project Length and Approval Time  
+
+### D  
+**D.1** - Line 258 - Mutated the dataframe with three new columns: `IssuedDayDiff`, `ExpiredDayDiff`, and `ProjectLength`  
+
+### E  
+**E.1** - Line 222 - Explaining how the NA values in the Approval Time Lengths came from an NA value in the `Applied.Date` column  
+**E.2** - Line 238 - Explaining how the NA values in the Project Lengths were a sum of `Active`, `Expired`, `VOID`, and other statuses  
+
+### G  
+**G.1** - Line 052 - Converting the `Applied.Date` column to be of type Date, not character  
+**G.2** - Line 053 - Converting the `Issued.Date` column to be of type Date, not character  
+**G.3** - Line 054 - Converting the `Expires.Date` column to be of type Date, not character  
+**G.4** - Line 055 - Converting the `Completed.Date` column to be of type Date, not character  
+
+### I  
+**I.1** - Line 347 - The multivariate plot containing the relationship between `Work.Class`, `Status.Current`, and `Day.Issued`  
+
+# **8. Conclusion**  
+Throughout the project, we have done several analyses. And we found a lot of information too. For starters, we know the government has a lot of wrong information in their datasets, which is just hilarious. But jokes aside, we did gain some vital findings related to my prompt. A majority of the building permits issued in 2023 were New and Shell construction, which means more houses and more apartments were being built to house a larger number of incoming people. Most of the projects that were issued were also applied for in 2023, which goes to show the efficiency the construction workers had to be working at in order for the project to be completed. We found that while there was nearly no relationship between the time length of a project and the time it took for the project to be approved (issued), there is somewhat of a relationship between the type of project the work is and the time length of said project, which makes sense considering building a new home would take longer than adding life safety features to buildings. We found that the Zip Codes which had a majority of the projects were in downtown, indicating large amounts of growth within the city and the nearby suburban areas. While this project didn't allow me to truly see how the population varied throughout the year, it provided key information to proving that the incoming population was large.  
+
+# **9. References**  
+https://i.redd.it/dh75zlho59o71.jpg  
+Image used for Project  
+
+https://data.austintexas.gov/Building-and-Development/Building-Permits-Issued-in-2015/ayav-qckq  
+Data collection portal  
+
+https://data.austintexas.gov/Building-and-Development/Issued-Construction-Permits/3syk-w9eu/data_preview  
+Larger data portal, with information from all years (backup source for information correction)
