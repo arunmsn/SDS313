@@ -1,0 +1,92 @@
+---
+title: "Homework 6"
+author: "Arun Mahadevan Sathia Narayanan"
+date: 'Date Published: `r Sys.Date()`'
+output:
+  html_document:
+    theme: sandstone
+    toc: true
+    toc_float:
+      collapsed: true
+---
+```{r include = FALSE}
+library(ggplot2)
+library(tidyverse)
+library(rvest)
+```
+  
+# Question 1  
+**Write code to scrape the title, author, and average rating (out of 5 stars) from the top 100 books listed on Good Read's Best Banned, Censured, and Challenged Books to an external site. list.  Note: the average rating will also include the information of number of ratings so manipulate this variable to be numeric without any missing values. Create a single dataset that has a column for each of these three variables. Then show all variables for the 10 highest-rated books in your report.**  
+```{r}
+# The link used in the homework
+books = "https://www.goodreads.com/list/show/1360.Best_Banned_Censored_and_Challenged_Books"
+bcc_books = data.frame(
+  Title = 
+  read_html(books) |>
+    html_elements(".bookTitle") |>
+    html_text() |>
+    str_replace_all("\\n", ""),
+  Author = 
+  read_html(books) |>
+    html_elements(".authorName__container") |>
+    html_text() |>
+    str_remove("\\s\\(.*\\)") |>
+    str_replace_all("\\s+", " "),
+  Rating = 
+  as.numeric(read_html(books) |>
+    html_elements(".minirating") |>
+    html_text() |>
+    str_remove("^[^0-9]*") |>
+    str_extract("^\\d+\\.\\d+"))
+)
+bcc_books |>
+  arrange(desc(Rating)) |>
+  head(10)
+```
+  
+What's interesting to note about this table is that J.K. Rowling's Harry Potter appears most often in the top 10 highest rated books. In fact, the entire series shows up in this top 10.  
+
+# Question 2  
+**Identify the author in your dataset with the most books in the top 100. Then show the titles of the books in order of the series.**  
+```{r}
+most_author <- data.frame(bcc_books |>
+  filter(Author == (bcc_books |> 
+                      group_by(Author) |> 
+                      count() |> 
+                      arrange(desc(n)) |> 
+                      head(1))$Author))
+most_author |>
+  mutate(book_num = as.numeric(str_extract(Title, "\\d+"))) |>
+  arrange(book_num) |>
+  select(-book_num)
+```
+  
+The books appear in order here, and we can actually visualize a sinusoidal trend in the rating. There is a decrease from 4.47 to 4.43, then going to the high 4.5's, and falling (but still staying in the 4.5's) then going back to the 4.6's.  
+
+# Question 3  
+**Find the books with the shortest and with the longest title. How does their average rating compare?**  
+```{r}
+paren_removed_titles <- bcc_books$Title |>
+  str_remove("\\s\\(.*")
+paren_removed_titles <- data.frame(paren_removed_titles, bcc_books$Author, bcc_books$Rating) |>
+  reframe(Title = paren_removed_titles, Author = bcc_books.Author, Rating = bcc_books.Rating)
+short_rating <- (paren_removed_titles |>
+  arrange(str_length(Title)) |>
+  head(1))$Rating
+long_rating <- (paren_removed_titles |>
+  arrange(str_length(Title)) |>
+  tail(1))$Rating
+```
+  
+Short Title Rating: `r short_rating`, Long Title Rating: `r long_rating`. The rating for the longer title seems to be less (but not by much) compared to the rating for the shorter title.  
+
+# Question 4  
+**Create a plot to show the relationship between the length of a title and its average rating and include appropriate statistics. Does the length of the title seem to impact the average rating of a book? Does that mean that an author should give their book a long title for getting a better average rating?**  
+```{r}
+ggplot(paren_removed_titles) + 
+  geom_point(aes(x = str_length(Title), y = Rating), color = "#75420e") +
+  labs(title = "Length of Title vs Average Rating", x = "Title Length (characters)", y = "Rating (Out of 5)") +
+  theme(axis.text.y = element_blank(), axis.ticks.y = element_blank(), panel.background = element_rect(fill = "#e9e5cd"), panel.grid.minor = element_blank())
+```
+  
+Correlation is `r round(cor(str_length(paren_removed_titles$Title), paren_removed_titles$Rating), 2)`, which is considered a Weak Positive (but extremely close a Moderate Positive) relationship. This means that there is somewhat of an effect by the length of the book's title on its rating (in a positive manner, meaning the longer a title is the better the rating is). However, since the relationship is weak between the two variables, it does not really matter the length of the title to get a better rating (the rating would mainly come from how good the story is).
