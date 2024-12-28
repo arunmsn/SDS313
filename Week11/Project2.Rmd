@@ -122,6 +122,8 @@ permits |>
     geom_col(aes(x = n, y = Work.Class, fill = Work.Class), show.legend = FALSE) +
     scale_fill_brewer(palette = "BrBG") +
     labs(title = "Frequencies of Types of Work", x = "Occurrences", y = "Type of Work")
+
+table(permits$Work.Class)
 ```
   
 From the graph here, we can see that the types of work with the lowest number of occurrences are _Remodel Mobile Home_ and _Life Safety_, with _Relocation_ and _Addition_ also having very few occurrences. The most amount of work happens when constructing something _New_ or performing a _Remodel_.  
@@ -153,6 +155,9 @@ permits |>
     scale_fill_brewer(palette = "RdBu") +
     labs(title = "Statuses of Projects", x = "Occurrences", y = "Status") + 
     scale_x_continuous(breaks = seq(0, 8000, by = 3000))
+
+table(permits$Status.Current)
+length(permits$Status.Current)
 ```
   
 Analyzing the graph here, most of the projects that were approved did go to completion, as indicated by the large differences in occurrences between `Final` and the other statuses. A large amount of the approved permits (projects) remained `Active` or had `Expired`, which is interesting. Even though the permits were approved, some of the projects remained unfinished. This could be for several reasons.  
@@ -345,6 +350,7 @@ permits |>
 ### Work.Class vs. Day.Issued  
 ```{r echo = FALSE}
 # separate the types of work into different days to perform analysis day-by-day
+permits[6726, 5] <- "WEDNESDAY"
 permits |>
   filter(!is.na(Work.Class)) |>
   filter(!is.na(Day.Issued)) |>
@@ -368,11 +374,13 @@ The analysis we can perform here is simple: more work is assigned on weekdays th
 permits |>
   filter(!is.na(Work.Class)) |>
   ggplot() + 
-    geom_bar(aes(y = Work.Class, fill = Status.Current)) +
+    geom_bar(aes(y = Work.Class, fill = Status.Current), position = "fill") +
     labs(title = "Type of Work vs. Completion Status", 
-         x = "Occurences", 
+         x = "Proportion", 
          y = "Type of Work") + 
-    scale_fill_brewer(palette = "Set3")
+    scale_fill_brewer(palette = "Set3") + 
+  scale_x_continuous(labels = scales::percent)
+
 ```
   
 Here, we can see that a majority of the projects did end up going to completion, but even if the `New` column had the most amount of completed projects, it also had the largest amount of active projects. `Repair` had the largest amount of expired projects, and `Remodel` had the largest amount of withdrawn projects. 
